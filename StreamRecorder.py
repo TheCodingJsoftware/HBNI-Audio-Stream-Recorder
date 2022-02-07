@@ -38,6 +38,7 @@ app_log.setLevel(logging.INFO)
 
 app_log.addHandler(my_handler)
 
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -48,6 +49,7 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
 
 class Changes:
     def __init__(self, url: str, archive: str = 'archived_page.html'):
@@ -107,6 +109,7 @@ class Changes:
             return 'No streams currently online.' not in file
             # return 'No streams currently online.' not in file
 
+
 def regex_finder(tag: str, html: str, replace_text: bool = True) -> 'list[str]':
     '''
     regex_finder finds strings after a tag using regex matching
@@ -129,6 +132,7 @@ def regex_finder(tag: str, html: str, replace_text: bool = True) -> 'list[str]':
         list_matches.append(m)
     return list_matches
 
+
 def run(sc: sched.scheduler):
     global titles, bodies, host_addresses
     url = 'http://hbniaudio.hbni.net/'
@@ -137,7 +141,6 @@ def run(sc: sched.scheduler):
     dt = datetime.now()
     if not lister.check_for_streams():
         print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKBLUE}No streams currently online{bcolors.ENDC}')
-        #app_log.info(f'{dt} - No streams currently online')
         titles.clear()
         bodies.clear()
         host_addresses.clear()
@@ -158,9 +161,7 @@ def run(sc: sched.scheduler):
         host_addresses = regex_finder(tag='data-mnt', html=changes[0], replace_text=False)
         if (len(titles) == 0 or len(bodies) == 0 or len(host_addresses) == 0):
             print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}No data could be found in changes{bcolors.ENDC}')
-            #app_log.info(f'{dt} - No data could be found in changes')
             print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKBLUE}Starting next cylce{bcolors.ENDC}')
-            #app_log.info(f'{dt} - Starting next cycle')
             s.enter(15, 1, run, (sc,))
             return
         print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Titles: {titles}{bcolors.ENDC}')
@@ -171,37 +172,41 @@ def run(sc: sched.scheduler):
         app_log.info(f'{dt} - Host Addresses: {host_addresses}')
         if IS_DELAYED == 'NULL': IS_DELAYED = 'START'
     except Exception as e: # IndexError
-        if not IS_DELAYED == 'DONE' or not IS_DELAYED == 'START':
-            print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}Error: {e}{bcolors.ENDC}')
-            #app_log.info(f'{dt} - Error: {e}')
-            print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}No data could be found for active streams{bcolors.ENDC}')
-            #app_log.info(f'{dt} - No data could be found for active streams')
-            print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}Starting next cylce{bcolors.ENDC}')
-            #app_log.info(f'{dt} - Starting next cycle')
-            s.enter(15, 1, run, (sc,))
-            return
+        print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}Error: {e}{bcolors.ENDC}')
+        app_log.info(f'{dt} - Error: {e}')
+        print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}No data could be found for active streams{bcolors.ENDC}')
+        app_log.info(f'{dt} - No data could be found for active streams')
+        print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}Starting next cylce{bcolors.ENDC}')
+        app_log.info(f'{dt} - Starting next cycle')
+        s.enter(15, 1, run, (sc,))
+        return
+
     for title, body, address in zip(titles, bodies, host_addresses):
         print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Host: {title} Description: {body}{bcolors.ENDC}")
-        app_log.info(f"{dt} - Host: {title} Description: {body} - Download Started")
-
+        app_log.info(f"{dt} - Host: {title} Description: {body} - Recording starting")
         fileName = f'{title} - {body}'
         threading.Thread(target=download, args=(fileName, address,)).start()
+
     s.enter(15, 1, run, (sc,))
 
+
 def download(fileName: str, hostAddress: str):
+    print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Started recording thread{bcolors.ENDC}")
     dt = datetime().now()
     timestr = datetime.now().strftime('%B %d %A %Y')
     recordingstr = time.strftime("%Y%m%d%H%M%S")
-    print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Started recording{bcolors.ENDC}")
     p = subprocess.Popen(['ffmpeg', '-y', '-i', f'http://hbniaudio.hbni.net:8000{hostAddress}', f'Recordings/{recordingstr}.mp3'])
     p.communicate()
-
     os.rename(f'Recordings/{recordingstr}.mp3', f"Recordings/{fileName} - {timestr}.mp3")
-
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Recording stopped{bcolors.ENDC}")
 
-if __name__ == '__main__':
+
+def main():
     s.enter(0, 0, run, (s,))
     print(f'{bcolors.BOLD}{datetime.now()}{bcolors.ENDC} - {bcolors.HEADER}Starting stream listener{bcolors.ENDC}')
     app_log.info(f'{datetime.now()} - Starting stream listener')
     s.run()
+
+
+if __name__ == '__main__':
+    main()
