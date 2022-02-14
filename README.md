@@ -5,6 +5,9 @@ Records HBNI streams as the show up.
 [ffmpeg download](https://www.filehorse.com/download-ffmpeg/)
 
 Requirements:
+
+**PYTHON 3.9**
+
 ```
 pip install flask
 ```
