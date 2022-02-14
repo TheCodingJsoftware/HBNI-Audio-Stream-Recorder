@@ -1,3 +1,9 @@
 *.exe
 Recordings
 logs/
+CURRENTLY_RECORDING
+credentials.json
+archived_page.html
+*.vscode
+__pycache__
+test.py
