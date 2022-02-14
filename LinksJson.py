@@ -1,5 +1,6 @@
 import json
 import requests
+from datetime import datetime
 from git import Repo
 
 def loadJson() -> dict:
@@ -7,14 +8,15 @@ def loadJson() -> dict:
         data = json.load(f)
     return data
 
-def addDownloadLink(fileName: str, downloadLink: str):
+def addDownloadLink(fileName: str, downloadLink: str, date: str):
     data = loadJson()
-    data.update({fileName: {"downloadLink": downloadLink}})
+    data.update({fileName: {"downloadLink": downloadLink, 'date': date}})
+
     with open('downloadLinks.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
-    updateDatabase()
+    uploadDatabase()
 
-def updateDatabase():
+def uploadDatabase():
     repo = Repo('.')  # if repo is CWD just do '.'
     repo.index.add(['downloadLinks.json'])
     repo.index.commit('Updated downloadLinks.json file.')
@@ -37,4 +39,3 @@ def getDownloadLink(fileName: str) -> str:
         return data[fileName]['downloadLink']
     except KeyError:
         return None
-downloadDatabase()

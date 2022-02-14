@@ -10,6 +10,7 @@ from datetime import datetime
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 import MegaUploader
+import LinksJson
 
 os.system('cls')
 s = sched.scheduler(time.time, time.sleep)
@@ -197,7 +198,7 @@ def run(sc: sched.scheduler):
 def download(fileName: str, hostAddress: str):
     dt = datetime.now()
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Started recording thread{bcolors.ENDC}")
-    timestr = datetime.now().strftime('%B %d %A %Y')
+    timestr = datetime.now().strftime('%B %d %A %Y %H_%M %p')
     recordingstr = time.strftime("%Y%m%d%H%M%S")
     p = subprocess.Popen(
         [
@@ -216,10 +217,9 @@ def download(fileName: str, hostAddress: str):
         )
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Starting upload to Mega{bcolors.ENDC}")
     app_log.info(f"{dt} - Starting upload to Mega")
-    MegaUploader.upload(file_path=f'Recordings/{fileName} - {timestr}.mp3')
+    MegaUploader.upload(file_path=f'Recordings/{fileName} - {timestr}.mp3', date=timestr)
     app_log.info(f"{dt} - Done uploading")
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Done uploading{bcolors.ENDC}")
-
 
 def main():
     s.enter(0, 0, run, (s,))

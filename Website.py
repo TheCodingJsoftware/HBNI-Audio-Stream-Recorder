@@ -1,17 +1,19 @@
 import os
+import time
+import json
+import sched
+import requests
+import threading
 from os import listdir
 from os.path import isfile, join
 from flask import send_file
 from flask import Flask, render_template
 from flask import current_app, url_for
-from natsort import natsort_keygen
-import natsort
-from natsort import natsorted, ns
 import LinksJson
 
-NATSORT_KEY: natsort_keygen() = natsort_keygen()
 
 app = Flask(__name__)
+s = sched.scheduler(time.time, time.sleep)
 
 
 @app.route('/')
@@ -36,6 +38,8 @@ def index():
         newFileName = fileName.replace('_', ':').replace('.mp3', '')
         fileNames.append(newFileName)
         downloadLinks.append(LinksJson.getDownloadLink(fileName))
+    fileNames.reverse()
+    downloadLinks.reverse()
     downloadableRecordings = zip(fileNames, downloadLinks)
     return render_template('index.html', downloadableRecordings=downloadableRecordings)
 
@@ -52,10 +56,27 @@ def download(path=None):
     path = '\\'.join(path)
     return send_file(path, as_attachment=True)
 
+def downloadDatabase():
+    print("Updating database")
+    url = 'https://raw.githubusercontent.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/master/downloadLinks.json'
+    req = requests.get(url)
+    if req.status_code == requests.codes.ok:
+        data = dict(req.json())  # the response is a JSON
+        with open('downloadLinks.json', 'w+') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+    else:
+        print('Content was not found.')
+
+
+def downloadThread():
+    while True:
+        downloadDatabase()
+        time.sleep(3600)
 
 if __name__ == "__main__":
     # website_url = 'hbniaudioarchive.hbni.net:5000'
     # app.config['SERVER_NAME'] = website_url
     # with app.test_request_context():
     #     url = url_for('index', _external=True)
+    threading.Thread(target=downloadThread).start()
     app.run(host='10.0.0.217', port='5000', debug=False, threaded=True)

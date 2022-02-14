@@ -11,7 +11,7 @@
         <h2> Downloads </h2>
         {% for fileName, downloadLink in downloadableRecordings %}
             <p>
-                <a class="buttonDownload" href={{ downloadLink }}>
+                <a class="buttonDownload" target="_blank" href={{ downloadLink }}>
                     <i class="fa fa fa-github fa-3x"></i>
                     <span class="df", style="font-weight:bold">Download</span>
                     <span class="dfn">{{ fileName }}</span>
