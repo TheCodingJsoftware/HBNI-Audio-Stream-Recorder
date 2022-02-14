@@ -9,7 +9,7 @@ from logging.handlers import RotatingFileHandler
 from datetime import datetime
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
-
+import MegaUploader
 
 os.system('cls')
 s = sched.scheduler(time.time, time.sleep)
@@ -153,24 +153,28 @@ def run(sc: sched.scheduler):
         s.enter(15, 1, run, (sc,))
         return
 
+    changes = lister.diff()
+
     try:
-        print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Changes: {changes[0]}{bcolors.ENDC}')
-        app_log.info(f'{dt} - Changes: {changes[0]}')
-        titles = regex_finder(tag='data-mnt', html=changes[0])
-        bodies = regex_finder(tag='data-stream', html=changes[0])
-        host_addresses = regex_finder(tag='data-mnt', html=changes[0], replace_text=False)
+        for change in changes:
+            print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Changes: {change}{bcolors.ENDC}')
+            app_log.info(f'{dt} - Changes: {change}')
+            titles = regex_finder(tag='data-mnt', html=change)
+            bodies = regex_finder(tag='data-stream', html=change)
+            host_addresses = regex_finder(tag='data-mnt', html=change, replace_text=False)
+            print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Titles: {titles}{bcolors.ENDC}')
+            app_log.info(f'{dt} - Titles: {titles}')
+            print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Bodies: {bodies}{bcolors.ENDC}')
+            app_log.info(f'{dt} - Bodies: {bodies}')
+            print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Host Addresses: {host_addresses}{bcolors.ENDC}')
+            app_log.info(f'{dt} - Host Addresses: {host_addresses}')
+            if len(titles) != 0:
+                break
         if (len(titles) == 0 or len(bodies) == 0 or len(host_addresses) == 0):
             print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}No data could be found in changes{bcolors.ENDC}')
             print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKBLUE}Starting next cylce{bcolors.ENDC}')
             s.enter(15, 1, run, (sc,))
             return
-        print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Titles: {titles}{bcolors.ENDC}')
-        app_log.info(f'{dt} - Titles: {titles}')
-        print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Bodies: {bodies}{bcolors.ENDC}')
-        app_log.info(f'{dt} - Bodies: {bodies}')
-        print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Host Addresses: {host_addresses}{bcolors.ENDC}')
-        app_log.info(f'{dt} - Host Addresses: {host_addresses}')
-        if IS_DELAYED == 'NULL': IS_DELAYED = 'START'
     except Exception as e: # IndexError
         print(f'{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}Error: {e}{bcolors.ENDC}')
         app_log.info(f'{dt} - Error: {e}')
@@ -191,14 +195,30 @@ def run(sc: sched.scheduler):
 
 
 def download(fileName: str, hostAddress: str):
+    dt = datetime.now()
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Started recording thread{bcolors.ENDC}")
-    dt = datetime().now()
     timestr = datetime.now().strftime('%B %d %A %Y')
     recordingstr = time.strftime("%Y%m%d%H%M%S")
-    p = subprocess.Popen(['ffmpeg', '-y', '-i', f'http://hbniaudio.hbni.net:8000{hostAddress}', f'Recordings/{recordingstr}.mp3'])
+    p = subprocess.Popen(
+        [
+            'ffmpeg',
+            '-y',
+            '-i',
+            f'http://hbniaudio.hbni.net:8000{hostAddress}',
+            f'CURRENTLY_RECORDING/{recordingstr}.mp3'
+        ]
+    )
     p.communicate()
-    os.rename(f'Recordings/{recordingstr}.mp3', f"Recordings/{fileName} - {timestr}.mp3")
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Recording stopped{bcolors.ENDC}")
+    os.rename(
+            f'CURRENTLY_RECORDING/{recordingstr}.mp3',
+            f'Recordings/{fileName} - {timestr}.mp3'
+        )
+    print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Starting upload to Mega{bcolors.ENDC}")
+    app_log.info(f"{dt} - Starting upload to Mega")
+    MegaUploader.upload(file_path=f'Recordings/{fileName} - {timestr}.mp3')
+    app_log.info(f"{dt} - Done uploading")
+    print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Done uploading{bcolors.ENDC}")
 
 
 def main():

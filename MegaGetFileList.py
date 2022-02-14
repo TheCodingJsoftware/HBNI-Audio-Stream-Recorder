@@ -1,0 +1,22 @@
+# b00UzCzL
+import re
+import os
+import json
+import requests
+from mega import Mega
+from rich import print
+import LinksJson
+
+
+with open('credentials.json', 'r') as f:
+	credentials = json.load(f)
+	mega = Mega({'verbose': True})
+	mega._login_user(credentials['username'],credentials['password'])
+
+Folder = mega.find('HBNI Audio Recording')
+files = mega.get_files()
+print(files)
+for file in files:
+    fileName = files[file]['a']['n']
+    print(fileName)
+    print(LinksJson.getDownloadLink(fileName=fileName))

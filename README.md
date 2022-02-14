@@ -9,7 +9,7 @@ Requirements:
 **PYTHON 3.9**
 
 ```
-pip install flask
+pip install flask natsort mega.py
 ```
 
 Tree Directory
