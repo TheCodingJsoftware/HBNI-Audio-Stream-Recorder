@@ -7,7 +7,6 @@ from mega import Mega
 from rich import print
 import LinksJson
 
-
 with open('credentials.json', 'r') as f:
 	credentials = json.load(f)
 	mega = Mega({'verbose': True})

@@ -1,4 +1,6 @@
 import json
+import base64
+import requests
 from git import Repo
 
 def loadJson() -> dict:
@@ -20,6 +22,15 @@ def updateDatabase():
     origin = repo.remote('origin')
     origin.push()
 
+def downloadDatabase():
+    url = 'https://raw.githubusercontent.com/jarebear12418/HBNI-Audio-Stream-Recorder/branch/downloadLinks.json'
+    req = requests.get(url)
+    if req.status_code == requests.codes.ok:
+        content = req.json()  # the response is a JSON
+        with open('downloadLinks.json', 'w+') as f:
+            f.write(content)
+    else:
+        print('Content was not found.')
 
 def getDownloadLink(fileName: str) -> str:
     data = loadJson()
@@ -27,3 +38,4 @@ def getDownloadLink(fileName: str) -> str:
         return data[fileName]['downloadLink']
     except KeyError:
         return None
+downloadDatabase()
