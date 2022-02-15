@@ -9,7 +9,12 @@ Requirements:
 **PYTHON 3.9**
 
 ```
-pip install flask natsort mega.py
+pip install flask natsort mega.py gitpython
+```
+
+**STARTING WEBSERVER PRODUCTION**
+```
+gunicorn -w 4 -b 10.0.0.150:5000 StreamRecorder:app
 ```
 
 Tree Directory

@@ -33,7 +33,8 @@ def index():
     fileNames = []
     downloadLinks = []
 
-    data = LinksJson.loadJson()
+    with open('websiteDownloadLinks.json', 'r') as f:
+        data = json.load(f)
     for fileName in data:
         newFileName = fileName.replace('_', ':').replace('.mp3', '')
         fileNames.append(newFileName)
@@ -62,7 +63,7 @@ def downloadDatabase():
     req = requests.get(url)
     if req.status_code == requests.codes.ok:
         data = dict(req.json())  # the response is a JSON
-        with open('downloadLinks.json', 'w+') as f:
+        with open('websiteDownloadLinks.json', 'w+') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
     else:
         print('Content was not found.')
@@ -71,7 +72,7 @@ def downloadDatabase():
 def downloadThread():
     while True:
         downloadDatabase()
-        time.sleep(3600)
+        time.sleep(300)
 
 if __name__ == "__main__":
     # website_url = 'hbniaudioarchive.hbni.net:5000'

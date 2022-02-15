@@ -7,3 +7,4 @@ archived_page.html
 *.vscode
 __pycache__
 test.py
+websiteDownloadLinks.json
