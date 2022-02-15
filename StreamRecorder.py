@@ -12,7 +12,7 @@ from urllib.error import HTTPError, URLError
 import MegaUploader
 import LinksJson
 
-os.system('cls')
+os.system('clear')
 s = sched.scheduler(time.time, time.sleep)
 titles: list = []
 bodies: list = []
@@ -20,7 +20,7 @@ host_addresses: list = []
 
 log_formatter = logging.Formatter('%(message)s')
 file_name = datetime.today().strftime('%Y-%m-%d')
-logFile = f'logs/{file_name}.log'
+logFile = f'/home/pi/hbni-audio-stream-recorder/logs/{file_name}.log'
 
 my_handler = RotatingFileHandler(
     logFile,
@@ -53,7 +53,7 @@ class bcolors:
 
 
 class Changes:
-    def __init__(self, url: str, archive: str = 'archived_page.html'):
+    def __init__(self, url: str, archive: str = '/home/pi/hbni-audio-stream-recorder/archived_page.html'):
         self.url = url
         self.new_html = []
         self.old_html = []
@@ -206,25 +206,25 @@ def download(fileName: str, hostAddress: str):
             '-y',
             '-i',
             f'http://hbniaudio.hbni.net:8000{hostAddress}',
-            f'CURRENTLY_RECORDING/{recordingstr}.mp3'
+            f'/home/pi/hbni-audio-stream-recorder/CURRENTLY_RECORDING/{recordingstr}.mp3'
         ]
     )
     p.communicate()
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Recording stopped{bcolors.ENDC}")
     os.rename(
-            f'CURRENTLY_RECORDING/{recordingstr}.mp3',
-            f'Recordings/{fileName} - {timestr}.mp3'
+            f'/home/pi/hbni-audio-stream-recorder/CURRENTLY_RECORDING/{recordingstr}.mp3',
+            f'/home/pi/hbni-audio-stream-recorder/Recordings/{fileName} - {timestr}.mp3'
         )
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Starting upload to Mega{bcolors.ENDC}")
     app_log.info(f"{dt} - Starting upload to Mega")
-    MegaUploader.upload(file_path=f'Recordings/{fileName} - {timestr}.mp3', date=timestr)
+    MegaUploader.upload(file_path=f'/home/pi/hbni-audio-stream-recorder/Recordings/{fileName} - {timestr}.mp3', date=timestr)
     app_log.info(f"{dt} - Done uploading")
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Done uploading{bcolors.ENDC}")
 
 def main():
     s.enter(0, 0, run, (s,))
     print(f'{bcolors.BOLD}{datetime.now()}{bcolors.ENDC} - {bcolors.HEADER}Starting stream listener{bcolors.ENDC}')
-    app_log.info(f'{datetime.now()} - Starting stream listener')
+    app_log.info(f'{datetime.now()} - Starting stream recorder')
     s.run()
 
 
