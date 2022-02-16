@@ -14,12 +14,13 @@ pip install flask natsort mega.py gitpython
 
 **STARTING WEBSERVER PRODUCTION**
 ```
-gunicorn -w 4 -b 10.0.0.150:5000 StreamRecorder:app
+gunicorn -w 4 -b 10.0.0.150:5000 Website:app
 ```
 
 Tree Directory
 ```
 +-- logs
++-- CURRENTLY_RECORDING
 +-- Recordings
 +-- static
 |   +-- favicon.png
@@ -29,9 +30,15 @@ Tree Directory
 |   +-- index.html
 +-- .gitignore
 +-- archived_page.html
++-- credentials.json
++-- downloadLinks.json
 +-- ffmpeg.exe
 +-- ffplay.exe
 +-- ffprobe.exe
++-- GlobalVariables.py
++-- LinksJson.py
++-- MegaGetFileList.py
++-- MegaUploader.py
 +-- README.md
 +-- StreamRecorder.py
 +-- Website.py
