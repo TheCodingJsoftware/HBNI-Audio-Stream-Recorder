@@ -6,7 +6,7 @@ import requests
 from mega import Mega
 import LinksJson
 
-with open('credentials.json', 'r') as f:
+with open('/home/pi/hbni-audio-stream-recorder/credentials.json', 'r') as f:
 	credentials = json.load(f)
 	mega = Mega({'verbose': True})
 	mega._login_user(credentials['username'],credentials['password'])
