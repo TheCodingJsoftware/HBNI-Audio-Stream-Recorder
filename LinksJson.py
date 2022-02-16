@@ -39,3 +39,4 @@ def getDownloadLink(fileName: str) -> str:
         return data[fileName]['downloadLink']
     except KeyError:
         return None
+uploadDatabase()

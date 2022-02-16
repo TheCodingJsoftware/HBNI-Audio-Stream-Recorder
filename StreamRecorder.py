@@ -197,6 +197,7 @@ def run(sc: sched.scheduler):
 
 def download(fileName: str, hostAddress: str):
     dt = datetime.now()
+    app_log.info(f"{dt} - Started recording")
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Started recording thread{bcolors.ENDC}")
     timestr = datetime.now().strftime('%B %d %A %Y %H_%M %p')
     recordingstr = time.strftime("%Y%m%d%H%M%S")
@@ -210,6 +211,7 @@ def download(fileName: str, hostAddress: str):
         ]
     )
     p.communicate()
+    app_log.info(f"{dt} - Recorded ended")
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Recording stopped{bcolors.ENDC}")
     os.rename(
             f'CURRENTLY_RECORDING/{recordingstr}.mp3',
