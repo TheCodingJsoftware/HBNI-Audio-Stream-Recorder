@@ -40,6 +40,7 @@ Tree Directory
 +-- MegaGetFileList.py
 +-- MegaUploader.py
 +-- README.md
++-- RemoveSilence.py
 +-- StreamRecorder.py
 +-- Website.py
 ```
