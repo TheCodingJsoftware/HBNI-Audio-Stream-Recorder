@@ -27,7 +27,7 @@ def addDownloadLink(fileName: str, downloadLink: str, date: str):
         date (str): date the file was created.
     """
     data = loadJson()
-    data.update({fileName: {"downloadLink": downloadLink, "date": date}})
+    data.update({fileName: {"date": date, "downloadLink": downloadLink}})
 
     with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
         json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
