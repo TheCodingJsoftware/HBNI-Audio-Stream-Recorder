@@ -233,7 +233,7 @@ def download(fileName: str, hostAddress: str):
     print(
         f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Started recording thread{bcolors.ENDC}"
     )
-    timestr = datetime.now().strftime("%B %d %A %Y %H_%M %p")
+    timestr = datetime.now().strftime("%B %d %A %Y %I_%M %p")
     recordingstr = time.strftime("%Y%m%d%H%M%S")
     p = subprocess.Popen(
         [
