@@ -10,16 +10,19 @@ def __findSilence(
         sound (AudioSegment): is a pydub.AudioSegment
         silenceThreshold (int): in dB
         chunkSize (int): in ms
+
+    Returns:
+        int: what time chunk the sound was first detected
     """
-    trimMilliSecond = 0  # ms
+    trimMilliSeconds: int = 0  # ms
 
     assert chunkSize > 0  # to avoid infinite loop
     while sound[
-        trimMilliSecond : trimMilliSecond + chunkSize
-    ].dBFS < silenceThreshold and trimMilliSecond < len(sound):
-        trimMilliSecond += chunkSize
+        trimMilliSeconds : trimMilliSeconds + chunkSize
+    ].dBFS < silenceThreshold and trimMilliSeconds < len(sound):
+        trimMilliSeconds += chunkSize
 
-    return trimMilliSecond
+    return trimMilliSeconds
 
 
 def removeSilence(filePath: str):
