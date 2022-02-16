@@ -9,12 +9,11 @@ from os.path import isfile, join
 import requests
 from flask import Flask, current_app, render_template, send_file, url_for
 
-import GlobalVariables
 import LinksJson
+from GlobalVariables import FOLDER_LOCATION
 
 app = Flask(__name__)
 s = sched.scheduler(time.time, time.sleep)
-FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
 
 
 @app.route("/")

@@ -4,28 +4,38 @@ from datetime import datetime
 import requests
 from git import Repo
 
-import GlobalVariables
-
-FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
+from GlobalVariables import FOLDER_LOCATION
 
 
 def loadJson() -> dict:
-    with open(f"{FOLDER_LOCATION}/downloadLinks.json", "r") as f:
-        data = json.load(f)
+    """loads downloadLinks.json file
+
+    Returns:
+        dict: json file for all the download links
+    """
+    with open(f"{FOLDER_LOCATION}/downloadLinks.json", "r") as downloadLinksFile:
+        data = json.load(downloadLinksFile)
     return data
 
 
 def addDownloadLink(fileName: str, downloadLink: str, date: str):
+    """Adds a new file to the downloadLinks.json file and updates the online database to github.
+
+    Args:
+        fileName (str): name of the file
+        downloadLink (str): download link for that file that was uploaded to mega
+        date (str): date the file was created.
+    """
     data = loadJson()
     data.update({fileName: {"downloadLink": downloadLink, "date": date}})
 
-    with open("downloadLinks.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
+        json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
     uploadDatabase()
 
 
 def uploadDatabase():
-    addDownloadLink("t", "t", "s")
+    """uploads the downloadLinks.json file to github"""
     repo = Repo(".")  # if repo is CWD just do '.'
     repo.index.add([f"{FOLDER_LOCATION}/downloadLinks.json"])
     repo.index.commit("Updated downloadLinks.json file.")
@@ -34,6 +44,7 @@ def uploadDatabase():
 
 
 def downloadDatabase():
+    """downloads the downloadLinks.json file from github"""
     url = "https://raw.githubusercontent.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/master/downloadLinks.json"
     req = requests.get(url)
     if req.status_code == requests.codes.ok:
@@ -45,11 +56,16 @@ def downloadDatabase():
 
 
 def getDownloadLink(fileName: str) -> str:
+    """Gets the download link from the fileName
+
+    Args:
+        fileName (str): name of the file you want the link for
+
+    Returns:
+        str: download link from taht file name or None if it can't find it.
+    """
     data = loadJson()
     try:
         return data[fileName]["downloadLink"]
     except KeyError:
         return None
-
-
-uploadDatabase()

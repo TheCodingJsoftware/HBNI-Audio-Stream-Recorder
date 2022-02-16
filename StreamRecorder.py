@@ -10,22 +10,21 @@ from logging.handlers import RotatingFileHandler
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
-import GlobalVariables
 import LinksJson
 import MegaUploader
+import RemoveSilence
+from GlobalVariables import FOLDER_LOCATION, Colors
 
-os.system("clear")
 s = sched.scheduler(time.time, time.sleep)
+
 titles: list = []
 bodies: list = []
-host_addresses: list = []
+hostAddresses: list = []
 
-log_formatter = logging.Formatter("%(message)s")
-file_name = datetime.today().strftime("%Y-%m-%d")
-FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
-logFile = f"{FOLDER_LOCATION}/logs/{file_name}.log"
-
-my_handler = RotatingFileHandler(
+logFormatter = logging.Formatter("%(message)s")
+logFileName = datetime.today().strftime("%Y-%m-%d")
+logFile = f"{FOLDER_LOCATION}/logs/{logFileName}.log"
+logHandler = RotatingFileHandler(
     logFile,
     mode="a",
     maxBytes=1024**2 * 1024,  # 1 gb
@@ -33,43 +32,34 @@ my_handler = RotatingFileHandler(
     encoding=None,
     delay=0,
 )
+logHandler.setFormatter(logFormatter)
+logHandler.setLevel(logging.INFO)
 
-my_handler.setFormatter(log_formatter)
-my_handler.setLevel(logging.INFO)
-
-app_log = logging.getLogger("root")
-app_log.setLevel(logging.INFO)
-
-app_log.addHandler(my_handler)
-
-
-class bcolors:
-    HEADER = "\033[95m"
-    OKBLUE = "\033[94m"
-    OKCYAN = "\033[96m"
-    OKGREEN = "\033[92m"
-    WARNING = "\033[93m"
-    FAIL = "\033[91m"
-    ENDC = "\033[0m"
-    BOLD = "\033[1m"
-    UNDERLINE = "\033[4m"
+appLog = logging.getLogger("root")
+appLog.setLevel(logging.INFO)
+appLog.addHandler(logHandler)
 
 
 class Changes:
-    def __init__(self, url: str, archive: str = f"{FOLDER_LOCATION}/archived_page.html"):
+    def __init__(self, url: str, archive: str = f"{FOLDER_LOCATION}/archivedPage.html"):
         self.url = url
-        self.new_html = []
-        self.old_html = []
-        self.change_list: list[str] = []
+        self.newHtml = []
+        self.oldHtml = []
+        self.changeList: list[str] = []
         self.archive = archive
 
     def update(self):
+        """Gets the html from the website and stores it's contents in a file.
+
+        Returns:
+            boolean: Not sure what this is used for anymore
+        """
 
         try:
             with urlopen(self.url) as byt:
-                self.new_html = [x.decode("latin-1") for x in byt.readlines()]
+                self.newHtml = [x.decode("latin-1") for x in byt.readlines()]
         except HTTPError as e:
-            self.new_html = [x.decode("latin-1") for x in e.readlines()]
+            self.newHtml = [x.decode("latin-1") for x in e.readlines()]
             print("HTTPError 500; continuing listenting process.")
         except (URLError, ConnectionResetError):
             print("URL ERROR")
@@ -78,47 +68,42 @@ class Changes:
         open(self.archive, "a").close()
 
         with open(self.archive, "rb+") as old:
-            self.old_html = [x.decode("latin-1") for x in old.readlines()]
+            self.oldHtml = [x.decode("latin-1") for x in old.readlines()]
             old.seek(0)
             old.truncate()
-            old.writelines(x.encode("latin-1") for x in self.new_html)
+            old.writelines(x.encode("latin-1") for x in self.newHtml)
             return True
 
     def diff(self) -> "list[str]":
-        self.change_list.clear()
-        # print(self.old_html)
-        # print(self.new_html)
-        for a, b in zip(self.old_html, self.new_html):
-            # if any(streams in a for streams in current_streams): continue
-            # if any(streams in a for streams in current_streams): continue
-            if a != b:
-                self.change_list.append(b)
+        """returns all the differences.
 
-        return self.change_list
+        Returns:
+            list[str]: all changes that were made in the file.
+        """
+        self.changeList.clear()
+        for old, new in zip(self.oldHtml, self.newHtml):
+            if old != new:
+                self.changeList.append(new)
+        return self.changeList
 
-    def email(self):
-        message = f"{len(self.change_list)} changes in {self.url}:\n"
-        message += "".join(self.change_list)
-        email_alert.send(message)
-
-    def check_for_streams(self):
-        with open(self.archive, "r") as f_archive:
-            file = f_archive.read()
+    def checkForStreams(self):
+        """Checks if there are streams online or not"""
+        with open(self.archive, "r") as archiveFile:
+            file = archiveFile.read()
             if "SSLLOGIN" in file:
-                # email_alert.send('SSLLOGIN Required')
-                # push_notify.send_notification_to_dev('SSLLOGIN', 'Raspberry pi needs SSLLOGIN')
                 print("Raspberry pi needs SSLLOGIN")
                 return
             return "No streams currently online." not in file
             # return 'No streams currently online.' not in file
 
 
-def regex_finder(tag: str, html: str, replace_text: bool = True) -> "list[str]":
-    """
-    regex_finder finds strings after a tag using regex matching
+def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> "list[str]":
+    """regexFinder finds strings after a tag using regex matching
+
     Args:
         tag (str): a tag in the html such as "data-mnt" or "data-streams"
         html (str): the html string to parserTest
+
     Returns:
         str: the string attached to the tag.
     """
@@ -130,91 +115,96 @@ def regex_finder(tag: str, html: str, replace_text: bool = True) -> "list[str]":
     for match in matches:
         m = match.group()
         m = m.replace(tag, "").replace("=", "").replace("'", "")
-        if replace_text:
+        if shouldReplaceText:
             m = m.replace("/", "").title()
         list_matches.append(m)
     return list_matches
 
 
 def run(sc: sched.scheduler):
-    global titles, bodies, host_addresses
+    """main loop that runs every 15 esconds.
+
+    Args:
+        sc (sched.scheduler): to recursively run this function every x seconds.
+    """
+    global titles, bodies, hostAddresses
     url = "http://hbniaudio.hbni.net/"
-    lister = Changes(url)
-    lister.update()
+    websiteListener = Changes(url)
+    websiteListener.update()
     dt = datetime.now()
-    if not lister.check_for_streams():
+    if not websiteListener.checkForStreams():
         print(
-            f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKBLUE}No streams currently online{bcolors.ENDC}"
+            f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKBLUE}No streams currently online{Colors.ENDC}"
         )
         titles.clear()
         bodies.clear()
-        host_addresses.clear()
+        hostAddresses.clear()
         IS_DELAYED = "NULL"
         s.enter(15, 1, run, (sc,))
         return
 
-    if not lister.diff():
+    if not websiteListener.diff():
         print(
-            f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKCYAN}No differences found{bcolors.ENDC}"
+            f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKCYAN}No differences found{Colors.ENDC}"
         )
         s.enter(15, 1, run, (sc,))
         return
 
-    changes = lister.diff()
+    changes = websiteListener.diff()
 
     try:
         for change in changes:
             print(
-                f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Changes: {change}{bcolors.ENDC}"
+                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Changes: {change}{Colors.ENDC}"
             )
-            app_log.info(f"{dt} - Changes: {change}")
-            titles = regex_finder(tag="data-mnt", html=change)
-            bodies = regex_finder(tag="data-stream", html=change)
-            host_addresses = regex_finder(tag="data-mnt", html=change, replace_text=False)
+            appLog.info(f"{dt} - Changes: {change}")
+            titles = regexFinder(tag="data-mnt", html=change)
+            bodies = regexFinder(tag="data-stream", html=change)
+            hostAddresses = regexFinder(
+                tag="data-mnt", html=change, shouldReplaceText=False
+            )
             print(
-                f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Titles: {titles}{bcolors.ENDC}"
+                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Titles: {titles}{Colors.ENDC}"
             )
-            app_log.info(f"{dt} - Titles: {titles}")
+            appLog.info(f"{dt} - Titles: {titles}")
             print(
-                f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Bodies: {bodies}{bcolors.ENDC}"
+                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Bodies: {bodies}{Colors.ENDC}"
             )
-            app_log.info(f"{dt} - Bodies: {bodies}")
+            appLog.info(f"{dt} - Bodies: {bodies}")
             print(
-                f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Host Addresses: {host_addresses}{bcolors.ENDC}"
+                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Host Addresses: {hostAddresses}{Colors.ENDC}"
             )
-            app_log.info(f"{dt} - Host Addresses: {host_addresses}")
+            appLog.info(f"{dt} - Host Addresses: {hostAddresses}")
             if len(titles) != 0:
                 break
-        if len(titles) == 0 or len(bodies) == 0 or len(host_addresses) == 0:
+        if len(titles) == 0 or len(bodies) == 0 or len(hostAddresses) == 0:
             print(
-                f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}No data could be found in changes{bcolors.ENDC}"
+                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.FAIL}No data could be found in changes{Colors.ENDC}"
             )
             print(
-                f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKBLUE}Starting next cylce{bcolors.ENDC}"
+                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKBLUE}Starting next cylce{Colors.ENDC}"
             )
             s.enter(15, 1, run, (sc,))
             return
     except Exception as e:  # IndexError
+        print(f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.FAIL}Error: {e}{Colors.ENDC}")
+        appLog.info(f"{dt} - Error: {e}")
         print(
-            f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}Error: {e}{bcolors.ENDC}"
+            f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.FAIL}No data could be found for active streams{Colors.ENDC}"
         )
-        app_log.info(f"{dt} - Error: {e}")
+        appLog.info(f"{dt} - No data could be found for active streams")
         print(
-            f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}No data could be found for active streams{bcolors.ENDC}"
+            f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.FAIL}Starting next cylce{Colors.ENDC}"
         )
-        app_log.info(f"{dt} - No data could be found for active streams")
-        print(
-            f"{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.FAIL}Starting next cylce{bcolors.ENDC}"
-        )
-        app_log.info(f"{dt} - Starting next cycle")
+        appLog.info(f"{dt} - Starting next cycle")
         s.enter(15, 1, run, (sc,))
         return
 
-    for title, body, address in zip(titles, bodies, host_addresses):
+    for title, body, address in zip(titles, bodies, hostAddresses):
         print(
-            f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Host: {title} Description: {body}{bcolors.ENDC}"
+            f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Host: {title} Description: {body}{Colors.ENDC}"
         )
-        app_log.info(f"{dt} - Host: {title} Description: {body} - Recording starting")
+        appLog.info(f"{dt} - Host: {title} Description: {body} - Recording starting")
         fileName = f"{title} - {body}"
         threading.Thread(
             target=download,
@@ -228,10 +218,16 @@ def run(sc: sched.scheduler):
 
 
 def download(fileName: str, hostAddress: str):
+    """The main Record/Download/Upload function.
+
+    Args:
+        fileName (str): the name of the file thats being streamed
+        hostAddress (str): the address to the stream
+    """
     dt = datetime.now()
-    app_log.info(f"{dt} - Started recording")
+    appLog.info(f"{dt} - Started recording")
     print(
-        f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Started recording thread{bcolors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Started recording{Colors.ENDC}"
     )
     timestr = datetime.now().strftime("%B %d %A %Y %I_%M %p")
     recordingstr = time.strftime("%Y%m%d%H%M%S")
@@ -245,33 +241,47 @@ def download(fileName: str, hostAddress: str):
         ]
     )
     p.communicate()
-    app_log.info(f"{dt} - Recorded ended")
+    appLog.info(f"{dt} - Recording stopped")
     print(
-        f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Recording stopped{bcolors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
+
+    appLog.info(f"{dt} - Removing silence")
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
+    )
+    RemoveSilence.removeSilence(
+        filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3"
+    )
+    appLog.info(f"{dt} - Silence Removed")
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Silence Removed{Colors.ENDC}"
+    )
+
     os.rename(
         f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
         f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3",
     )
     print(
-        f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Starting upload to Mega{bcolors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Starting upload to Mega{Colors.ENDC}"
     )
-    app_log.info(f"{dt} - Starting upload to Mega")
+
+    appLog.info(f"{dt} - Starting upload to Mega")
     MegaUploader.upload(
-        file_path=f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3", date=timestr
+        filePath=f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3", date=timestr
     )
-    app_log.info(f"{dt} - Done uploading")
+    appLog.info(f"{dt} - Done uploading")
     print(
-        f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Done uploading{bcolors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Done uploading{Colors.ENDC}"
     )
 
 
 def main():
     s.enter(0, 0, run, (s,))
     print(
-        f"{bcolors.BOLD}{datetime.now()}{bcolors.ENDC} - {bcolors.HEADER}Starting stream listener{bcolors.ENDC}"
+        f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.HEADER}Starting stream listener{Colors.ENDC}"
     )
-    app_log.info(f"{datetime.now()} - Starting stream recorder")
+    appLog.info(f"{datetime.now()} - Starting stream recorder")
     s.run()
 
 
