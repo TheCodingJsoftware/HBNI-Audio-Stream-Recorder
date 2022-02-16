@@ -1,0 +1,1 @@
+FOLDER_LOCATION: str= 'F:/Code/Python-Projects/HBNI-Audio-Stream-Recorder'

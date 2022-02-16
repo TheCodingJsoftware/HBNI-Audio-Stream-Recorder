@@ -11,6 +11,7 @@ from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 import MegaUploader
 import LinksJson
+import GlobalVariables
 
 os.system('clear')
 s = sched.scheduler(time.time, time.sleep)
@@ -20,7 +21,8 @@ host_addresses: list = []
 
 log_formatter = logging.Formatter('%(message)s')
 file_name = datetime.today().strftime('%Y-%m-%d')
-logFile = f'/home/pi/hbni-audio-stream-recorder/logs/{file_name}.log'
+FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
+logFile = f'{FOLDER_LOCATION}/logs/{file_name}.log'
 
 my_handler = RotatingFileHandler(
     logFile,
@@ -53,7 +55,7 @@ class bcolors:
 
 
 class Changes:
-    def __init__(self, url: str, archive: str = '/home/pi/hbni-audio-stream-recorder/archived_page.html'):
+    def __init__(self, url: str, archive: str = f'{FOLDER_LOCATION}/archived_page.html'):
         self.url = url
         self.new_html = []
         self.old_html = []
@@ -207,19 +209,19 @@ def download(fileName: str, hostAddress: str):
             '-y',
             '-i',
             f'http://hbniaudio.hbni.net:8000{hostAddress}',
-            f'/home/pi/hbni-audio-stream-recorder/CURRENTLY_RECORDING/{recordingstr}.mp3'
+            f'{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3'
         ]
     )
     p.communicate()
     app_log.info(f"{dt} - Recorded ended")
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Recording stopped{bcolors.ENDC}")
     os.rename(
-            f'/home/pi/hbni-audio-stream-recorder/CURRENTLY_RECORDING/{recordingstr}.mp3',
-            f'/home/pi/hbni-audio-stream-recorder/Recordings/{fileName} - {timestr}.mp3'
+            f'{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3',
+            f'{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3'
         )
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Starting upload to Mega{bcolors.ENDC}")
     app_log.info(f"{dt} - Starting upload to Mega")
-    MegaUploader.upload(file_path=f'/home/pi/hbni-audio-stream-recorder/Recordings/{fileName} - {timestr}.mp3', date=timestr)
+    MegaUploader.upload(file_path=f'{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3', date=timestr)
     app_log.info(f"{dt} - Done uploading")
     print(f"{bcolors.ENDC}{bcolors.BOLD}{dt}{bcolors.ENDC} - {bcolors.OKGREEN}Done uploading{bcolors.ENDC}")
 

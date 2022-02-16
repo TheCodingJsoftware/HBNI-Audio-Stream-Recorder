@@ -10,11 +10,11 @@ from flask import send_file
 from flask import Flask, render_template
 from flask import current_app, url_for
 import LinksJson
-
+import GlobalVariables
 
 app = Flask(__name__)
 s = sched.scheduler(time.time, time.sleep)
-
+FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
 
 @app.route('/')
 def index():
@@ -33,7 +33,7 @@ def index():
     fileNames = []
     downloadLinks = []
 
-    with open('websiteDownloadLinks.json', 'r') as f:
+    with open(f'{FOLDER_LOCATION}/websiteDownloadLinks.json', 'r') as f:
         data = json.load(f)
     for fileName in data:
         newFileName = fileName.replace('_', ':').replace('.mp3', '')

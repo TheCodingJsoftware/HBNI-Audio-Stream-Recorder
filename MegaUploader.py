@@ -5,8 +5,11 @@ import json
 import requests
 from mega import Mega
 import LinksJson
+import GlobalVariables
 
-with open('/home/pi/hbni-audio-stream-recorder/credentials.json', 'r') as f:
+FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
+
+with open(f'{FOLDER_LOCATION}/credentials.json', 'r') as f:
 	credentials = json.load(f)
 	mega = Mega({'verbose': True})
 	mega._login_user(credentials['username'],credentials['password'])

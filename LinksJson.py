@@ -2,9 +2,12 @@ import json
 import requests
 from datetime import datetime
 from git import Repo
+import GlobalVariables
+
+FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
 
 def loadJson() -> dict:
-    with open('/home/pi/hbni-audio-stream-recorder/downloadLinks.json', 'r') as f:
+    with open(f'{FOLDER_LOCATION}/downloadLinks.json', 'r') as f:
         data = json.load(f)
     return data
 
@@ -18,8 +21,8 @@ def addDownloadLink(fileName: str, downloadLink: str, date: str):
 
 def uploadDatabase():
     addDownloadLink('t', 't', 's')
-    repo = Repo('/home/pi/hbni-audio-stream-recorder')  # if repo is CWD just do '.'
-    repo.index.add(['/home/pi/hbni-audio-stream-recorder/downloadLinks.json'])
+    repo = Repo('.')  # if repo is CWD just do '.'
+    repo.index.add([f'{FOLDER_LOCATION}/downloadLinks.json'])
     repo.index.commit('Updated downloadLinks.json file.')
     origin = repo.remote('origin')
     origin.push()
