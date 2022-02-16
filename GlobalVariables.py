@@ -1,1 +1,1 @@
-FOLDER_LOCATION: str= 'F:/Code/Python-Projects/HBNI-Audio-Stream-Recorder'
+FOLDER_LOCATION: str = "F:/Code/Python-Projects/HBNI-Audio-Stream-Recorder"

@@ -1,22 +1,23 @@
-import os
-import time
 import json
+import os
 import sched
-import requests
 import threading
+import time
 from os import listdir
 from os.path import isfile, join
-from flask import send_file
-from flask import Flask, render_template
-from flask import current_app, url_for
-import LinksJson
+
+import requests
+from flask import Flask, current_app, render_template, send_file, url_for
+
 import GlobalVariables
+import LinksJson
 
 app = Flask(__name__)
 s = sched.scheduler(time.time, time.sleep)
 FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
 
-@app.route('/')
+
+@app.route("/")
 def index():
     # recordingsDir = 'F:\\Code\\Python-Projects\\Hutterite-Church\\Recorder\\Recordings'
     # downloadableRecordings = [
@@ -33,40 +34,41 @@ def index():
     fileNames = []
     downloadLinks = []
 
-    with open(f'{FOLDER_LOCATION}/websiteDownloadLinks.json', 'r') as f:
+    with open(f"{FOLDER_LOCATION}/websiteDownloadLinks.json", "r") as f:
         data = json.load(f)
     for fileName in data:
-        newFileName = fileName.replace('_', ':').replace('.mp3', '')
+        newFileName = fileName.replace("_", ":").replace(".mp3", "")
         fileNames.append(newFileName)
         downloadLinks.append(LinksJson.getDownloadLink(fileName))
     fileNames.reverse()
     downloadLinks.reverse()
     downloadableRecordings = zip(fileNames, downloadLinks)
-    return render_template('index.html', downloadableRecordings=downloadableRecordings)
+    return render_template("index.html", downloadableRecordings=downloadableRecordings)
 
 
 @app.route("/download/<path>")
 def download(path=None):
     print(path)
-    path = path.split('\\')
-    fileName = path[-1].replace(':', '_')
-    fileName += '.mp3'
+    path = path.split("\\")
+    fileName = path[-1].replace(":", "_")
+    fileName += ".mp3"
     path.pop(-1)
-    path.append('Recordings')
+    path.append("Recordings")
     path.append(fileName)
-    path = '\\'.join(path)
+    path = "\\".join(path)
     return send_file(path, as_attachment=True)
+
 
 def downloadDatabase():
     print("Updating database")
-    url = 'https://raw.githubusercontent.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/master/downloadLinks.json'
+    url = "https://raw.githubusercontent.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/master/downloadLinks.json"
     req = requests.get(url)
     if req.status_code == requests.codes.ok:
         data = dict(req.json())  # the response is a JSON
-        with open('websiteDownloadLinks.json', 'w+') as f:
+        with open("websiteDownloadLinks.json", "w+") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
     else:
-        print('Content was not found.')
+        print("Content was not found.")
 
 
 def downloadThread():
@@ -74,10 +76,11 @@ def downloadThread():
         downloadDatabase()
         time.sleep(300)
 
+
 if __name__ == "__main__":
     # website_url = 'hbniaudioarchive.hbni.net:5000'
     # app.config['SERVER_NAME'] = website_url
     # with app.test_request_context():
     #     url = url_for('index', _external=True)
     threading.Thread(target=downloadThread).start()
-    app.run(host='10.0.0.217', port='5000', debug=False, threaded=True)
+    app.run(host="10.0.0.217", port="5000", debug=False, threaded=True)

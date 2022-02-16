@@ -1,12 +1,14 @@
 # b00UzCzL
-import re
-import os
 import json
+import os
+import re
+
 import requests
 from mega import Mega
 from rich import print
-import LinksJson
+
 import GlobalVariables
+import LinksJson
 
 FOLDER_LOCATION: str = GlobalVariables.FOLDER_LOCATION
 
