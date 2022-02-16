@@ -37,7 +37,7 @@ def addDownloadLink(fileName: str, downloadLink: str, date: str):
 def uploadDatabase():
     """uploads the downloadLinks.json file to github"""
     repo = Repo(".")  # if repo is CWD just do '.'
-    repo.index.add([f"{FOLDER_LOCATION}/downloadLinks.json"])
+    repo.index.add(["downloadLinks.json"])
     repo.index.commit("Updated downloadLinks.json file.")
     origin = repo.remote("origin")
     origin.push()
