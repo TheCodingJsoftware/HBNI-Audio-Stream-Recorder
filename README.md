@@ -57,7 +57,7 @@ sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
 Add this line before ```@xscreensaver -no-splash```
 
 ```
-@lxterminal --working-directory="/home/pi/HBNI-Audio-Recorder" -e gunicorn -w 1 -b 10.0.0.198:5000 Website:app
+@lxterminal --working-directory="/home/pi/HBNI-Audio-Stream-Recorder" -e gunicorn -w 1 -b 10.0.0.198:5000 Website:app
 ```
 
 ```Ctrl+S```
