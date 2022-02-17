@@ -66,14 +66,14 @@ Add this line before ```@xscreensaver -no-splash```
 
 ## Tree Directory
 ```
-+-- logs
-+-- CURRENTLY_RECORDING
-+-- Recordings
-+-- static
++-- logs/
++-- CURRENTLY_RECORDING/
++-- Recordings/
++-- static/
 |   +-- favicon.png
 |   +-- hbni_logo_dark.png
 |   +-- icon.png
-+-- templates
++-- templates/
 |   +-- index.html
 +-- .gitignore
 +-- archived_page.html
