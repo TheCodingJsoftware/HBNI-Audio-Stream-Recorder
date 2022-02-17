@@ -72,11 +72,6 @@ h4 {
 	text-align: center;
 }
 
-@media (max-width: 600px) {
-	#header {
-		font-size: 20px;
-	}
-}
 
 #menu {
 	/* height: 1000px; */
@@ -93,12 +88,13 @@ h4 {
 
 	background-color: #4CC713;
 	color: white;
+	width: auto;
 
 	font-family: sans-serif;
 	text-decoration: none;
 	font-size: 0.9em;
 	text-align: center;
-	border-radius: 20px;
+	border-radius: 50px;
 	text-indent: 15px;
 }
 
@@ -170,5 +166,15 @@ h4 {
 	100% {
 		margin-top: 0;
 		opacity: 0;
+	}
+}
+
+@media (max-width: 600px) {
+	h1 {
+		font-size: 1.9em;
+	}
+
+	h2 {
+		font-size: 1.4em;
 	}
 }

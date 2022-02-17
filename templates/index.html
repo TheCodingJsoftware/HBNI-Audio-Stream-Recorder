@@ -2,6 +2,7 @@
 <meta content="HBNI Audio Streaming Archive" property="title">
 <link rel="icon" href="/static/favicon.png">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href='/static/main.css' />
     <div id="menu">
         <img src="/static/hbni_logo_dark.png">
@@ -12,9 +13,7 @@
         {% for fileName, downloadLink in downloadableRecordings %}
             <p>
                 <a class="buttonDownload" target="_blank" href={{ downloadLink }}>
-                    <i class="fa fa fa-github fa-3x"></i>
-                    <span class="df", style="font-weight:bold">Download</span>
-                    <span class="dfn">{{ fileName }}</span>
+                    <span>{{ fileName }}</span>
                 </a>
             </p>
         {% endfor %}
