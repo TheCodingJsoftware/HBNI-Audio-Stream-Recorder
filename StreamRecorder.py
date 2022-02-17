@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+__author__ = "Jared Gross"
+__copyright__ = "Copyright 2022, StreamRecorder"
+__credits__ = ["Jared Gross"]
+__license__ = "MIT"
+__version__ = "1.0.0"
+__updated__ = "2022-02-17 15:40:44"
+__maintainer__ = "Jared Gross"
+__email__ = "jared@pinelandfarms.ca"
+__status__ = "Production"
+
 import logging
 import os
 import re
@@ -10,7 +23,6 @@ from logging.handlers import RotatingFileHandler
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
-import LinksJson
 import MegaUploader
 import RemoveSilence
 from GlobalVariables import FOLDER_LOCATION, Colors
@@ -48,7 +60,7 @@ class Changes:
         self.changeList: list[str] = []
         self.archive = archive
 
-    def update(self):
+    def update(self) -> None:
         """Gets the html from the website and stores it's contents in a file.
 
         Returns:
@@ -86,7 +98,7 @@ class Changes:
                 self.changeList.append(new)
         return self.changeList
 
-    def checkForStreams(self):
+    def checkForStreams(self) -> None:
         """Checks if there are streams online or not"""
         with open(self.archive, "r") as archiveFile:
             file = archiveFile.read()
@@ -121,7 +133,7 @@ def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> "list[st
     return list_matches
 
 
-def run(sc: sched.scheduler):
+def run(sc: sched.scheduler) -> None:
     """main loop that runs every 15 esconds.
 
     Args:
@@ -217,7 +229,7 @@ def run(sc: sched.scheduler):
     s.enter(15, 1, run, (sc,))
 
 
-def download(fileName: str, hostAddress: str):
+def download(fileName: str, hostAddress: str) -> None:
     """The main Record/Download/Upload function.
 
     Args:
@@ -276,7 +288,7 @@ def download(fileName: str, hostAddress: str):
     )
 
 
-def main():
+def main() -> None:
     s.enter(0, 0, run, (s,))
     print(
         f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.HEADER}Starting stream listener{Colors.ENDC}"

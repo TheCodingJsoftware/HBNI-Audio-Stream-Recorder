@@ -7,7 +7,7 @@ import requests
 from mega import Mega
 from rich import print
 
-import LinksJson
+import DownloadLinks
 from GlobalVariables import FOLDER_LOCATION
 
 with open(f"{FOLDER_LOCATION}/credentials.json", "r") as f:
@@ -21,4 +21,4 @@ print(files)
 for file in files:
     fileName = files[file]["a"]["n"]
     print(fileName)
-    print(LinksJson.getDownloadLink(fileName=fileName))
+    print(DownloadLinks.getDownloadLink(fileName=fileName))

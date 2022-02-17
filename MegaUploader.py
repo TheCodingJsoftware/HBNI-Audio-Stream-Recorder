@@ -6,11 +6,11 @@ import re
 import requests
 from mega import Mega
 
-import LinksJson
+import DownloadLinks
 from GlobalVariables import FOLDER_LOCATION, Colors
 
 
-def upload(filePath: str, date: str):
+def upload(filePath: str, date: str) -> None:
     """uploades file to mega account
 
     Args:
@@ -29,4 +29,4 @@ def upload(filePath: str, date: str):
 
     uploadedFile = mega.upload(filePath, folder[0])
     downloadLink = mega.get_upload_link(uploadedFile)
-    LinksJson.addDownloadLink(fileName=fileName, downloadLink=downloadLink, date=date)
+    DownloadLinks.addDownloadLink(fileName=fileName, downloadLink=downloadLink, date=date)

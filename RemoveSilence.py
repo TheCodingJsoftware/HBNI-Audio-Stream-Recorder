@@ -3,7 +3,7 @@ from pydub import AudioSegment
 
 def __findSilence(
     sound: AudioSegment, silenceThreshold: int = -30.0, chunkSize: int = 10
-):
+) -> int:
     """iterate over chunks until you find the first one with sound
 
     Args:
@@ -25,7 +25,7 @@ def __findSilence(
     return trimMilliSeconds
 
 
-def removeSilence(filePath: str):
+def removeSilence(filePath: str) -> None:
     """removes silence from beggining and the end of the audio file
 
     Args:
