@@ -2,6 +2,8 @@
 
 Records HBNI streams as the show up.
 
+## Stream Recorder
+
 [ffmpeg download](https://www.filehorse.com/download-ffmpeg/)
 
 Requirements:
@@ -12,12 +14,57 @@ Requirements:
 pip install flask natsort mega.py gitpython
 ```
 
-**STARTING WEBSERVER PRODUCTION**
+
+## Server setup
+
+### Requirements:
+
+**PYTHON 3.9**
+
 ```
-gunicorn -w 4 -b 10.0.0.150:5000 Website:app
+pip install flask gitpython
 ```
 
-Tree Directory
+### Autoreboot
+
+Run this:
+
+```
+sudo crontab -e
+```
+
+Choose nano [1]
+
+Add this line at the end
+
+```
+30 4 * * * /sbin/shutdown -r now
+```
+
+```Ctrl+S```
+
+```Ctrl+X```
+
+
+### Starting server
+
+Go into this file:
+
+```
+sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+```
+
+Add this line before ```@xscreensaver -no-splash```
+
+```
+@lxterminal --working-directory="/home/pi/HBNI-Audio-Recorder" -e gunicorn -w 1 -b 10.0.0.198:5000 Website:app
+```
+
+```Ctrl+S```
+
+```Ctrl+X```
+
+## Tree Directory
 ```
 +-- logs
 +-- CURRENTLY_RECORDING
