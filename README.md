@@ -79,11 +79,11 @@ Add this line before ```@xscreensaver -no-splash```
 +-- archived_page.html
 +-- credentials.json
 +-- downloadLinks.json
++-- DownloadLinks.py
 +-- ffmpeg.exe
 +-- ffplay.exe
 +-- ffprobe.exe
 +-- GlobalVariables.py
-+-- LinksJson.py
 +-- MegaGetFileList.py
 +-- MegaUploader.py
 +-- README.md
