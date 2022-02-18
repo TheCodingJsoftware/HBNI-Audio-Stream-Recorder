@@ -29,5 +29,5 @@ def upload(filePath: str, date: str) -> None:
 
     uploadedFile = mega.upload(filePath, folder[0])
     downloadLink = mega.get_upload_link(uploadedFile)
-    Zip.zipFile(fileToZipPath=filePath)
+    Zip.zipFile(pathToFile=filePath)
     DownloadLinks.addDownloadLink(fileName=fileName, downloadLink=downloadLink, date=date)
