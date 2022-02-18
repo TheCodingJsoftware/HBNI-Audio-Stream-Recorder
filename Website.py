@@ -9,7 +9,6 @@ from os.path import isfile, join
 import requests
 from flask import Flask, current_app, render_template, send_file, url_for
 
-import DownloadLinks
 from GlobalVariables import FOLDER_LOCATION
 
 app = Flask(__name__)
@@ -18,15 +17,14 @@ s = sched.scheduler(time.time, time.sleep)
 
 @app.route("/")
 def index() -> None:
-    fileNames = []
-    downloadLinks = []
+    fileNames: list[str] = []
+    downloadLinks: list[str] = []
 
-    with open(f"{FOLDER_LOCATION}/websiteDownloadLinks.json", "r") as f:
-        data = json.load(f)
+    data = loadJson()
     for fileName in data:
-        newFileName = fileName.replace("_", ":").replace(".mp3", "")
+        newFileName: str = fileName.replace("_", ":").replace(".mp3", "")
         fileNames.append(newFileName)
-        downloadLinks.append(DownloadLinks.getDownloadLink(fileName))
+        downloadLinks.append(getDownloadLink(fileName=fileName))
     fileNames.reverse()
     downloadLinks.reverse()
     downloadableRecordings = zip(fileNames, downloadLinks)
@@ -49,6 +47,33 @@ def downloadThread() -> None:
     while True:
         downloadDatabase()
         time.sleep(300)
+
+
+def loadJson() -> dict:
+    """Loads the websiteDownloadLink.json file
+
+    Returns:
+        dict: all download links
+    """
+    with open(f"{FOLDER_LOCATION}/websiteDownloadLinks.json", "r") as f:
+        data = json.load(f)
+    return data
+
+
+def getDownloadLink(fileName: str) -> str:
+    """Gets the download link from the fileName
+
+    Args:
+        fileName (str): name of the file you want the link for
+
+    Returns:
+        str: download link from taht file name or None if it can't find it.
+    """
+    data = loadJson()
+    try:
+        return data[fileName]["downloadLink"]
+    except KeyError:
+        return None
 
 
 threading.Thread(target=downloadThread).start()
