@@ -39,7 +39,7 @@ def downloadDatabase() -> None:
     req = requests.get(url)
     if req.status_code == requests.codes.ok:
         data = dict(req.json())  # the response is a JSON
-        with open("websiteDownloadLinks.json", "w+") as f:
+        with open(f"{FOLDER_LOCATION}/websiteDownloadLinks.json", "w+") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
     else:
         print("Content was not found.")
@@ -52,3 +52,5 @@ def downloadThread() -> None:
 
 
 threading.Thread(target=downloadThread).start()
+
+app.run(host="10.0.0.217", port="5000", debug=False, threaded=True)
