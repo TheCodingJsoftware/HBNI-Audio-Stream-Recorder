@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-17 15:40:44"
+__updated__ = "2022-02-17 20:33:25"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -25,6 +25,7 @@ from urllib.request import urlopen
 
 import MegaUploader
 import RemoveSilence
+import Zip
 from GlobalVariables import FOLDER_LOCATION, Colors
 
 s = sched.scheduler(time.time, time.sleep)
@@ -151,7 +152,6 @@ def run(sc: sched.scheduler) -> None:
         titles.clear()
         bodies.clear()
         hostAddresses.clear()
-        IS_DELAYED = "NULL"
         s.enter(15, 1, run, (sc,))
         return
 
@@ -194,7 +194,7 @@ def run(sc: sched.scheduler) -> None:
                 f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.FAIL}No data could be found in changes{Colors.ENDC}"
             )
             print(
-                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKBLUE}Starting next cylce{Colors.ENDC}"
+                f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKBLUE}Starting next cycle{Colors.ENDC}"
             )
             s.enter(15, 1, run, (sc,))
             return
@@ -206,7 +206,7 @@ def run(sc: sched.scheduler) -> None:
         )
         appLog.info(f"{dt} - No data could be found for active streams")
         print(
-            f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.FAIL}Starting next cylce{Colors.ENDC}"
+            f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.FAIL}Starting next cycle{Colors.ENDC}"
         )
         appLog.info(f"{dt} - Starting next cycle")
         s.enter(15, 1, run, (sc,))
@@ -285,6 +285,19 @@ def download(fileName: str, hostAddress: str) -> None:
     appLog.info(f"{dt} - Done uploading")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Done uploading{Colors.ENDC}"
+    )
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Starting compression{Colors.ENDC}"
+    )
+    Zip.zipFile(pathToFile=f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3")
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}File compressed{Colors.ENDC}"
+    )
+    appLog.info(f"{dt} - File compressed")
+    os.remove(f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3")
+    appLog.info(f"{dt} - Original copy deleted")
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Original copy deleted{Colors.ENDC}"
     )
 
 
