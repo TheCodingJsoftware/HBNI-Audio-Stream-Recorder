@@ -17,6 +17,11 @@ s = sched.scheduler(time.time, time.sleep)
 
 @app.route("/")
 def index() -> None:
+    """Main page
+
+    Returns:
+        _type_: webpage
+    """
     fileNames: list[str] = []
     downloadLinks: list[str] = []
 
@@ -32,6 +37,7 @@ def index() -> None:
 
 
 def downloadDatabase() -> None:
+    """donwload database"""
     print("Updating database")
     url = "https://raw.githubusercontent.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/master/downloadLinks.json"
     req = requests.get(url)
@@ -44,6 +50,7 @@ def downloadDatabase() -> None:
 
 
 def downloadThread() -> None:
+    """update database ever 5 minutes"""
     while True:
         downloadDatabase()
         time.sleep(300)
