@@ -5,25 +5,16 @@ Records HBNI streams as the show up.
 ## Stream Recorder
 
 [ffmpeg download](https://www.filehorse.com/download-ffmpeg/)
-
-Requirements:
+ ### Requirements:
 
 **PYTHON 3.9**
 
 ```
-pip install flask natsort mega.py gitpython
+pip install flask natsort mega.py gitpython pydub
 ```
 
 
 ## Server setup
-
-### Requirements:
-
-**PYTHON 3.9**
-
-```
-pip install flask gitpython
-```
 
 ### Autoreboot
 
@@ -73,10 +64,12 @@ Add this line before ```@xscreensaver -no-splash```
 |   +-- favicon.png
 |   +-- hbni_logo_dark.png
 |   +-- icon.png
+|   +-- main.css
 +-- templates/
 |   +-- index.html
 +-- .gitignore
 +-- archived_page.html
++-- AudioFile.py
 +-- credentials.json
 +-- downloadLinks.json
 +-- DownloadLinks.py

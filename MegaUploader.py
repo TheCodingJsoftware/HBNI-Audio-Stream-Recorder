@@ -14,8 +14,8 @@ def upload(filePath: str, date: str, length: int) -> None:
     """uploades file to mega account
 
     Args:
-                    filePath (str): path to file that you want to upload
-                    date (str): date the file was created
+        filePath (str): path to file that you want to upload
+        date (str): date the file was created
     """
     fileName = filePath.split("/")[-1]
     with open(f"{FOLDER_LOCATION}/credentials.json", "r") as credentialsFile:
