@@ -50,7 +50,7 @@ def downloadDatabase() -> None:
 
 
 def downloadThread() -> None:
-    """update database ever 5 minutes"""
+    """update database every 5 minutes"""
     while True:
         downloadDatabase()
         time.sleep(300)

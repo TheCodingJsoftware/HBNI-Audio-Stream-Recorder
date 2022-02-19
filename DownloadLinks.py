@@ -18,7 +18,7 @@ def loadJson() -> dict:
     return data
 
 
-def addDownloadLink(fileName: str, downloadLink: str, date: str) -> None:
+def addDownloadLink(fileName: str, downloadLink: str, date: str, length: int) -> None:
     """Adds a new file to the downloadLinks.json file and updates the online database to github.
 
     Args:
@@ -27,7 +27,15 @@ def addDownloadLink(fileName: str, downloadLink: str, date: str) -> None:
         date (str): date the file was created.
     """
     data = loadJson()
-    data.update({fileName: {"date": date, "downloadLink": downloadLink}})
+    data.update(
+        {
+            fileName: {
+                "date": date,
+                "downloadLink": downloadLink,
+                "length": audioFileLength,
+            }
+        }
+    )
 
     with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
         json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)

@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-17 22:41:45"
+__updated__ = "2022-02-18 16:26:16"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -23,6 +23,7 @@ from logging.handlers import RotatingFileHandler
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
+import AudioFile
 import MegaUploader
 import RemoveSilence
 import Zip
@@ -270,31 +271,45 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Silence Removed{Colors.ENDC}"
     )
 
-    os.rename(
-        f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
-        f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3",
-    )
-    print(
-        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Starting upload to Mega{Colors.ENDC}"
+    audioFileLength: int = AudioFile.getAudioFileLength(
+        pathToFile=f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3"
     )
 
-    appLog.info(f"{dt} - Starting upload to Mega")
-    MegaUploader.upload(
-        filePath=f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3", date=timestr
+    timeDelta = datetime.timedelta(minutes=audioFileLength)
+    finalDeltatime: str = AudioFile.convertDeltatime(duration=timeDelta)
+    finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
+
+    os.rename(
+        f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
+        f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
     )
-    appLog.info(f"{dt} - Done uploading")
-    print(
-        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Done uploading{Colors.ENDC}"
-    )
+    if audioFileLength > 5:
+        print(
+            f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Starting upload to Mega{Colors.ENDC}"
+        )
+        appLog.info(f"{dt} - Starting upload to Mega")
+        MegaUploader.upload(
+            filePath=f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
+            date=timestr,
+            length=audioFileLength,
+        )
+        appLog.info(f"{dt} - Done uploading")
+        print(
+            f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Done uploading{Colors.ENDC}"
+        )
+    else:
+        print(
+            f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.WARNING}Recording is too small, probably a test stream and won't be uploaded.{Colors.ENDC}"
+        )
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Starting compression{Colors.ENDC}"
     )
-    Zip.zipFile(pathToFile=f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3")
+    Zip.zipFile(pathToFile=f"{FOLDER_LOCATION}/Recordings/{finalFileName}")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}File compressed{Colors.ENDC}"
     )
     appLog.info(f"{dt} - File compressed")
-    os.remove(f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3")
+    os.remove(f"{FOLDER_LOCATION}/Recordings/{finalFileName}")
     appLog.info(f"{dt} - Original copy deleted")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Original copy deleted{Colors.ENDC}"

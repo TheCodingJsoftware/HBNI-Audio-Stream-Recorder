@@ -64,6 +64,7 @@ logs/
 CURRENTLY_RECORDING
 credentials.json
 archivedPage.html
+archivedPage - Copy.html
 *.vscode
 __pycache__
 test.py

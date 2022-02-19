@@ -10,7 +10,7 @@ import Zip
 from GlobalVariables import FOLDER_LOCATION, Colors
 
 
-def upload(filePath: str, date: str) -> None:
+def upload(filePath: str, date: str, length: int) -> None:
     """uploades file to mega account
 
     Args:
@@ -30,4 +30,6 @@ def upload(filePath: str, date: str) -> None:
     uploadedFile = mega.upload(filePath, folder[0])
     downloadLink = mega.get_upload_link(uploadedFile)
     Zip.zipFile(pathToFile=filePath)
-    DownloadLinks.addDownloadLink(fileName=fileName, downloadLink=downloadLink, date=date)
+    DownloadLinks.addDownloadLink(
+        fileName=fileName, downloadLink=downloadLink, date=date, length=length
+    )
