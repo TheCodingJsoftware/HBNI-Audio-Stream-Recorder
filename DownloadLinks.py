@@ -32,7 +32,7 @@ def addDownloadLink(fileName: str, downloadLink: str, date: str, length: int) ->
             fileName: {
                 "date": date,
                 "downloadLink": downloadLink,
-                "length": audioFileLength,
+                "length": length,
             }
         }
     )

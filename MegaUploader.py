@@ -6,7 +6,6 @@ import requests
 from mega import Mega
 
 import DownloadLinks
-import Zip
 from GlobalVariables import FOLDER_LOCATION, Colors
 
 
@@ -29,7 +28,6 @@ def upload(filePath: str, date: str, length: int) -> None:
 
     uploadedFile = mega.upload(filePath, folder[0])
     downloadLink = mega.get_upload_link(uploadedFile)
-    Zip.zipFile(pathToFile=filePath)
     DownloadLinks.addDownloadLink(
         fileName=fileName, downloadLink=downloadLink, date=date, length=length
     )

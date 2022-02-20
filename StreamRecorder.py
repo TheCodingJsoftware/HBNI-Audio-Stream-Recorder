@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-18 16:26:16"
+__updated__ = "2022-02-19 19:01:45"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -272,7 +272,7 @@ def download(fileName: str, hostAddress: str) -> None:
     )
 
     audioFileLength: int = AudioFile.getAudioFileLength(
-        pathToFile=f"{FOLDER_LOCATION}/Recordings/{fileName} - {timestr}.mp3"
+        pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3"
     )
 
     timeDelta = datetime.timedelta(minutes=audioFileLength)
@@ -283,6 +283,7 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
         f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
     )
+
     if audioFileLength > 5:
         print(
             f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Starting upload to Mega{Colors.ENDC}"
