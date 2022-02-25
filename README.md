@@ -5,16 +5,39 @@ Records HBNI streams as the show up.
 ## Stream Recorder
 
 [ffmpeg download](https://www.filehorse.com/download-ffmpeg/)
- ### Requirements:
+ ## Requirements:
 
-**PYTHON 3.9**
+**PYTHON 3.8+**
 
 ```
-pip install flask natsort mega.py gitpython pydub
+pip install flask natsort mega.py gitpython pydub colorama
 ```
 
+## Server setup (Windows)
 
-## Server setup
+Create Batch file:
+
+`StreamRecorder.bat`
+
+With the following contents:
+```bat
+/path/to/python.exe /path/to/StreamRecorder.py %*
+```
+
+Example:
+
+```bat
+C:\Users\user\AppData\Local\Programs\Python\Python38\python.exe C:\Users\user\Desktop\HBNI-Audio-Stream-Recorder\StreamRecorder.py %*
+```
+
+Create a shortcut and paste it into the `Startup` directory:
+
+Directory Example:
+```
+C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+```
+
+## Server setup (Raspberry Pi)
 
 ### Autoreboot
 

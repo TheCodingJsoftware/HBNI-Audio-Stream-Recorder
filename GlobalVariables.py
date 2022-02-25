@@ -1,8 +1,10 @@
+import os
+
 from colorama import Fore, init
 
 init(convert=True)
 
-FOLDER_LOCATION: str = "F:/Code/Python-Projects/HBNI-Audio-Stream-Recorder"
+FOLDER_LOCATION: str = os.path.abspath(os.getcwd()).replace("\\", "/")
 
 
 class Colors:

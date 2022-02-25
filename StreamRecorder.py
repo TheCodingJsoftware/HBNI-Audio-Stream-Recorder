@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-24 21:44:59"
+__updated__ = "2022-02-25 15:21:28"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -34,6 +34,7 @@ s = sched.scheduler(time.time, time.sleep)
 titles: list = []
 bodies: list = []
 hostAddresses: list = []
+recordingPartNumber: int = 0
 
 logFormatter = logging.Formatter("%(message)s")
 logFileName = datetime.today().strftime("%Y-%m-%d")
@@ -237,6 +238,7 @@ def download(fileName: str, hostAddress: str) -> None:
         fileName (str): the name of the file thats being streamed
         hostAddress (str): the address to the stream
     """
+    global recordingPartNumber
     dt = datetime.now()
     appLog.info(f"{dt} - Started recording")
     print(
@@ -244,7 +246,7 @@ def download(fileName: str, hostAddress: str) -> None:
     )
     timestr = datetime.now().strftime("%B %d %A %Y %I_%M %p")
     recordingstr = time.strftime("%Y%m%d%H%M%S")
-    p = subprocess.Popen(
+    process = subprocess.Popen(
         [
             "{FOLDER_LOCATION}/ffmpeg",
             "-y",
@@ -253,7 +255,7 @@ def download(fileName: str, hostAddress: str) -> None:
             f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
         ]
     )
-    p.communicate()
+    process.communicate()
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
@@ -262,6 +264,7 @@ def download(fileName: str, hostAddress: str) -> None:
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()
         if regexFinder("data-mnt", html=html):  # If stream is still online
+            recordingPartNumber += 1
             threading.Thread(
                 target=download,
                 args=(
@@ -273,8 +276,12 @@ def download(fileName: str, hostAddress: str) -> None:
             print(
                 f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.WARNING}Recording restarted{Colors.ENDC}"
             )
+            os.rename(
+                f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
+                f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{fileName} - (Part {recordingPartNumber}).mp3",
+            )
             return
-
+    recordingPartNumber = 0
     appLog.info(f"{dt} - Removing silence")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
