@@ -49,7 +49,9 @@ def uploadDatabase() -> None:
     repo.index.commit("Updated downloadLinks.json file.")
     origin = repo.remote("origin")
     origin.push()
-    print(f"{Colors.ENDC}{Colors.OKGREEN}Updated downloadLinks.json file.{Colors.ENDC}")
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Updated downloadLinks.json file to github.{Colors.ENDC}"
+    )
 
 
 def downloadDatabase() -> None:
@@ -61,7 +63,9 @@ def downloadDatabase() -> None:
         with open("downloadLinks.json", "w+") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
     else:
-        print(f"{Colors.ENDC}{Colors.WARNING}Content was not found.{Colors.ENDC}")
+        print(
+            f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.WARNING}Content was not found.{Colors.ENDC}"
+        )
 
 
 def getDownloadLink(fileName: str) -> str:

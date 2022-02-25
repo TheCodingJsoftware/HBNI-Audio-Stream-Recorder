@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from datetime import datetime
 
 import requests
 from mega import Mega
@@ -23,7 +24,7 @@ def upload(filePath: str, date: str, length: int) -> None:
         mega._login_user(credentials["username"], credentials["password"])
         folder = mega.find("HBNI Audio Recording")
         print(
-            f"{Colors.ENDC}{Colors.OKGREEN}Successfully logged into Mega Account{Colors.ENDC}"
+            f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Successfully logged into Mega Account{Colors.ENDC}"
         )
 
     uploadedFile = mega.upload(filePath, folder[0])

@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-19 19:01:45"
+__updated__ = "2022-02-24 21:44:59"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -18,7 +18,7 @@ import sched
 import subprocess
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from logging.handlers import RotatingFileHandler
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
@@ -74,9 +74,9 @@ class Changes:
                 self.newHtml = [x.decode("latin-1") for x in byt.readlines()]
         except HTTPError as e:
             self.newHtml = [x.decode("latin-1") for x in e.readlines()]
-            print("HTTPError 500; continuing listenting process.")
+            print(f"HTTPError 500; continuing listenting process. {e}")
         except (URLError, ConnectionResetError):
-            print("URL ERROR")
+            print("URL ERROR, ConnectionResetError")
             return False
 
         open(self.archive, "a").close()
@@ -246,7 +246,7 @@ def download(fileName: str, hostAddress: str) -> None:
     recordingstr = time.strftime("%Y%m%d%H%M%S")
     p = subprocess.Popen(
         [
-            "ffmpeg",
+            "{FOLDER_LOCATION}/ffmpeg",
             "-y",
             "-i",
             f"http://hbniaudio.hbni.net:8000{hostAddress}",
@@ -254,10 +254,26 @@ def download(fileName: str, hostAddress: str) -> None:
         ]
     )
     p.communicate()
-    appLog.info(f"{dt} - Recording stopped")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
+    appLog.info(f"{dt} - Recording stopped")
+    Changes(url="http://hbniaudio.hbni.net/").update()
+    with open("archivedPage.html", "r") as htmlFile:
+        html = htmlFile.read()
+        if regexFinder("data-mnt", html=html):  # If stream is still online
+            threading.Thread(
+                target=download,
+                args=(
+                    fileName,
+                    hostAddress,
+                ),
+            ).start()
+            appLog.info(f"{dt} - Stream still online, restarting recording")
+            print(
+                f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.WARNING}Recording restarted{Colors.ENDC}"
+            )
+            return
 
     appLog.info(f"{dt} - Removing silence")
     print(
@@ -266,16 +282,12 @@ def download(fileName: str, hostAddress: str) -> None:
     RemoveSilence.removeSilence(
         filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3"
     )
-    appLog.info(f"{dt} - Silence Removed")
-    print(
-        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Silence Removed{Colors.ENDC}"
-    )
 
     audioFileLength: int = AudioFile.getAudioFileLength(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3"
     )
 
-    timeDelta = datetime.timedelta(minutes=audioFileLength)
+    timeDelta = timedelta(minutes=audioFileLength)
     finalDeltatime: str = AudioFile.convertDeltatime(duration=timeDelta)
     finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
 
