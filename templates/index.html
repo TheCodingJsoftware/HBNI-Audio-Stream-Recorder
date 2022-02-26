@@ -4,12 +4,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href='/static/main.css' />
-    <div id="menu">
-        <img src="/static/hbni_logo_dark.png">
-        <h1>HBNI Audio Streaming Archive</h1>
+    <div id="logo">
+        <img src="/static/hbnilogo.png">
     </div>
+    <div id="menu">
+        <h1 id="header">HBNI Audio Streaming Archive</h1>
+    </div>
+    <h4> Downloads </h4>
     <div id="downloads">
-        <h2> Downloads </h2>
         {% for fileName, downloadLink in downloadableRecordings %}
             <p>
                 <a class="buttonDownload" target="_blank" href={{ downloadLink }}>
