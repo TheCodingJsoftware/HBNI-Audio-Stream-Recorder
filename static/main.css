@@ -1,13 +1,56 @@
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+
 html {
-	background-color: #1170B3;
+	justify-content: center;
+	position: center;
+	height: 100%;
+	text-align: center;
+	align-items: center;
+	margin: auto;
+	padding: 10px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-	background-color: #1170B3;
-	font-family: Verdana, sans-serif;
+	justify-content: center;
+	position: center;
+	align-items: center;
+	margin: auto;
+	height: 100%;
+	padding: 0 25px 0 50px;
+	background-color: #5b6268;
+	font-family: Arial, Helvetica, sans-serif;
 	text-decoration: none;
-	color: #fff;
+	color: rgb(240, 244, 245);
 }
+
+#menu {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align: center;
+	margin-bottom: 35px;
+	margin: auto;
+}
+
+
+a {
+	color: #4CC713;
+	text-decoration: none;
+	border-bottom: 1px dotted #4CC713;
+}
+
+a:hover {
+	color: #4CC713;
+	text-decoration: none;
+	border-bottom: 1px solid #4CC713;
+}
+
+
 
 h1 {
 	font-family: Verdana, sans-serif;
@@ -27,36 +70,80 @@ h3 {
 	color: #f8ef64;
 }
 
-#downloads {
-	border-top: 3px solid #7B96C6;
-	border-bottom: 3px solid #7B96C6;
+h3 small {
+	color: #fff;
+	font-size: 70%;
+	padding-left: 15px;
+}
+
+form.alignedform label {
+	text-align: right;
+	display: inline-block;
+	vertical-align: middle;
+	width: 10em;
+	margin: 0 1em 0 0;
+}
+
+form.alignedform input {
+	display: inline-block;
+	vertical-align: middle;
+	border: 1px solid #f8ef64;
+	background-color: #333;
+	color: #f8ef64;
+	padding: 5px;
+}
+
+#menu {
 	text-align: center;
 	margin-bottom: 35px;
-	margin-left: auto;
-	margin-right: auto;
-	width: 100%;
 }
 
-@media (max-width: 800px) {
-	body {
-		padding: 0;
-	}
+#menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: inline-block;
+	vertical-align: middle;
 }
 
-/*! CSS Used from: Embedded */
+#menu ul li {
+	float: left;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+#menu ul li a {
+	font-family: Verdana, sans-serif;
+	text-decoration: none;
+	color: #fff;
+	font-size: 18px;
+	border: none;
+}
+
+#menu ul li a:hover {
+	color: #4CC713;
+}
+
+
 h2 {
-	background-color: #00cccc;
+	background-color: #71c288;
 	padding: 6px;
+	border-radius: 25px;
 }
 
 h4 {
-	background-color: #CFD103;
-	padding: 8px;
-	border: 2px solid red;
+	background-color: #53bb71;
+	padding: 10px;
+	border-radius: 20px;
+	text-align: center;
 }
 
-.event {
-	border-top: 2px solid white;
+
+@media (max-width: 800px) {
+
+	body {
+		padding: 5%;
+	}
 }
 
 #logo {
@@ -65,6 +152,7 @@ h4 {
 
 #logo img {
 	width: max=20%;
+	border-radius: 20px;
 }
 
 #header {
@@ -72,35 +160,49 @@ h4 {
 	text-align: center;
 }
 
-
-#menu {
-	/* height: 1000px; */
+#downloads {
+	border-top: 2px solid white;
+	text-align: center;
+	margin-bottom: 35px;
 	margin-left: auto;
 	margin-right: auto;
 	width: 100%;
-	text-align: center;
+}
+
+@media (max-width: 600px) {
+	#header {
+		font-size: 20px;
+	}
 }
 
 .buttonDownload {
 	display: inline-block;
 	position: relative;
-	padding: 10px 25px;
+	padding: 20px 25px;
 
-	background-color: #4CC713;
+
+	background: #000000;
+	color: #ffffff;
+	background: -webkit-gradient(linear, left bottom, left top, from(#000000), to(#262626));
+	background: -webkit-linear-gradient(bottom, #000000, #262626);
+	background: -moz-linear-gradient(bottom, #000000, #262626);
+	background: -o-linear-gradient(bottom, #000000, #262626);
+	background: linear-gradient(0deg, #000000, #262626);
 	color: white;
 	width: auto;
-
 	font-family: sans-serif;
 	text-decoration: none;
-	font-size: 0.9em;
-	text-align: center;
-	border-radius: 50px;
+	font-size: 1em;
 	text-indent: 15px;
+	text-align: center;
+	-webkit-border-radius: 32px;
+	-moz-border-radius: 32px;
+	border-radius: 32px;
 }
 
 .buttonDownload:hover {
-	background-color: #333;
-	color: white;
+	background-color: #0f8f13;
+	color: #b3eec4;
 }
 
 .buttonDownload:before,

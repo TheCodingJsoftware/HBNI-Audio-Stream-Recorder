@@ -2,10 +2,11 @@
 
 Records HBNI streams as the show up.
 
-## Stream Recorder
+## Requirements:
 
 [ffmpeg download](https://www.filehorse.com/download-ffmpeg/)
- ## Requirements:
+
+Add to **PATH** environment variables.
 
 **PYTHON 3.8+**
 

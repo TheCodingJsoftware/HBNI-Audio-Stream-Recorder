@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-25 18:20:16"
+__updated__ = "2022-02-25 19:55:21"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -260,6 +260,7 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
     appLog.info(f"{dt} - Recording stopped")
+    time.sleep(5)
     Changes(url="http://hbniaudio.hbni.net/").update()
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()
@@ -281,7 +282,6 @@ def download(fileName: str, hostAddress: str) -> None:
                 f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{fileName} - (Part {recordingPartNumber}).mp3",
             )
             return
-    recordingPartNumber = 0
     appLog.info(f"{dt} - Removing silence")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
@@ -296,7 +296,11 @@ def download(fileName: str, hostAddress: str) -> None:
 
     timeDelta = timedelta(minutes=audioFileLength)
     finalDeltatime: str = AudioFile.convertDeltatime(duration=timeDelta)
+    if recordingPartNumber != 0:
+        finalDeltatime += " - (Final Part)"
     finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
+
+    recordingPartNumber = 0
 
     os.rename(
         f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
