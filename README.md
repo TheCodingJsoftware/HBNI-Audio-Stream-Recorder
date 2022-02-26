@@ -38,6 +38,8 @@ Directory Example:
 C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
 ```
 
+Possible Github TLS/SSL error [fix](https://www.youtube.com/watch?v=LK7-YNpxEhA&ab_channel=AccuWebHosting):
+
 ## Server setup (Raspberry Pi)
 
 ### Autoreboot
