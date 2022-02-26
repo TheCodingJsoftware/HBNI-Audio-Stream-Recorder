@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-25 15:21:28"
+__updated__ = "2022-02-25 18:20:16"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -248,7 +248,7 @@ def download(fileName: str, hostAddress: str) -> None:
     recordingstr = time.strftime("%Y%m%d%H%M%S")
     process = subprocess.Popen(
         [
-            "{FOLDER_LOCATION}/ffmpeg",
+            "ffmpeg",
             "-y",
             "-i",
             f"http://hbniaudio.hbni.net:8000{hostAddress}",
