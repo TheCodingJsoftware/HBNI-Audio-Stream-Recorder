@@ -41,7 +41,7 @@ body {
 a {
 	color: #4CC713;
 	text-decoration: none;
-	border-bottom: 1px dotted #4CC713;
+	border-bottom: 1px solid #71c288;
 }
 
 a:hover {
