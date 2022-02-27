@@ -111,3 +111,12 @@ Add this line before ```@xscreensaver -no-splash```
 +-- Website.py
 +-- Zip.py
 ```
+
+Create a `credentials.json` file with the following:
+```
+{
+    "username": "",
+    "password": ""
+}
+```
+Make sure you fill these out with your mega login credetials.
