@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-02-25 19:55:21"
+__updated__ = "2022-03-01 11:33:07"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -256,6 +256,7 @@ def download(fileName: str, hostAddress: str) -> None:
         ]
     )
     process.communicate()
+    # This code will proceed once recording stopped
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
@@ -265,18 +266,22 @@ def download(fileName: str, hostAddress: str) -> None:
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()
         if regexFinder("data-mnt", html=html):  # If stream is still online
+            streams = regexFinder("data-mnt", html=html, shouldReplaceText=False)
             recordingPartNumber += 1
-            threading.Thread(
-                target=download,
-                args=(
-                    fileName,
-                    hostAddress,
-                ),
-            ).start()
-            appLog.info(f"{dt} - Stream still online, restarting recording")
-            print(
-                f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.WARNING}Recording restarted{Colors.ENDC}"
-            )
+            for stream in streams:
+                if stream is hostAddress:
+                    threading.Thread(
+                        target=download,
+                        args=(
+                            fileName,
+                            hostAddress,
+                        ),
+                    ).start()
+                    appLog.info(f"{dt} - Stream still online, restarting recording")
+                    print(
+                        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.WARNING}Recording restarted{Colors.ENDC}"
+                    )
+                    break
             os.rename(
                 f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
                 f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{fileName} - (Part {recordingPartNumber}).mp3",

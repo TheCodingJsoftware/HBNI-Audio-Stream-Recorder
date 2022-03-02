@@ -33,6 +33,7 @@ def addDownloadLink(fileName: str, downloadLink: str, date: str, length: int) ->
                 "date": date,
                 "downloadLink": downloadLink,
                 "length": length,
+                "id": len(data),
             }
         }
     )
