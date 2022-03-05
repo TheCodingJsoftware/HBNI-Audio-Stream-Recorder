@@ -1,0 +1,1 @@
+C:\Users\user\AppData\Local\Programs\Python\Python38\python.exe C:\Users\user\Desktop\HBNI-Audio-Stream-Recorder\StreamRecorder.py %*
