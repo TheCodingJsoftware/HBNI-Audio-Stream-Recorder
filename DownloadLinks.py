@@ -18,13 +18,16 @@ def loadJson() -> dict:
     return data
 
 
-def addDownloadLink(fileName: str, downloadLink: str, date: str, length: int) -> None:
+def addDownloadLink(
+    fileName: str, downloadLink: str, date: str, length: float, commit: bool = True
+) -> None:
     """Adds a new file to the downloadLinks.json file and updates the online database to github.
 
     Args:
         fileName (str): name of the file
         downloadLink (str): download link for that file that was uploaded to mega
         date (str): date the file was created.
+        length (float): length of the audio file
     """
     data = loadJson()
     data.update(
@@ -40,7 +43,59 @@ def addDownloadLink(fileName: str, downloadLink: str, date: str, length: int) ->
 
     with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
         json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
-    uploadDatabase()
+
+    if commit:
+        uploadDatabase()
+
+
+def editDownloadLink(
+    fileName: str, downloadLink: str, date: str, length: float, id: int
+) -> None:
+    """Edits a download link.
+
+    Args:
+        fileName (str): name of the file
+        downloadLink (str): download link for that file that was uploaded to mega
+        date (str): date the file was created.
+        length (float): length of the audio file
+        id (int): id for sorting
+    """
+
+    data = loadJson()
+    data[fileName]["downloadLink"] = downloadLink
+    data[fileName]["date"] = date
+    data[fileName]["length"] = float(length)
+    data[fileName]["id"] = int(id)
+
+    with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
+        json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
+
+    sortJsonFile()
+
+
+def updateIds() -> None:
+    """Reorders the ID so its sorted"""
+    data = loadJson()
+    for index, name in enumerate(data):
+        data[name]["id"] = index
+
+    with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
+        json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
+
+
+def removeDownloadLink(filename: str) -> None:
+    """Delets a link from the downloadLinks.json file
+
+    Args:
+        filename (str): name of the file to be removed
+    """
+    data = loadJson()
+    data.pop(filename)
+
+    with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
+        json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
+
+    updateIds()
 
 
 def uploadDatabase() -> None:
@@ -53,6 +108,14 @@ def uploadDatabase() -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Updated downloadLinks.json file to github.{Colors.ENDC}"
     )
+
+
+def sortJsonFile() -> None:
+    """Sorts json file using the 'id' tag"""
+    data = loadJson()
+    sortedData = dict(sorted(data.items(), key=lambda x: x[1]["id"]))
+    with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
+        json.dump(sortedData, downloadLinksFile, ensure_ascii=False, indent=4)
 
 
 def downloadDatabase() -> None:

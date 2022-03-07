@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-03-01 11:33:07"
+__updated__ = "2022-03-06 16:14:34"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -37,7 +37,7 @@ hostAddresses: list = []
 recordingPartNumber: int = 0
 
 logFormatter = logging.Formatter("%(message)s")
-logFileName = datetime.today().strftime("%Y-%m-%d")
+logFileName = datetime.now().strftime("%Y-%m-%d")
 logFile = f"{FOLDER_LOCATION}/logs/{logFileName}.log"
 logHandler = RotatingFileHandler(
     logFile,

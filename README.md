@@ -11,7 +11,7 @@ Add to **PATH** environment variables.
 **PYTHON 3.8+**
 
 ```
-pip install flask natsort mega.py gitpython pydub colorama
+pip install flask natsort mega.py gitpython pydub colorama pyqt5 pyqtdarktheme
 ```
 
 ## Server setup (Windows)
