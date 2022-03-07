@@ -96,11 +96,13 @@ class MainWindow(QMainWindow):
                     gridLayout.addWidget(label, self.index, 0)
                     if data == "id":
                         edit = QSpinBox(self)
+                        edit.setMaximum(999999)
                         edit.setValue(int(json[name][data]))
                     elif data == "length":
                         edit = QDoubleSpinBox(self)
                         edit.setDecimals(15)
                         edit.setSuffix(" minutes")
+                        edit.setMaximum(999.9999999999)
                         edit.setValue(float(json[name][data]))
                     else:
                         edit = QLineEdit(self)
