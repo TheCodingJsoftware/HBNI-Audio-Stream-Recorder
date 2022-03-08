@@ -14,6 +14,18 @@ Add to **PATH** environment variables.
 pip install flask natsort mega.py gitpython pydub colorama pyqt5 pyqtdarktheme
 ```
 
+## JsonEditor.py
+
+Demo:
+
+![image](https://user-images.githubusercontent.com/25397800/157142218-add15dc4-ab4c-432c-acc4-1ed1b3f36874.png)
+
+Run with:
+
+```
+python JsonEditor.py
+```
+
 ## Server setup (Windows)
 
 Create Batch file:
