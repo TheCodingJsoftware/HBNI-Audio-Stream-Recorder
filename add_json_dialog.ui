@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>180</height>
+    <width>625</width>
+    <height>227</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,9 +33,26 @@
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="label_6">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="text">
+          <string>Description:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
           <string>Download Link:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Host:</string>
          </property>
         </widget>
        </item>
@@ -56,15 +73,43 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0">
        <item>
-        <widget class="QLineEdit" name="inputFileName"/>
+        <widget class="QLineEdit" name="inputFileName">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLineEdit" name="inputDate"/>
        </item>
        <item>
-        <widget class="QLineEdit" name="inputDownloadLink"/>
+        <widget class="QLineEdit" name="inputDescription">
+         <property name="text">
+          <string>Unspecified Description</string>
+         </property>
+         <property name="placeholderText">
+          <string>Description</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="inputDownloadLink">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>https://mega.co.nz/</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="inputHost">
+         <property name="text">
+          <string>/</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="inputLength">
@@ -84,6 +129,9 @@
        </item>
        <item>
         <widget class="QSpinBox" name="inputID">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
          </property>
