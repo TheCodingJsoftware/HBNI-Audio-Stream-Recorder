@@ -18,7 +18,7 @@ pip install flask natsort mega.py gitpython pydub colorama pyqt5 pyqtdarktheme
 
 Demo:
 
-![image](https://user-images.githubusercontent.com/25397800/157142218-add15dc4-ab4c-432c-acc4-1ed1b3f36874.png)
+![image](https://user-images.githubusercontent.com/25397800/157153928-06c7fecd-d541-42f6-ac73-f24a88136f69.png)
 
 Run with:
 
@@ -105,6 +105,9 @@ Add this line before ```@xscreensaver -no-splash```
 |   +-- main.css
 +-- templates/
 |   +-- index.html
++-- UI/
+|   +-- add_json_dialog.ui
+|   +-- json_editor.ui
 +-- .gitignore
 +-- archived_page.html
 +-- AudioFile.py
@@ -115,6 +118,7 @@ Add this line before ```@xscreensaver -no-splash```
 +-- ffplay.exe
 +-- ffprobe.exe
 +-- GlobalVariables.py
++-- JsonEditor.py
 +-- MegaGetFileList.py
 +-- MegaUploader.py
 +-- README.md

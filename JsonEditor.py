@@ -27,7 +27,7 @@ import DownloadLinks
 class QDialogClass(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
-        uic.loadUi("add_json_dialog.ui", self)
+        uic.loadUi("UI/add_json_dialog.ui", self)
         self.setStyleSheet(qdarktheme.load_stylesheet())
         data = DownloadLinks.loadJson()
         self.inputID.setValue(len(data))
@@ -95,7 +95,7 @@ class QDialogClass(QDialog):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("json_editor.ui", self)
+        uic.loadUi("UI/json_editor.ui", self)
         self.setStyleSheet(qdarktheme.load_stylesheet())
         self.jsonContent = {}
         self.index = 0
