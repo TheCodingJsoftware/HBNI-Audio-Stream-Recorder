@@ -101,6 +101,7 @@ class MainWindow(QMainWindow):
         self.index = 0
         # self.loadContents()
         self.inputSearch.returnPressed.connect(self.loadContents)
+        self.btnPushToGithub.clicked.connect(DownloadLinks.uploadDatabase)
         self.btnAdd.clicked.connect(self.addJson)
         self.startTimer()
         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
