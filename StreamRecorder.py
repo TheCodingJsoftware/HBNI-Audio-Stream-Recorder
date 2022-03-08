@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-03-06 16:14:34"
+__updated__ = "2022-03-07 18:19:32"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -240,6 +240,7 @@ def download(fileName: str, hostAddress: str) -> None:
     """
     global recordingPartNumber
     dt = datetime.now()
+    description: str = fileName.split(" - ")[-1]
     appLog.info(f"{dt} - Started recording")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Started recording{Colors.ENDC}"
@@ -319,6 +320,8 @@ def download(fileName: str, hostAddress: str) -> None:
         appLog.info(f"{dt} - Starting upload to Mega")
         MegaUploader.upload(
             filePath=f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
+            host=hostAddress,
+            description=description,
             date=timestr,
             length=audioFileLength,
         )

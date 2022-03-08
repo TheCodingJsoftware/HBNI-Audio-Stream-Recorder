@@ -1,9 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial
 
 import qdarktheme
 from PyQt5 import uic
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QRegExp, Qt, QTimer
+from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import (
     QApplication,
     QDialog,
@@ -31,12 +32,60 @@ class QDialogClass(QDialog):
         data = DownloadLinks.loadJson()
         self.inputID.setValue(len(data))
         self.inputDate.setText(datetime.now().strftime("%B %d %A %Y %I_%M %p"))
+        self.inputHost.setText("/")
+        reg_ex = QRegExp("(\/(\/\/)?[a-z]+)")
+        input_validator = QRegExpValidator(reg_ex, self.inputHost)
+        self.inputHost.setValidator(input_validator)
+        self.inputHost.textChanged.connect(self.inputTextChanged)
+        self.inputDescription.textChanged.connect(self.inputTextChanged)
+        self.inputLength.valueChanged.connect(self.inputTextChanged)
+        self.inputTextChanged()
+
+    def inputTextChanged(self):
+        timeDelta = timedelta(minutes=self.inputLength.value())
+        finalDeltatime: str = self.convertDeltatime(duration=timeDelta)
+        try:
+            if self.inputHost.text()[0] != "/":
+                self.inputHost.setText("/" + self.inputHost.text().replace("/", ""))
+        except IndexError:
+            self.inputHost.setText("/")
+
+        self.inputFileName.setText(
+            self.inputHost.text().replace("/", "").title()
+            + " - "
+            + self.inputDescription.text()
+            + " - "
+            + self.inputDate.text()
+            + " - "
+            + finalDeltatime
+            + ".mp3"
+        )
+
+    def convertDeltatime(self, duration) -> str:
+        """Converts minutes to a pretty format
+
+        Args:
+            duration (deltatime): file length
+
+        Returns:
+            output (str): final format
+        """
+        days, seconds = duration.days, duration.seconds
+        hours = days * 24 + seconds // 3600
+        minutes = (seconds % 3600) // 60
+        seconds = seconds % 60
+
+        return (
+            f"{minutes}m {seconds}s" if hours == 0 else f"{hours}h {minutes}m {seconds}s"
+        )
 
     def accept(self):
         DownloadLinks.addDownloadLink(
             fileName=self.inputFileName.text(),
             downloadLink=self.inputDownloadLink.text(),
             date=self.inputDate.text(),
+            host=self.inputHost.text(),
+            description=self.inputDescription.text(),
             length=self.inputLength.value(),
             commit=False,
         )
@@ -72,8 +121,6 @@ class MainWindow(QMainWindow):
         except StopIteration:
             self._timer.stop()
         else:
-            # btn = QPushButton(self, text=f"{i}")
-            # for name in json:
             name = list(json.keys())[i]
             if self.inputSearch.text() in name.lower() or self.inputSearch.text() == "":
                 self.jsonContent.update({name: {}})
@@ -97,15 +144,21 @@ class MainWindow(QMainWindow):
                     if data == "id":
                         edit = QSpinBox(self)
                         edit.setMaximum(999999)
+                        edit.setFocusPolicy(Qt.ClickFocus)
                         edit.setValue(int(json[name][data]))
                     elif data == "length":
                         edit = QDoubleSpinBox(self)
                         edit.setDecimals(15)
                         edit.setSuffix(" minutes")
+                        edit.setFocusPolicy(Qt.ClickFocus)
                         edit.setMaximum(999.9999999999)
                         edit.setValue(float(json[name][data]))
                     else:
                         edit = QLineEdit(self)
+                        if data == "host":
+                            reg_ex = QRegExp("(\/(\/\/)?[a-z]+)")
+                            input_validator = QRegExpValidator(reg_ex, edit)
+                            edit.setValidator(input_validator)
                         edit.setText(f"{json[name][data]}")
                     self.jsonContent[name].update({data: []})
                     self.jsonContent[name][data].append(edit)
@@ -114,10 +167,9 @@ class MainWindow(QMainWindow):
 
     def addJson(self):
         dialog = QDialogClass()
-        if dialog.exec_() in [QDialog.Rejected, QDialog.Accepted]:
+        if dialog.exec_() in [QDialog.Accepted, QDialog.Rejected]:
             self.startTimer()
         dialog.deleteLater()
-        # dialog.exec_()
 
     def clearLayout(self, layout) -> None:
         if layout is not None:
@@ -134,6 +186,8 @@ class MainWindow(QMainWindow):
             fileName=name,
             downloadLink=self.jsonContent[name]["downloadLink"][0].text(),
             date=self.jsonContent[name]["date"][0].text(),
+            host=self.jsonContent[name]["host"][0].text(),
+            description=self.jsonContent[name]["description"][0].text(),
             length=self.jsonContent[name]["length"][0].value(),
             id=self.jsonContent[name]["id"][0].value(),
         )

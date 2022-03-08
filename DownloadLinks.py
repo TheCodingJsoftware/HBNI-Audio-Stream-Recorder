@@ -19,13 +19,21 @@ def loadJson() -> dict:
 
 
 def addDownloadLink(
-    fileName: str, downloadLink: str, date: str, length: float, commit: bool = True
+    fileName: str,
+    downloadLink: str,
+    host: str,
+    description: str,
+    date: str,
+    length: float,
+    commit: bool = True,
 ) -> None:
     """Adds a new file to the downloadLinks.json file and updates the online database to github.
 
     Args:
         fileName (str): name of the file
         downloadLink (str): download link for that file that was uploaded to mega
+        host (str): the hosts name
+        description (str): description
         date (str): date the file was created.
         length (float): length of the audio file
     """
@@ -34,8 +42,10 @@ def addDownloadLink(
         {
             fileName: {
                 "date": date,
+                "description": description,
                 "downloadLink": downloadLink,
                 "length": length,
+                "host": host,
                 "id": len(data),
             }
         }
@@ -49,13 +59,21 @@ def addDownloadLink(
 
 
 def editDownloadLink(
-    fileName: str, downloadLink: str, date: str, length: float, id: int
+    fileName: str,
+    downloadLink: str,
+    host: str,
+    description: str,
+    date: str,
+    length: float,
+    id: int,
 ) -> None:
     """Edits a download link.
 
     Args:
         fileName (str): name of the file
         downloadLink (str): download link for that file that was uploaded to mega
+        host (str): the hosts name
+        description (str): description
         date (str): date the file was created.
         length (float): length of the audio file
         id (int): id for sorting
@@ -63,8 +81,10 @@ def editDownloadLink(
 
     data = loadJson()
     data[fileName]["downloadLink"] = downloadLink
+    data[fileName]["description"] = description
     data[fileName]["date"] = date
     data[fileName]["length"] = float(length)
+    data[fileName]["host"] = host
     data[fileName]["id"] = int(id)
 
     with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
