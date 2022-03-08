@@ -1,3 +1,5 @@
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css");
+
 * {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -14,6 +16,74 @@ html {
 	margin: auto;
 	padding: 10px;
 	font-family: Arial, Helvetica, sans-serif;
+}
+
+footer {
+	position: relative;
+	bottom: 0;
+	background: #242424;
+	width: 100%;
+	font-family: "Open Sans";
+	color: #fff;
+	border-radius: 10px;
+}
+
+.apps {
+	list-style: none;
+	display: flex;
+	justify-content: space-evenly;
+	margin: 2px 0 1px 0;
+}
+
+
+.apps a {
+	text-decoration: none;
+	color: #fff;
+}
+
+
+.footer-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+}
+
+.footer-content h3 {
+	font-size: 1.8rem;
+	font-weight: 400;
+	text-transform: capitalize;
+	line-height: 1srem;
+}
+
+.footer-content p {
+	max-width: 500px;
+	margin: 10px auto;
+	line-height: 28px;
+	font-size: 14px;
+}
+
+
+.footer-bottom {
+	background: #000;
+	width: 100%;
+	padding: 10px 0;
+	text-align: center;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+.footer-bottom p {
+	font-size: 14px;
+	word-spacing: 2px;
+	text-transform: capitalize;
+}
+
+.footer-bottom span {
+	text-transform: uppercase;
+	opacity: .4;
+	font-weight: 200;
 }
 
 body {
@@ -279,4 +349,45 @@ h4 {
 	h2 {
 		font-size: 1.4em;
 	}
+}
+
+.download {
+	width: 200px;
+	height: 75px;
+	background: black;
+	float: left;
+	border-radius: 5px;
+	position: relative;
+	color: #fff;
+	cursor: pointer;
+	border: 1px solid #fff;
+}
+
+.download>.fa {
+	color: #fff;
+	position: absolute;
+	top: 50%;
+	left: 15px;
+	transform: translateY(-50%);
+}
+
+.df,
+.dfn {
+	position: absolute;
+	left: 70px;
+}
+
+.df {
+	top: 20px;
+	font-size: .68em;
+}
+
+.dfn {
+	top: 33px;
+	font-size: 1.08em;
+}
+
+.download:hover {
+	-webkit-filter: invert(100%);
+	filter: invert(100%);
 }
