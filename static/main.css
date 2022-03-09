@@ -367,7 +367,7 @@ h4 {
 		font-size: 1.4em;
 	}
 
-	.apps {
+	#apps {
 		display: grid;
 		grid-template-rows: repeat(3, 1fr);
 		gap: 5px;
