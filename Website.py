@@ -33,7 +33,32 @@ def index() -> None:
     fileNames.reverse()
     downloadLinks.reverse()
     downloadableRecordings = zip(fileNames, downloadLinks)
-    return render_template("index.html", downloadableRecordings=downloadableRecordings)
+    return render_template(
+        "index.html", downloadableRecordings=downloadableRecordings, searchValue=""
+    )
+
+
+@app.route("/<file_name>")
+def search(file_name):
+    """Main page
+
+    Returns:
+        _type_: webpage
+    """
+    fileNames: list[str] = []
+    downloadLinks: list[str] = []
+    data = loadJson()
+    for fileName in data:
+        if file_name.lower() in fileName.lower():
+            newFileName: str = fileName.replace("_", ":").replace(".mp3", "")
+            fileNames.append(newFileName)
+            downloadLinks.append(getDownloadLink(fileName=fileName))
+    fileNames.reverse()
+    downloadLinks.reverse()
+    downloadableRecordings = zip(fileNames, downloadLinks)
+    return render_template(
+        "index.html", downloadableRecordings=downloadableRecordings, searchValue=file_name
+    )
 
 
 def downloadDatabase() -> None:
