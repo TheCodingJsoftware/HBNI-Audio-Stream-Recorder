@@ -91,7 +91,7 @@
             event.preventDefault();
             location.replace(input.value);
             if (input.value === "") {
-                location.assign('http://10.0.0.217:5000');
+                location.assign('https://hbniaudioarchive.herokuapp.com');
             }
         }
     });
@@ -108,7 +108,7 @@
         $(".go-icon").click(function () {
             $(".search-form").submit();
             $(".go-icon").removeClass("go-in");
-            location.assign('http://10.0.0.217:5000');
+            location.assign('https://hbniaudioarchive.herokuapp.com');
         });
     });
 </script>
