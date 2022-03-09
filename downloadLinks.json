@@ -166,5 +166,13 @@
         "length": 115.72211666666666,
         "host": "/ridgeland",
         "id": 20
+    },
+    "Newdale - Newdale Broadcast - March 08 Tuesday 2022 05_59 PM - 25m 54s.mp3": {
+        "date": "March 08 Tuesday 2022 05_59 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!m8dUzDKJ!UeAqZ9-hBUiGR0LLzkWa6pXpQ-VtKXEogce01vGqiTY",
+        "length": 25.910583333333335,
+        "host": "/newdale",
+        "id": 21
     }
 }
