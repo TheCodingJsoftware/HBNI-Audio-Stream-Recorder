@@ -38,5 +38,5 @@ def upload(filePath: str, host: str, description: str, date: str, length: int) -
         description=description,
         date=date,
         length=length,
-        commit=False,
+        commit=True,
     )
