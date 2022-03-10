@@ -103,6 +103,15 @@ footer {
 	font-weight: 200;
 }
 
+.scroll {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 400px;
+	padding: 2%;
+	width: auto;
+	font-size: large;
+}
+
 .container {
 	display: grid;
 	grid-template-columns: auto auto auto auto;
@@ -300,11 +309,11 @@ h4 {
 	background: -o-linear-gradient(bottom, #000000, #262626);
 	background: linear-gradient(0deg, #000000, #262626);
 	color: white;
-	width: auto;
 	font-family: sans-serif;
 	text-decoration: none;
+	width: 60%;
 	font-size: 1em;
-	text-indent: 15px;
+	text-indent: 20px;
 	text-align: center;
 	-webkit-border-radius: 32px;
 	-moz-border-radius: 32px;
@@ -318,7 +327,6 @@ h4 {
 
 .buttonDownload:before,
 .buttonDownload:after {
-	content: ' ';
 	display: block;
 	position: absolute;
 	left: 15px;
@@ -345,8 +353,6 @@ h4 {
 	border-color: transparent;
 	border-top-color: inherit;
 
-	animation: downloadArrow 2s linear infinite;
-	animation-play-state: paused;
 }
 
 .buttonDownload:hover:before {
@@ -355,7 +361,6 @@ h4 {
 
 .buttonDownload:hover:after {
 	border-top-color: #4CC713;
-	animation-play-state: running;
 }
 
 .btn.dropdown-toggle.btn-info,
@@ -561,29 +566,6 @@ h4 {
 	background: rgba(66, 255, 113, 0.25);
 }
 
-/* keyframes for the download icon anim */
-@keyframes downloadArrow {
-
-	/* 0% and 0.001% keyframes used as a hackish way of having the button frozen on a nice looking frame by default */
-	0% {
-		margin-top: -7px;
-		opacity: 1;
-	}
-
-	0.001% {
-		margin-top: -15px;
-		opacity: 0;
-	}
-
-	50% {
-		opacity: 1;
-	}
-
-	100% {
-		margin-top: 0;
-		opacity: 0;
-	}
-}
 
 @media (max-width: 800px) {
 	h1 {
@@ -605,6 +587,14 @@ h4 {
 		grid-template-columns: auto;
 		width: auto;
 
+	}
+
+	.buttonDownload {
+		width: 100%;
+	}
+
+	.scroll {
+		font-size: small;
 	}
 }
 
