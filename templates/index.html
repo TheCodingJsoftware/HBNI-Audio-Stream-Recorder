@@ -1,13 +1,22 @@
 <!doctype html>
-<link rel="icon" href="/static/favicon.png">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.js"></script>
+
 
 <head>
+    <link rel="icon" href="/static/favicon.png">
+    <link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.css"
+        rel="stylesheet" />
+    <link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.css"
+        rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href='/static/main.css' />
+
     <meta property="og:title" content="HBNI Audio Archive" />
     <meta property="og:url" content="https://hbniaudioarchive.herokuapp.com" />
     <meta property="og:image" content="https://hbniaudioarchive.herokuapp.com/static/hbnilogo.png" />
     <meta property="og:description" content="Download or relisten to previously broadcasted streams." />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href='/static/main.css' />
     <div id="logo">
         <img src="/static/hbnilogo.png">
     </div>
@@ -15,8 +24,6 @@
         <h1 id="header">HBNI Audio Streaming Archive</h1>
     </div>
     <h4> Downloads </h4>
-
-<body onload="document.getElementById('refreshButton').click()">
     <div id="downloads">
         <br>
         <div class="search-box">
@@ -33,6 +40,34 @@
             </svg>
             <div class="go-icon"><i class="fa fa-close"></i></div>
         </div>
+        <br>
+        <div class="container">
+            <div class="item">
+                <h3>Quick Search</h3>
+            </div>
+            <div class="item">
+                <select name="search_categories" id="coloylist" class="selectpicker" data-style="btn-info"
+                    data-live-search="true">
+                    <option value="" selected="selected" disabled>Select Quick Search</option>
+                    <optgroup label="Colonies">
+                        {% for coloyName in colonySearchList%}
+                        <option value={{coloyName}}>{{coloyName}}</option>
+                        {%endfor%}
+                    </optgroup>
+                    <optgroup label="Months">
+                        {% for month in monthsList%}
+                        <option value={{month}}>{{month}}</option>
+                        {%endfor%}
+                    </optgroup>
+                    <optgroup label="Days of the week">
+                        {% for day in daysList%}
+                        <option value={{day}}>{{day}}</option>
+                        {%endfor%}
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+        <br>
         {% for fileName, downloadLink in downloadableRecordings %}
         <p>
             <a class="buttonDownload" target="_blank" href={{ downloadLink }}>
@@ -42,7 +77,6 @@
         {% endfor %}
     </div>
     </div>
-</body>
 </head>
 
 <br>
@@ -82,7 +116,6 @@
         <p>Copyright 2022 by TheCodingJ's</p>
     </div>
 </footer>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
 <script>
     var input = document.getElementById("search");
     // Execute a function when the user releases a key on the keyboard
@@ -109,6 +142,12 @@
             $(".search-form").submit();
             $(".go-icon").removeClass("go-in");
             location.assign('https://hbniaudioarchive.herokuapp.com');
+        });
+        $(function () {
+            $('select').on('change', function (e) {
+                location.replace(this.value);
+            });
+
         });
     });
 </script>

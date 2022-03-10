@@ -1,3 +1,4 @@
+import calendar
 import json
 import os
 import sched
@@ -34,7 +35,12 @@ def index() -> None:
     downloadLinks.reverse()
     downloadableRecordings = zip(fileNames, downloadLinks)
     return render_template(
-        "index.html", downloadableRecordings=downloadableRecordings, searchValue=""
+        "index.html",
+        downloadableRecordings=downloadableRecordings,
+        searchValue="",
+        colonySearchList=getColonyList(),
+        monthsList=getMonthsList(),
+        daysList=getDaysList(),
     )
 
 
@@ -47,6 +53,7 @@ def search(file_name):
     """
     fileNames: list[str] = []
     downloadLinks: list[str] = []
+
     data = loadJson()
     for fileName in data:
         if file_name.lower() in fileName.lower():
@@ -57,8 +64,55 @@ def search(file_name):
     downloadLinks.reverse()
     downloadableRecordings = zip(fileNames, downloadLinks)
     return render_template(
-        "index.html", downloadableRecordings=downloadableRecordings, searchValue=file_name
+        "index.html",
+        downloadableRecordings=downloadableRecordings,
+        searchValue=file_name,
+        colonySearchList=getColonyList(),
+        monthsList=getMonthsList(),
+        daysList=getDaysList(),
     )
+
+
+def getColonyList() -> list[str]:
+    """Generates a list of all the colonies that have broadcasted
+
+    Returns:
+        list[str]: List of colonies
+    """
+    data = loadJson()
+    colonySearchList: list[str] = [fileName.split(" - ")[0] for fileName in data]
+    colonySearchList = sorted(set(colonySearchList))
+    return colonySearchList
+
+
+def getMonthsList() -> list[str]:
+    """Generates a list that contains all the months that streams were broadcasted
+
+    Returns:
+        list[str]: List of months
+    """
+    data = loadJson()
+    monthSearchList: list[str] = []
+    for fileName in data:
+        monthSearchList.extend(
+            month for month in calendar.month_name[1:] if month in fileName
+        )
+    monthSearchList = set(monthSearchList)
+    return monthSearchList
+
+
+def getDaysList() -> list[str]:
+    """Generates a list that contains all the days that streams were broadcasted
+
+    Returns:
+        list[str]: List of days
+    """
+    data = loadJson()
+    daySearchList: list[str] = []
+    for fileName in data:
+        daySearchList.extend(day for day in list(calendar.day_name) if day in fileName)
+    daySearchList = set(daySearchList)
+    return daySearchList
 
 
 def downloadDatabase() -> None:

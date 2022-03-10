@@ -103,6 +103,30 @@ footer {
 	font-weight: 200;
 }
 
+.container {
+	display: grid;
+	grid-template-columns: auto auto auto auto;
+	grid-template-rows: auto;
+	justify-content: space-evenly;
+	justify-items: center;
+	align-content: space-evenly;
+	align-items: center;
+	box-sizing: border-box;
+	width: 400px;
+	height: 50px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.item {
+	box-sizing: border-box;
+	align-content: end;
+	align-items: center;
+	width: auto;
+	min-width: 80px;
+	height: autp;
+}
+
 body {
 	justify-content: center;
 	position: center;
@@ -334,6 +358,46 @@ h4 {
 	animation-play-state: running;
 }
 
+.btn.dropdown-toggle.btn-info,
+.btn.dropdown-toggle.bs-placeholder.btn-info {
+	font-size: 14px;
+	width: 100%;
+	height: 40px;
+	max-width: 300px;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	outline: 0;
+	background: -webkit-gradient(linear, left bottom, left top, from(#131313), to(#262626));
+	background: -webkit-linear-gradient(bottom, #131313, #262626);
+	background: -moz-linear-gradient(bottom, #131313, #262626);
+	background: -o-linear-gradient(bottom, #131313, #262626);
+	background: linear-gradient(0deg, #131313, #262626);
+	color: #fff;
+	border: 1px solid black;
+	padding: 4px;
+	border-radius: 10px;
+	position: relative;
+	font-size: 13px;
+	padding: 10px 8px 10px 14px;
+	border-radius: 15px;
+	overflow: hidden;
+	position: relative;
+}
+
+.search_categories .select select {
+	background: transparent;
+	line-height: 1;
+	border: 0;
+	padding: 0;
+	border-radius: 0;
+	width: 100%;
+	position: relative;
+	z-index: 10;
+	font-size: 1em;
+	color: black;
+}
+
 .search-box {
 	position: relative;
 	width: 100%;
@@ -535,6 +599,12 @@ h4 {
 		grid-template-rows: repeat(3, 1fr);
 		gap: 5px;
 		grid-auto-rows: minmax(100%, auto);
+	}
+
+	.container {
+		grid-template-columns: auto;
+		width: auto;
+
 	}
 }
 
