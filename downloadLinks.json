@@ -190,5 +190,13 @@
         "length": 123.08128333333333,
         "host": "/valleyview",
         "id": 23
+    },
+    "Newdale - Newdale Broadcast - March 15 Tuesday 2022 05_55 PM - 24m 25s - (Final Part).mp3": {
+        "date": "March 15 Tuesday 2022 05_55 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!uxdRwTYT!Hiaxvulb49adBMJx4QwI9kHyxVN5ycRvF7GCKSW4G3c",
+        "length": 24.42325,
+        "host": "/newdale",
+        "id": 24
     }
 }
