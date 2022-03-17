@@ -10,7 +10,7 @@ def getAudioFileLength(pathToFile: str) -> float:
     Returns:
         float: the length of the audio file as minutes
     """
-    audioFile = AudioSegment.from_mp3(pathToFile)
+    audioFile = AudioSegment.from_file(pathToFile)
     return len(audioFile) / 60000  # Convert ms to min
 
 
