@@ -98,7 +98,6 @@ def updateIds() -> None:
     data = loadJson()
     for index, name in enumerate(data):
         data[name]["id"] = index
-
     with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
         json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
 
@@ -111,7 +110,6 @@ def removeDownloadLink(filename: str) -> None:
     """
     data = loadJson()
     data.pop(filename)
-
     with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
         json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
 
@@ -126,7 +124,7 @@ def uploadDatabase() -> None:
     origin = repo.remote("origin")
     origin.push()
     print(
-        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Updated downloadLinks.json file to github.{Colors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Updated downloadLinks.json file.{Colors.ENDC}"
     )
 
 

@@ -10,8 +10,7 @@ def getAudioFileLength(pathToFile: str) -> float:
     Returns:
         float: the length of the audio file as minutes
     """
-    audioFile = AudioSegment.from_file(pathToFile)
-    return len(audioFile) / 60000  # Convert ms to min
+    return len(AudioSegment.from_file(pathToFile)) / 60000  # Convert ms to min
 
 
 def convertDeltatime(duration) -> str:
@@ -23,9 +22,10 @@ def convertDeltatime(duration) -> str:
     Returns:
         output (str): final format
     """
-    days, seconds = duration.days, duration.seconds
-    hours = days * 24 + seconds // 3600
-    minutes = (seconds % 3600) // 60
-    seconds = seconds % 60
+    days: int = duration.days
+    seconds: int = duration.seconds
+    hours: int = days * 24 + seconds // 3600
+    minutes: int = (seconds % 3600) // 60
+    seconds %= 60
 
     return f"{minutes}m {seconds}s" if hours == 0 else f"{hours}h {minutes}m {seconds}s"

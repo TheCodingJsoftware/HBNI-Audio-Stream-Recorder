@@ -28,8 +28,13 @@ def upload(filePath: str, host: str, description: str, date: str, length: int) -
         print(
             f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Successfully logged into Mega Account{Colors.ENDC}"
         )
-
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Starting upload{Colors.ENDC}"
+    )
     uploadedFile = mega.upload(filePath, folder[0])
+    print(
+        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Upload finished{Colors.ENDC}"
+    )
     downloadLink = mega.get_upload_link(uploadedFile)
     DownloadLinks.addDownloadLink(
         fileName=fileName,

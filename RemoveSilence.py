@@ -33,10 +33,10 @@ def removeSilence(filePath: str) -> None:
     """
     sound = AudioSegment.from_file(filePath, format="mp3")
 
-    startTrim = __findSilence(sound)
-    endTrim = __findSilence(sound.reverse())
+    startTrim: int = __findSilence(sound)
+    endTrim: int = __findSilence(sound.reverse())
 
-    duration = len(sound)
+    duration: float = len(sound)
     trimmedSound = sound[startTrim : duration - endTrim]
 
     trimmedSound.export(filePath, format="mp3")

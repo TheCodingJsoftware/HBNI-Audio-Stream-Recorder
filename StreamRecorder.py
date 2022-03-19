@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-03-08 21:09:03"
+__updated__ = "2022-03-18 22:28:31"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -112,7 +112,7 @@ class Changes:
             # return 'No streams currently online.' not in file
 
 
-def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> "list[str]":
+def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> list[str]:
     """regexFinder finds strings after a tag using regex matching
 
     Args:
@@ -261,7 +261,7 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
     appLog.info(f"{dt} - Recording stopped")
-    time.sleep(5)
+    time.sleep(3)
     Changes(url="http://hbniaudio.hbni.net/").update()
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()
@@ -313,9 +313,6 @@ def download(fileName: str, hostAddress: str) -> None:
     )
 
     if audioFileLength > 5:
-        print(
-            f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Starting upload to Mega{Colors.ENDC}"
-        )
         appLog.info(f"{dt} - Starting upload to Mega")
         description: str = fileName.split(" - ")[-1]
         MegaUploader.upload(
@@ -330,6 +327,7 @@ def download(fileName: str, hostAddress: str) -> None:
             f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Done uploading{Colors.ENDC}"
         )
     else:
+        appLog.info(f"{dt} - Test stream, and won't be uploaded")
         print(
             f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.WARNING}Recording is too small, probably a test stream and won't be uploaded.{Colors.ENDC}"
         )
