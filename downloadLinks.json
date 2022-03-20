@@ -222,5 +222,13 @@
         "length": 77.02486666666667,
         "host": "/trileaf",
         "id": 27
+    },
+    "Newdale - Newdale Broadcast - March 20 Sunday 2022 09_28 AM - 1h 6m 25s.mp3": {
+        "date": "March 20 Sunday 2022 09_28 AM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!C9VDCB4I!EJRk1ZjttlK6sBXXHyBvSAKd-FEy2QRgpnXJ8LtKkXU",
+        "length": 66.4224,
+        "host": "/newdale",
+        "id": 28
     }
 }
