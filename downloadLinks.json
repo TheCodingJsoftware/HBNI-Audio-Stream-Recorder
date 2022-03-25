@@ -231,37 +231,21 @@
         "host": "/newdale",
         "id": 28
     },
-    "Newhaven - Wake For Maria Basel Newhaven - March 23 Wednesday 2022 11_26 AM - 5m 47s.mp3": {
-        "date": "March 23 Wednesday 2022 11_26 AM",
-        "description": "Wake For Maria Basel Newhaven",
-        "downloadLink": "https://mega.co.nz/#!j10F2Z6R!GOoJXdc6Yug-QF3iR8AjEyPvkBffw7ab7oeCDPuxulM",
-        "length": 5.784233333333333,
-        "host": "/newhaven",
-        "id": 29
-    },
-    "Newhaven - Wake For Maria Basel Newhaven - March 23 Wednesday 2022 02_13 PM - 13m 56s.mp3": {
-        "date": "March 23 Wednesday 2022 02_13 PM",
-        "description": "Wake For Maria Basel Newhaven",
-        "downloadLink": "https://mega.co.nz/#!vwFiHAra!YlzvRQEKdMaBxEldknKy9KeJ0tXSx-oRmtJGJ14LNKc",
-        "length": 13.942,
-        "host": "/newhaven",
-        "id": 30
-    },
     "Newhaven - Wake For Maria Basel Newhaven - March 23 Wednesday 2022 08_22 PM - 2h 17m 15s.mp3": {
         "date": "March 23 Wednesday 2022 08_22 PM",
         "description": "Wake For Maria Basel Newhaven",
         "downloadLink": "https://mega.co.nz/#!rtdwUZjb!7fj9wAdhvtXTXDeFgA8qtm_Yr86sMzGMeUCETwruJfc",
         "length": 137.25568333333334,
         "host": "/newhaven",
-        "id": 31
+        "id": 29
     },
-    "Newhaven - Wake For Maria Basel Newhaven - March 24 Thursday 2022 01_56 PM - 1h 25m 26s.mp3": {
+    "Newhaven - Funeral For Maria Basel Newhaven - March 24 Thursday 2022 01_56 PM - 1h 25m 26s.mp3": {
         "date": "March 24 Thursday 2022 01_56 PM",
-        "description": "Wake For Maria Basel Newhaven",
+        "description": "Funerel For Maria Basel Newhaven",
         "downloadLink": "https://mega.co.nz/#!T4MSXaCb!wg-UPdGWS2TogdS232vdOb-0fk8Pcbly7X_B1RaW1yY",
         "length": 85.44745,
         "host": "/newhaven",
-        "id": 32
+        "id": 30
     },
     "Riverbend - Rb Singing For Trapnell Family - March 24 Thursday 2022 07_05 PM - 1h 53m 58s.mp3": {
         "date": "March 24 Thursday 2022 07_05 PM",
@@ -269,6 +253,6 @@
         "downloadLink": "https://mega.co.nz/#!e99gwC5b!YsBmsKbrPh6KyOIuBzQWt_icPYxpIzwgSAKA8W5SpLc",
         "length": 113.96865,
         "host": "/riverbend",
-        "id": 33
+        "id": 31
     }
 }
