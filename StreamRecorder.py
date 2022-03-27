@@ -112,7 +112,7 @@ class Changes:
             # return 'No streams currently online.' not in file
 
 
-def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> list[str]:
+def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> "list[str]":
     """regexFinder finds strings after a tag using regex matching
 
     Args:
