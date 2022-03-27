@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-03-18 22:28:31"
+__updated__ = "2022-03-27 15:10:34"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -312,7 +312,7 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
     )
 
-    if audioFileLength > 5:
+    if audioFileLength > 12:
         appLog.info(f"{dt} - Starting upload to Mega")
         description: str = fileName.split(" - ")[-1]
         MegaUploader.upload(
