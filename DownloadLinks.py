@@ -55,7 +55,7 @@ def addDownloadLink(
         json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
 
     if commit:
-        uploadDatabase()
+        uploadDatabase(message=f"Uploaded stream - {host}.")
 
 
 def editDownloadLink(
@@ -116,15 +116,15 @@ def removeDownloadLink(filename: str) -> None:
     updateIds()
 
 
-def uploadDatabase() -> None:
+def uploadDatabase(str: message = "Updated downloadLinks.json file.") -> None:
     """uploads the downloadLinks.json file to github"""
     repo = Repo(".")  # if repo is CWD just do '.'
     repo.index.add(["downloadLinks.json"])
-    repo.index.commit("Updated downloadLinks.json file.")
+    repo.index.commit(message)
     origin = repo.remote("origin")
     origin.push()
     print(
-        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Updated downloadLinks.json file.{Colors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}{message}{Colors.ENDC}"
     )
 
 
