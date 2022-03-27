@@ -262,5 +262,13 @@
         "length": 8.178366666666667,
         "host": "/sunnyside",
         "id": 32
+    },
+    "Newdale - Newdale Broadcast - March 27 Sunday 2022 09_25 AM - 1h 6m 29s.mp3": {
+        "date": "March 27 Sunday 2022 09_25 AM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!uwEhnJhI!ovn7lncuHcjcN36RlSZb92LL0hLKsHHNaQdoHpPXMv8",
+        "length": 66.49298333333333,
+        "host": "/newdale",
+        "id": 33
     }
 }
