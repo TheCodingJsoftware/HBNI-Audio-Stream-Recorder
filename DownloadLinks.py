@@ -116,7 +116,7 @@ def removeDownloadLink(filename: str) -> None:
     updateIds()
 
 
-def uploadDatabase(str: message = "Updated downloadLinks.json file.") -> None:
+def uploadDatabase(message: str = "Updated downloadLinks.json file.") -> None:
     """uploads the downloadLinks.json file to github"""
     repo = Repo(".")  # if repo is CWD just do '.'
     repo.index.add(["downloadLinks.json"])
