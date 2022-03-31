@@ -10,7 +10,7 @@ import DownloadLinks
 from GlobalVariables import FOLDER_LOCATION, Colors
 
 
-def upload(filePath: str, host: str, description: str, date: str, length: int) -> None:
+def upload(filePath: str, host: str, description: str, date: str, length: float) -> None:
     """uploades file to mega account
 
     Args:
@@ -19,7 +19,7 @@ def upload(filePath: str, host: str, description: str, date: str, length: int) -
         description (str): description
         date (str): date the file was created
     """
-    fileName = filePath.split("/")[-1]
+    fileName: str = filePath.split("/")[-1]
     with open(f"{FOLDER_LOCATION}/credentials.json", "r") as credentialsFile:
         credentials = json.load(credentialsFile)
         mega = Mega({"verbose": True})
@@ -29,19 +29,32 @@ def upload(filePath: str, host: str, description: str, date: str, length: int) -
             f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Successfully logged into Mega Account{Colors.ENDC}"
         )
     print(
-        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Starting upload{Colors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.WARNING}Starting upload{Colors.ENDC}"
     )
-    uploadedFile = mega.upload(filePath, folder[0])
-    print(
-        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Upload finished{Colors.ENDC}"
-    )
-    downloadLink = mega.get_upload_link(uploadedFile)
-    DownloadLinks.addDownloadLink(
-        fileName=fileName,
-        downloadLink=downloadLink,
-        host=host,
-        description=description,
-        date=date,
-        length=length,
-        commit=True,
-    )
+    try:
+        uploadedFile = mega.upload(filePath, folder[0])
+        print(
+            f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Upload finished{Colors.ENDC}"
+        )
+        downloadLink = mega.get_upload_link(uploadedFile)
+        DownloadLinks.addDownloadLink(
+            fileName=fileName,
+            downloadLink=downloadLink,
+            host=host,
+            description=description,
+            date=date,
+            length=length,
+            commit=True,
+        )
+    except Exception as error:
+        print(
+            f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.WARNING}{error}{Colors.ENDC}"
+        )
+        upload(
+            filePath=filePath,
+            host=host,
+            description=description,
+            date=date,
+            length=length,
+        )
+        return
