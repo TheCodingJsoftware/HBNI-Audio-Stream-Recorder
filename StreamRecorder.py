@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-03-27 15:10:34"
+__updated__ = "2022-03-31 17:29:48"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -77,7 +77,9 @@ class Changes:
             self.newHtml = [x.decode("latin-1") for x in e.readlines()]
             print(f"HTTPError 500; continuing listenting process. {e}")
         except (URLError, ConnectionResetError):
-            print("URL ERROR, ConnectionResetError")
+            print(
+                f"{Colors.WARNING}URL ERROR, ConnectionResetError - StreamRecorder.py{Colors.ENDC}"
+            )
             return False
 
         open(self.archive, "a").close()
@@ -112,8 +114,8 @@ class Changes:
             # return 'No streams currently online.' not in file
 
 
-def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> "list[str]":
-    """regexFinder finds strings after a tag using regex matching
+def findHtmlTag(tag: str, html: str, shouldReplaceText: bool = True) -> "list[str]":
+    """findHtmlTag finds strings after a tag using regex matching
 
     Args:
         tag (str): a tag in the html such as "data-mnt" or "data-streams"
@@ -122,7 +124,7 @@ def regexFinder(tag: str, html: str, shouldReplaceText: bool = True) -> "list[st
     Returns:
         str: the string attached to the tag.
     """
-    regex = r"{}=([\"'])((?:(?=(?:\\)*)\\.|.)*?)\1".format(tag)
+    regex = f"""{tag}=([\\"'])((?:(?=(?:\\\\)*)\\\\.|.)*?)\\1"""
     matches = re.finditer(regex, html, re.MULTILINE)
 
     list_matches: list[str] = []
@@ -172,9 +174,9 @@ def run(sc: sched.scheduler) -> None:
                 f"{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Changes: {change}{Colors.ENDC}"
             )
             appLog.info(f"{dt} - Changes: {change}")
-            titles = regexFinder(tag="data-mnt", html=change)
-            bodies = regexFinder(tag="data-stream", html=change)
-            hostAddresses = regexFinder(
+            titles = findHtmlTag(tag="data-mnt", html=change)
+            bodies = findHtmlTag(tag="data-stream", html=change)
+            hostAddresses = findHtmlTag(
                 tag="data-mnt", html=change, shouldReplaceText=False
             )
             print(
@@ -261,12 +263,13 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
     appLog.info(f"{dt} - Recording stopped")
-    time.sleep(3)
+    # wait 15 seconds after a stream has stopped, just to make sure it actually stopped and not just crashed
+    time.sleep(15)
     Changes(url="http://hbniaudio.hbni.net/").update()
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()
-        if regexFinder("data-mnt", html=html):  # If stream is still online
-            streams = regexFinder("data-mnt", html=html, shouldReplaceText=False)
+        if findHtmlTag("data-mnt", html=html):  # If stream is still online
+            streams = findHtmlTag("data-mnt", html=html, shouldReplaceText=False)
             recordingPartNumber += 1
             for stream in streams:
                 if stream is hostAddress:
