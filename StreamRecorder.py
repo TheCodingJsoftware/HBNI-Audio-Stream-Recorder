@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-03-31 17:29:48"
+__updated__ = "2022-04-03 14:27:24"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -25,6 +25,7 @@ from urllib.request import urlopen
 
 import AudioFile
 import MegaUploader
+import RecordingStatus
 import RemoveSilence
 import Zip
 from GlobalVariables import FOLDER_LOCATION, Colors
@@ -243,6 +244,7 @@ def download(fileName: str, hostAddress: str) -> None:
     global recordingPartNumber
     dt = datetime.now()
     appLog.info(f"{dt} - Started recording")
+    RecordingStatus.setRecordingStatus(message=f"Currently recording {hostAddress}")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Started recording{Colors.ENDC}"
     )
@@ -263,6 +265,7 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
     appLog.info(f"{dt} - Recording stopped")
+    RecordingStatus.setRecordingStatus(message=f"Uploading {hostAddress} to archive")
     # wait 15 seconds after a stream has stopped, just to make sure it actually stopped and not just crashed
     time.sleep(15)
     Changes(url="http://hbniaudio.hbni.net/").update()
@@ -347,6 +350,7 @@ def download(fileName: str, hostAddress: str) -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Original copy deleted{Colors.ENDC}"
     )
+    RecordingStatus.setRecordingStatus(message="Currently nothing to record")
 
 
 def main() -> None:
