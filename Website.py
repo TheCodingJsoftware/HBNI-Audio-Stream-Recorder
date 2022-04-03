@@ -25,7 +25,6 @@ def index() -> None:
     """
     fileNames: list[str] = []
     downloadLinks: list[str] = []
-    print(getRecordingStatus())
     data = loadJson()
     for fileName in data:
         newFileName: str = fileName.replace("_", ":").replace(".mp3", "")
@@ -177,4 +176,4 @@ def getDownloadLink(fileName: str) -> str:
 
 
 threading.Thread(target=downloadThread).start()
-app.run(host="10.0.0.217", port=5000, debug=False, threaded=True)
+# app.run(host="10.0.0.217", port=5000, debug=False, threaded=True)
