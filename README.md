@@ -127,6 +127,8 @@ Add this line before ```@xscreensaver -no-splash```
 +-- MegaGetFileList.py
 +-- MegaUploader.py
 +-- README.md
++-- RecordingStatus.py
++-- recordingStatus.txt
 +-- RemoveSilence.py
 +-- StreamRecorder.py
 +-- Website.py
