@@ -83,15 +83,20 @@
         <div class="item">
             <h3>Recording Status: </h3>
         </div>
-        <div class="item">
-                {{recordingStatus}}
-        </div>
         {% if recordingStatus != "Currently nothing to record"%}
+        <div class="item">
+            Currently recording <a href="http://hbniaudio.hbni.net:8000{{recordingStatus}}">{{recordingStatus}}</a>
+        </div>
         <div class="item">
             <div class="recorder-container">
                 <div class="outer"></div>
                 <div class="outer-2"></div>
             </div>
+        </div>
+        {% else %}
+
+        <div class="item">
+            {{recordingStatus}}
         </div>
         {% endif %}
     </div>
