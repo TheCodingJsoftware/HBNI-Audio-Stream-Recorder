@@ -286,5 +286,29 @@
         "length": 64.46216666666666,
         "host": "/newdale",
         "id": 35
+    },
+    "Springfield - Springfield Wakefuneral - April 04 Monday 2022 10_08 AM - 1h 29m 20s.mp3": {
+        "date": "April 04 Monday 2022 10_08 AM",
+        "description": "Springfield Wakefuneral",
+        "downloadLink": "https://mega.co.nz/#!n9UWjKZb!MusHu0TgAbTouA_GTggpox-luXW_GBCcG0BTUUO1lxY",
+        "length": 89.33723333333333,
+        "host": "/springfield",
+        "id": 36
+    },
+    "Springfield - Springfield Wakefuneral - April 04 Monday 2022 02_15 PM - 1h 22m 39s.mp3": {
+        "date": "April 04 Monday 2022 02_15 PM",
+        "description": "Springfield Wakefuneral",
+        "downloadLink": "https://mega.co.nz/#!L9FRyLrK!gPR94OEZBarNnW-sWFudZEHlSQtJME4dP-kUp3jGIUA",
+        "length": 82.6505,
+        "host": "/springfield",
+        "id": 37
+    },
+    "Newdale - Newdale Broadcast - April 05 Tuesday 2022 05_56 PM - 24m 50s.mp3": {
+        "date": "April 05 Tuesday 2022 05_56 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!ztkg3IzK!Wv0ZgCzaARPLPLH2hdybq7m_03ZAszLC2A0e4mcaHnQ",
+        "length": 24.83775,
+        "host": "/newdale",
+        "id": 38
     }
 }
