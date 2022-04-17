@@ -414,5 +414,13 @@
         "length": 79.34648333333334,
         "host": "/brentwood",
         "id": 51
+    },
+    "Newdale - Newdale Broadcast - April 17 Sunday 2022 09_24 AM - 1h 3m 11s.mp3": {
+        "date": "April 17 Sunday 2022 09_24 AM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!CkkS2IyI!h_XSrUXeGBBMtnW5DY6NTMpa9LFf6bnVjkuXobdDnfs",
+        "length": 63.18615,
+        "host": "/newdale",
+        "id": 52
     }
 }
