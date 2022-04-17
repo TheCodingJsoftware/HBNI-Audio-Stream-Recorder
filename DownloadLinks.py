@@ -93,6 +93,36 @@ def editDownloadLink(
     sortJsonFile()
 
 
+def changeTitle(oldTitle: str, newTitle: str) -> None:
+    data = loadJson()
+
+    downloadLink: str = data[oldTitle]["downloadLink"]
+    description: str = data[oldTitle]["description"]
+    date: str = data[oldTitle]["date"]
+    length: float = data[oldTitle]["length"]
+    host: str = data[oldTitle]["host"]
+    idNum: int = data[oldTitle]["id"]
+
+    data.pop(oldTitle)
+
+    data.update(
+        {
+            newTitle: {
+                "date": date,
+                "description": description,
+                "downloadLink": downloadLink,
+                "length": length,
+                "host": host,
+                "id": idNum,
+            }
+        }
+    )
+    with open("downloadLinks.json", "w", encoding="utf-8") as downloadLinksFile:
+        json.dump(data, downloadLinksFile, ensure_ascii=False, indent=4)
+
+    sortJsonFile()
+
+
 def updateIds() -> None:
     """Reorders the ID so its sorted"""
     data = loadJson()

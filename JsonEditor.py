@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QGridLayout,
     QGroupBox,
+    QInputDialog,
     QLabel,
     QLineEdit,
     QMainWindow,
@@ -101,7 +102,7 @@ class MainWindow(QMainWindow):
         self.index = 0
         # self.loadContents()
         self.inputSearch.returnPressed.connect(self.loadContents)
-        self.btnPushToGithub.clicked.connect(DownloadLinks.uploadDatabase)
+        self.btnPushToGithub.clicked.connect(partial(DownloadLinks.uploadDatabase, 'Updated downloadLinks.json file.'))
         self.btnAdd.clicked.connect(self.addJson)
         self.startTimer()
         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -129,6 +130,9 @@ class MainWindow(QMainWindow):
                 groupbox = QGroupBox(self, title=name, checkable=False)
                 self.layoutContent.addWidget(groupbox)
                 gridLayout = QGridLayout(self)
+                btnEdit = QPushButton(self, text="Edit Title")
+                btnEdit.clicked.connect(partial(self.editTitle, name))
+                vBoxLayout.addWidget(btnEdit)
                 groupbox.setLayout(vBoxLayout)
                 vBoxLayout.addLayout(gridLayout)
                 vBoxLayout.addWidget(groupbox)
@@ -181,6 +185,20 @@ class MainWindow(QMainWindow):
                     widget.deleteLater()
                 else:
                     self.clearLayout(item.layout())
+
+    def editTitle(self, oldTitle: str) -> None:
+        InputDialog = QInputDialog(self)
+        newTitle, okPressed = InputDialog.getText(
+            self,
+            "Edit title",
+            "New title:",
+            QLineEdit.Normal,
+            oldTitle,
+        )
+
+        if okPressed:
+            DownloadLinks.changeTitle(oldTitle, newTitle)
+            self.startTimer()
 
     def applyEdit(self, name: str) -> None:
         DownloadLinks.editDownloadLink(
