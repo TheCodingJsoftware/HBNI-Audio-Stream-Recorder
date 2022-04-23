@@ -486,5 +486,13 @@
         "length": 78.94515,
         "host": "/clearview",
         "id": 60
+    },
+    "Newdale - Newdale Broadcast - April 23 Saturday 2022 05_59 PM - 27m 24s.mp3": {
+        "date": "April 23 Saturday 2022 05_59 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!Lo9lABTZ!NIGO-mXG5GxyNPMM76ptIKh8HEj_QXKU76MtbL50nps",
+        "length": 27.414366666666666,
+        "host": "/newdale",
+        "id": 61
     }
 }
