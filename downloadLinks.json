@@ -510,5 +510,13 @@
         "length": 92.3458,
         "host": "/baker",
         "id": 63
+    },
+    "Newdale - Newdale Broadcast - April 25 Monday 2022 07_54 PM - 1h 31m 3s.mp3": {
+        "date": "April 25 Monday 2022 07_54 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!HxUHmIRB!1bJbhaRmEZe0Kz7ci_gmwMBRKK8_iwZ5hgyI4N3SQBQ",
+        "length": 91.0622,
+        "host": "/newdale",
+        "id": 64
     }
 }
