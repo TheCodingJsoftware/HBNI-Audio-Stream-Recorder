@@ -542,5 +542,13 @@
         "length": 61.3402,
         "host": "/newdale",
         "id": 67
+    },
+    "Newdale - Newdale Broadcast - May 03 Tuesday 2022 06_07 PM - 20m 6s.mp3": {
+        "date": "May 03 Tuesday 2022 06_07 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!T01lzIBK!a4ojUB_gUOu0Cy8vJNj2iMFjeHHASyDy6nx1sx8Qi1A",
+        "length": 20.107716666666665,
+        "host": "/newdale",
+        "id": 68
     }
 }
