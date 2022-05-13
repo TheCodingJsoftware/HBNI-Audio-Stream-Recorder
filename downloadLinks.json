@@ -582,5 +582,13 @@
         "length": 75.08001666666667,
         "host": "/Starland",
         "id": 72
+    },
+    "Newdale - Newdale Broadcast - May 13 Friday 2022 05_56 PM - 25m 13s.mp3": {
+        "date": "May 13 Friday 2022 05_56 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!H99nnL4Q!JaCCoSE3yM_jryWsbydK5stahJ8xFVClksy7QN5RSKY",
+        "length": 25.222683333333332,
+        "host": "/newdale",
+        "id": 73
     }
 }
