@@ -598,5 +598,13 @@
         "length": 166.65716666666665,
         "host": "/vermillion",
         "id": 74
+    },
+    "Newdale - Newdale Broadcast - May 19 Thursday 2022 05_54 PM - 27m 11s.mp3": {
+        "date": "May 19 Thursday 2022 05_54 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!DoEm3ZKC!qPGnffFbnGw1kD_kQNSZeWeuGqxdCAVe_Tms1V0pg04",
+        "length": 27.195333333333334,
+        "host": "/newdale",
+        "id": 75
     }
 }
