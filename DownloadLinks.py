@@ -194,3 +194,8 @@ def getDownloadLink(fileName: str) -> str:
         return data[fileName]["downloadLink"]
     except KeyError:
         return None
+
+
+def getCountOfStreams(host: str) -> int:
+    data = loadJson()
+    return sum(host == data[file]["host"] for file in list(data.keys()))

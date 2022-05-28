@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-04-06 22:13:38"
+__updated__ = "2022-05-28 18:35:37"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -24,6 +24,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
 import AudioFile
+import DownloadLinks
 import MegaUploader
 import RecordingStatus
 import RemoveSilence
@@ -309,6 +310,23 @@ def download(fileName: str, hostAddress: str) -> None:
     if recordingPartNumber != 0:
         finalDeltatime += " - (Final Part)"
     finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
+
+    AudioFile.setArtist(
+        pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
+        artist=fileName.split(" - ")[0],
+    )
+    AudioFile.setGenre(
+        pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
+        genre="HBNI Streams",
+    )
+    AudioFile.setTitle(
+        pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
+        title=fileName.split(" - ")[-1],
+    )
+    AudioFile.setNumber(
+        pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3",
+        number=DownloadLinks.getCountOfStreams(host=hostAddress),
+    )
 
     recordingPartNumber = 0
 
