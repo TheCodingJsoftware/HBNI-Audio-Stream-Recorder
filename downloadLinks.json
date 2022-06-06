@@ -742,5 +742,13 @@
         "length": 82.39458333333333,
         "host": "/millbrook",
         "id": 92
+    },
+    "Newdale - Newdale Broadcast - June 06 Monday 2022 09_24 AM - 1h 1m 55s.mp3": {
+        "date": "June 06 Monday 2022 09_24 AM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!D5VgxC7K!FjVvPfKt1wINJMJdMNammGsSgKs2m5BkERy14unV0Xo",
+        "length": 61.918533333333336,
+        "host": "/newdale",
+        "id": 93
     }
 }
