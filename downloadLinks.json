@@ -686,5 +686,69 @@
         "length": 64.4638,
         "host": "/newdale",
         "id": 85
+    },
+    "Shadylane - Shady Lane Prediger Wahl - May 29 Sunday 2022 10_02 AM - 2h 51m 46s.mp3": {
+        "date": "May 29 Sunday 2022 10_02 AM",
+        "description": "Shady Lane Prediger Wahl",
+        "downloadLink": "https://mega.co.nz/#!G0EyxTyb!Dn5ROOqW8qud44bPBjclQb0OSD-HaV6adz2fzswVhc8",
+        "length": 171.78183333333334,
+        "host": "/shadylane",
+        "id": 86
+    },
+    "Newdale - Newdale Broadcast - May 31 Tuesday 2022 05_52 PM - 25m 38s.mp3": {
+        "date": "May 31 Tuesday 2022 05_52 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!7wVhxTTA!-Q3urjW5cwxXWHprQFvvp1hMqKx9BUh8z2UzCvrej4U",
+        "length": 25.640516666666667,
+        "host": "/newdale",
+        "id": 87
+    },
+    "Newdale - Newdale Broadcast - June 02 Thursday 2022 05_58 PM - 24m 52s.mp3": {
+        "date": "June 02 Thursday 2022 05_58 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!ilszSL4b!8kIkxSBtZbsi_GuSb5Y_gEwqV3Pq4UDVuX9Ziv1nSFg",
+        "length": 24.875716666666666,
+        "host": "/newdale",
+        "id": 88
+    },
+    "Newdale - Newdale Broadcast - June 04 Saturday 2022 05_55 PM - 22m 15s.mp3": {
+        "date": "June 04 Saturday 2022 05_55 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!PsthnDJS!EepBVDnI3VWCK9twT_ZmYgeiZJtJEnHMmOlTWf-FgCI",
+        "length": 22.263833333333334,
+        "host": "/newdale",
+        "id": 89
+    },
+    "Millbrook - Millbrook Wake And Funeral - June 04 Saturday 2022 07_59 PM - 2h 0m 13s.mp3": {
+        "date": "June 04 Saturday 2022 07_59 PM",
+        "description": "Millbrook Wake And Funeral",
+        "downloadLink": "https://mega.co.nz/#!C09ERQDD!pkH07VS5D8JXBTnfmBRDWqcJRYhRuEw7Rr8ZK1tFC90",
+        "length": 120.23276666666666,
+        "host": "/millbrook",
+        "id": 90
+    },
+    "Newdale - Newdale Broadcast - June 05 Sunday 2022 09_21 AM - 1h 3m 38s.mp3": {
+        "date": "June 05 Sunday 2022 09_21 AM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!3kVC3DqI!l7E3xaP_N6ZqOcQU5KbecZibQfw0mxBSSPXadHTGnz0",
+        "length": 63.63845,
+        "host": "/newdale",
+        "id": 91
+    },
+    "Millbrook - Millbrook Wake And Funeral - June 05 Sunday 2022 02_04 PM - 1h 22m 23s.mp3": {
+        "date": "June 05 Sunday 2022 02_04 PM",
+        "description": "Millbrook Wake And Funeral",
+        "downloadLink": "https://mega.co.nz/#!a4NwyY6L!62R7HJrbZmP1DaZxROyr8Z1MwK74L83NId-IH8cXuJw",
+        "length": 82.39458333333333,
+        "host": "/millbrook",
+        "id": 92
+    },
+    "Newdale - Newdale Broadcast - June 06 Monday 2022 09_24 AM - 1h 1m 55s.mp3": {
+        "date": "June 06 Monday 2022 09_24 AM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "https://mega.co.nz/#!D5VgxC7K!FjVvPfKt1wINJMJdMNammGsSgKs2m5BkERy14unV0Xo",
+        "length": 61.918533333333336,
+        "host": "/newdale",
+        "id": 93
     }
 }
