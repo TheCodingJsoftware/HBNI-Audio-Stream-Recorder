@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-05-28 18:35:37"
+__updated__ = "2022-06-02 08:28:14"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -371,6 +371,9 @@ def download(fileName: str, hostAddress: str) -> None:
 
 
 def main() -> None:
+    """
+    This function starts the scheduler, and then starts the stream listener
+    """
     s.enter(0, 0, run, (s,))
     print(
         f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.HEADER}Starting stream listener{Colors.ENDC}"

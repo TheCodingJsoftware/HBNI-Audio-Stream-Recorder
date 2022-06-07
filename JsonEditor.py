@@ -27,6 +27,12 @@ import DownloadLinks
 
 class QDialogClass(QDialog):
     def __init__(self, parent=None):
+        """
+        I'm trying to make a dialog box that will allow the user to add a new entry to a JSON file
+
+        Args:
+          parent: The parent widget.
+        """
         QDialog.__init__(self, parent)
         uic.loadUi("UI/add_json_dialog.ui", self)
         self.setStyleSheet(qdarktheme.load_stylesheet())
@@ -43,6 +49,10 @@ class QDialogClass(QDialog):
         self.inputTextChanged()
 
     def inputTextChanged(self):
+        """
+        It takes the text from the inputHost, inputDescription, inputDate, and inputLength fields and
+        combines them into a filename.
+        """
         timeDelta = timedelta(minutes=self.inputLength.value())
         finalDeltatime: str = self.convertDeltatime(duration=timeDelta)
         try:
@@ -81,6 +91,9 @@ class QDialogClass(QDialog):
         )
 
     def accept(self):
+        """
+        It takes the text from the text boxes and adds it to a database.
+        """
         DownloadLinks.addDownloadLink(
             fileName=self.inputFileName.text(),
             downloadLink=self.inputDownloadLink.text(),
@@ -95,13 +108,16 @@ class QDialogClass(QDialog):
 
 class MainWindow(QMainWindow):
     def __init__(self):
+        """
+        It loads the json file, and then it loads the contents of the json file into the GUI.
+        """
         super().__init__()
         uic.loadUi("UI/json_editor.ui", self)
         self.setStyleSheet(qdarktheme.load_stylesheet())
         self.jsonContent = {}
         self.index = 0
         # self.loadContents()
-        self.inputSearch.returnPressed.connect(self.loadContents)
+        self.inputSearch.returnPressed.connect(self.startTimer)
         self.btnPushToGithub.clicked.connect(
             partial(DownloadLinks.uploadDatabase, "Updated downloadLinks.json file.")
         )
@@ -110,15 +126,22 @@ class MainWindow(QMainWindow):
         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     def startTimer(self) -> None:
+        """
+        It clears the layout, clears the jsonContent, loads the json, sets the index to 0, sets the iter
+        to the length of the json, and starts the timer.
+        """
         self.clearLayout(self.layoutContent)
         self.jsonContent.clear()
         json = DownloadLinks.loadJson()
         self.index = 0
         self._iter = iter(range(len(json)))
-        self._timer = QTimer(interval=10, timeout=self.loadContents)
+        self._timer = QTimer(interval=0, timeout=self.loadContents)
         self._timer.start()
 
     def loadContents(self) -> None:
+        """
+        It loads the contents of a json file into a QGroupBox.
+        """
         json = DownloadLinks.loadJson()
         try:
             i = next(self._iter)
@@ -173,12 +196,22 @@ class MainWindow(QMainWindow):
                 self.index += 1
 
     def addJson(self):
+        """
+        If the dialog is accepted or rejected, start the timer.
+        """
         dialog = QDialogClass()
         if dialog.exec_() in [QDialog.Accepted, QDialog.Rejected]:
             self.startTimer()
         dialog.deleteLater()
 
     def clearLayout(self, layout) -> None:
+        """
+        If the layout is not None, while the layout has items, take the first item, get the widget, if
+        the widget is not None, delete it, otherwise, clear the layout
+
+        Args:
+          layout: The layout to be cleared
+        """
         if layout is not None:
             while layout.count():
                 item = layout.takeAt(0)
@@ -189,6 +222,12 @@ class MainWindow(QMainWindow):
                     self.clearLayout(item.layout())
 
     def editTitle(self, oldTitle: str) -> None:
+        """
+        It opens a dialog box that allows the user to change the title of a download link
+
+        Args:
+          oldTitle (str): str
+        """
         InputDialog = QInputDialog(self)
         newTitle, okPressed = InputDialog.getText(
             self,
@@ -203,6 +242,13 @@ class MainWindow(QMainWindow):
             self.startTimer()
 
     def applyEdit(self, name: str) -> None:
+        """
+        It takes the values from the QLineEdits and QSpinBoxes and passes them to a function that edits
+        the JSON file
+
+        Args:
+          name (str): str = The name of the file
+        """
         DownloadLinks.editDownloadLink(
             fileName=name,
             downloadLink=self.jsonContent[name]["downloadLink"][0].text(),
@@ -215,6 +261,12 @@ class MainWindow(QMainWindow):
         self.startTimer()
 
     def deleteJson(self, name: str) -> None:
+        """
+        It removes a download link from the database and then starts the timer again
+
+        Args:
+          name (str): The name of the file to be deleted
+        """
         DownloadLinks.removeDownloadLink(filename=name)
         self.startTimer()
 

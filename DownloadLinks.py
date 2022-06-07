@@ -94,8 +94,13 @@ def editDownloadLink(
 
 
 def changeTitle(oldTitle: str, newTitle: str) -> None:
-    data = loadJson()
+    """Changes the title of a broadcasted stream
 
+    Args:
+        oldTitle (str): title
+        newTitle (str): title
+    """
+    data = loadJson()
     downloadLink: str = data[oldTitle]["downloadLink"]
     description: str = data[oldTitle]["description"]
     date: str = data[oldTitle]["date"]
@@ -197,5 +202,13 @@ def getDownloadLink(fileName: str) -> str:
 
 
 def getCountOfStreams(host: str) -> int:
+    """Gets the count of streams that a certain host has hosted
+
+    Args:
+        host (str): such as `/pineland` or `/newdale`
+
+    Returns:
+        int: count of streams the host has broadcasted
+    """
     data = loadJson()
-    return sum(host == data[file]["host"] for file in list(data.keys()))
+    return sum(host == data[file]["host"].lower() for file in list(data.keys()))
