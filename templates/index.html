@@ -94,12 +94,20 @@
             </div>
         </div>
         {% else %}
-
         <div class="item">
             {{recordingStatus}}
         </div>
         {% endif %}
     </div>
+    <br>
+    {% if recordingStatus != "Currently nothing to record"%}
+    <details>
+        <summary>Current Listeners</summary>
+        <span>
+            <img class="graph "src="https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/blob/master/graph.png?raw=true" alt="graph.png" height=400 width=600>
+        </span>
+    </details>
+    {% endif %}
 </head>
 
 <br>

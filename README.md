@@ -16,7 +16,7 @@ Add to **PATH** environment variables.
 **PYTHON 3.8+**
 
 ```
-pip install flask natsort mega.py gitpython pydub colorama pyqt5 pyqtdarktheme mutagen
+pip install flask natsort mega.py gitpython pydub colorama pyqt5 pyqtdarktheme mutagen matplotlib themepy
 ```
 
 ## JsonEditor.py

@@ -6,13 +6,14 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-06-02 08:28:14"
+__updated__ = "2022-06-12 17:03:58"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
 
 import logging
 import os
+import random
 import re
 import sched
 import subprocess
@@ -30,6 +31,7 @@ import RecordingStatus
 import RemoveSilence
 import Zip
 from GlobalVariables import FOLDER_LOCATION, Colors
+from Graph import ListenersGraph
 
 s = sched.scheduler(time.time, time.sleep)
 
@@ -37,6 +39,7 @@ titles: list = []
 bodies: list = []
 hostAddresses: list = []
 recordingPartNumber: int = 0
+listeners_count: dict = {}
 
 logFormatter = logging.Formatter("%(message)s")
 logFileName = datetime.now().strftime("%Y-%m-%d")
@@ -116,7 +119,7 @@ class Changes:
             # return 'No streams currently online.' not in file
 
 
-def findHtmlTag(tag: str, html: str, shouldReplaceText: bool = True) -> "list[str]":
+def findHtmlTag(tag: str, html: str, shouldReplaceText: bool = True) -> list:
     """findHtmlTag finds strings after a tag using regex matching
 
     Args:
@@ -141,15 +144,23 @@ def findHtmlTag(tag: str, html: str, shouldReplaceText: bool = True) -> "list[st
 
 
 def run(sc: sched.scheduler) -> None:
-    """main loop that runs every 15 esconds.
+    """
+    It checks for changes on a website, and if there are changes, it starts a thread to download the
+    audio stream.
 
     Args:
-        sc (sched.scheduler): to recursively run this function every x seconds.
+      sc (sched.scheduler): sched.scheduler
+
+    Returns:
+      A list of strings
     """
     global titles, bodies, hostAddresses
     url = "http://hbniaudio.hbni.net/"
     websiteListener = Changes(url)
     websiteListener.update()
+
+    # update_graph()
+
     dt = datetime.now()
     if not websiteListener.checkForStreams():
         print(
@@ -160,6 +171,8 @@ def run(sc: sched.scheduler) -> None:
         hostAddresses.clear()
         s.enter(15, 1, run, (sc,))
         return
+
+    update_graph()
 
     if not websiteListener.diff():
         print(
@@ -231,21 +244,68 @@ def run(sc: sched.scheduler) -> None:
                 address,
             ),
         ).start()
-
     s.enter(15, 1, run, (sc,))
 
 
+def update_graph_data():
+    """
+    It reads the archivedPage.html file, finds the data I want, and then adds it to the listeners_count
+    dictionary.
+
+    Returns:
+      A dictionary with the host as the key and a dictionary as the value. The value dictionary has a
+    key of "listeners" and a value of a list of dictionaries. The list of dictionaries has a key of the
+    current time and a value of the current listeners count.
+    """
+    regex = r"<button class='change-stream' data-mnt='(\/\w{1,})' data-stream='([\w\s]{1,})'>[\w\s]{1,}<\/button><br \/>\s{1,}<a href='http:\/\/hbniaudio.hbni.net:8000\/\w{1,}'>Direct Link<\/a><br \/>\s{1,}Listeners Current: (\d{1,})"
+    with open(f"{FOLDER_LOCATION}/archivedPage.html", "r") as archivedPage:
+        html = archivedPage.read()
+
+    matches = re.finditer(regex, html, re.MULTILINE)
+    for match in matches:
+        host: str = match.group(1)
+        description: str = match.group(2)
+        current_listeners_count: int = int(match.group(3))
+        try:
+            listeners_count[host]["listeners"].append(
+                {datetime.now().strftime("%r"): current_listeners_count}
+            )
+        except Exception:
+            return
+
+
+def update_graph() -> None:
+    """
+    It updates the graph data and then updates the graph
+    """
+    update_graph_data()
+    graph = ListenersGraph(listeners_count)
+    graph.update()
+
+
 def download(fileName: str, hostAddress: str) -> None:
-    """The main Record/Download/Upload function.
+    """
+    It downloads a stream, removes silence, sets metadata, uploads to Mega, compresses the file, and
+    deletes the original copy
 
     Args:
-        fileName (str): the name of the file thats being streamed
-        hostAddress (str): the address to the stream
+      fileName (str): str = The name of the file
+      hostAddress (str): str = "http://hbniaudio.hbni.net:8000/stream"
+
+    Returns:
+      None.
     """
     global recordingPartNumber
     dt = datetime.now()
     appLog.info(f"{dt} - Started recording")
     RecordingStatus.setRecordingStatus(message=hostAddress)
+
+    r: float = random.random()
+    b: float = random.random()
+    g: float = random.random()
+    color: tuple = (r, g, b)
+    listeners_count.update({hostAddress: {"listeners": [], "color": color}})
+
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Started recording{Colors.ENDC}"
     )
@@ -265,17 +325,23 @@ def download(fileName: str, hostAddress: str) -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Recording stopped{Colors.ENDC}"
     )
+
     appLog.info(f"{dt} - Recording stopped")
+    graph = ListenersGraph(listeners_count)
+    graph.archive(hostAddress)
     # wait 15 seconds after a stream has stopped, just to make sure it actually stopped and not just crashed
     time.sleep(15)
     Changes(url="http://hbniaudio.hbni.net/").update()
+
+    listeners_count.pop(address)
+
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()
         if findHtmlTag("data-mnt", html=html):  # If stream is still online
             streams = findHtmlTag("data-mnt", html=html, shouldReplaceText=False)
             recordingPartNumber += 1
             for stream in streams:
-                if stream is hostAddress:
+                if stream == hostAddress:
                     threading.Thread(
                         target=download,
                         args=(
