@@ -58,3 +58,7 @@ def upload(filePath: str, host: str, description: str, date: str, length: float)
             length=length,
         )
         return
+        
+
+
+#upload("Recordings/Newdale - Newdale Broadcast - May 19 Thursday 2022 05_54 PM - 27m 11s.mp3", "newdale", "Newdale Broadcast", "May 19 Thursday 2022 05_54 PM", 27.1833333333)
