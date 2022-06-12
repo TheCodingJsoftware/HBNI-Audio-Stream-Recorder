@@ -71,3 +71,6 @@ test.py
 websiteDownloadLinks.json
 *.mp3
 ffmpeg-2022-02-10-git-b6bb6b9f22-full_build
+*.ini
+*.json
+*.txt
