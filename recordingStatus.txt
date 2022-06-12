@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-/brightstone
-=======
 Currently nothing to record
->>>>>>> 2b539707c4f6aee864bffb07c556c2595d6ff8b9
