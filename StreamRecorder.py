@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-06-12 17:03:58"
+__updated__ = "2022-06-15 16:56:15"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -333,7 +333,7 @@ def download(fileName: str, hostAddress: str) -> None:
     time.sleep(15)
     Changes(url="http://hbniaudio.hbni.net/").update()
 
-    listeners_count.pop(address)
+    listeners_count.pop(hostAddress)
 
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()

@@ -67,7 +67,7 @@ class ListenersGraph:
                 label=colony,
             )
             self.ax.set_xticklabels(dates, rotation=45, ha="right")
-        locator = mticker.MultipleLocator(6)
+        locator = mticker.MultipleLocator(15)
         self.ax.xaxis.set_major_locator(locator)
         plt.legend()
         self.fig.savefig(f"{FOLDER_LOCATION}/graph.png")
@@ -97,7 +97,7 @@ class ListenersGraph:
             dates, values, color=self.listeners_count[host]["color"], label=title
         )
         self.ax.set_xticklabels(dates, rotation=45, ha="right")
-        locator = mticker.MultipleLocator(6)
+        locator = mticker.MultipleLocator(15)
         self.ax.xaxis.set_major_locator(locator)
         plt.legend()
         self.fig.savefig(
