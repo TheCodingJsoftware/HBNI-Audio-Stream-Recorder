@@ -11,7 +11,7 @@ import Zip
 from GlobalVariables import FOLDER_LOCATION, Colors
 
 
-def upload(filePath: str, fileName: str) -> None:
+def upload(filePath: str, hostAddress: str, fileName: str) -> None:
     """
     It takes a file path and a file name, removes silence from the file, sets the artist, genre, title,
     and number of the file, renames the file, uploads the file to Mega, and then compresses the file.
@@ -26,9 +26,9 @@ def upload(filePath: str, fileName: str) -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
     )
-    RemoveSilence.removeSilence(
-        filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
-    )
+    #RemoveSilence.removeSilence(
+    #    filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
+    #)
 
     audioFileLength: int = AudioFile.getAudioFileLength(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
@@ -36,8 +36,6 @@ def upload(filePath: str, fileName: str) -> None:
 
     timeDelta = timedelta(minutes=audioFileLength)
     finalDeltatime: str = AudioFile.convertDeltatime(duration=timeDelta)
-    if recordingPartNumber != 0:
-        finalDeltatime += " - (Final Part)"
     finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
 
     AudioFile.setArtist(
@@ -94,6 +92,7 @@ def upload(filePath: str, fileName: str) -> None:
 
 
 upload(
-    filePath="20220614202122.mp3",
+    filePath="20220614202122",
+    hostAddress="/newrosedale",
     fileName="New Rosedale - New Rosedale Colony Singing for Elm River",
 )
