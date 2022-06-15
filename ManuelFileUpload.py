@@ -22,6 +22,7 @@ def upload(filePath: str, fileName: str) -> None:
     """
 
     timestr = datetime.now().strftime("%B %d %A %Y %I_%M %p")
+    dt = datetime.now()
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
     )
