@@ -26,9 +26,9 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
     )
-    #RemoveSilence.removeSilence(
-    #    filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
-    #)
+    RemoveSilence.removeSilence(
+        filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
+    )
 
     audioFileLength: int = AudioFile.getAudioFileLength(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
