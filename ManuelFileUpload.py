@@ -13,12 +13,13 @@ from GlobalVariables import FOLDER_LOCATION, Colors
 
 def upload(filePath: str, hostAddress: str, fileName: str) -> None:
     """
-    It takes a file path and a file name, removes silence from the file, sets the artist, genre, title,
-    and number of the file, renames the file, uploads the file to Mega, and then compresses the file.
+    It takes a file, removes silence, sets the metadata, uploads it to Mega, compresses it, and deletes
+    the original file
 
     Args:
-      filePath (str): str = The name of the file to be uploaded
-      fileName (str): str = "Name of the stream"
+      filePath (str): str = The name of the file that is being uploaded.
+      hostAddress (str): str = "/pineland"
+      fileName (str): str = "HBNI - " + fileName
     """
 
     timestr = datetime.now().strftime("%B %d %A %Y %I_%M %p")
