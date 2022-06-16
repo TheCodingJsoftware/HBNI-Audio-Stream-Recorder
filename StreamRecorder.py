@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-06-15 16:56:15"
+__updated__ = "2022-06-16 08:43:42"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -333,8 +333,6 @@ def download(fileName: str, hostAddress: str) -> None:
     time.sleep(15)
     Changes(url="http://hbniaudio.hbni.net/").update()
 
-    listeners_count.pop(hostAddress)
-
     with open("archivedPage.html", "r") as htmlFile:
         html = htmlFile.read()
         if findHtmlTag("data-mnt", html=html):  # If stream is still online
@@ -359,6 +357,7 @@ def download(fileName: str, hostAddress: str) -> None:
                 f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{fileName} - (Part {recordingPartNumber}).mp3",
             )
             return
+    listeners_count.pop(hostAddress)
     appLog.info(f"{dt} - Removing silence")
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
