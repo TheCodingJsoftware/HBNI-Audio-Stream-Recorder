@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-06-16 11:11:30"
+__updated__ = "2022-06-16 14:10:14"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -257,7 +257,7 @@ def update_graph_data():
     key of "listeners" and a value of a list of dictionaries. The list of dictionaries has a key of the
     current time and a value of the current listeners count.
     """
-    regex = r"<button class='change-stream' data-mnt='(\/\w{1,})' data-stream='([\w\W\s]{1,})'>[\W\w\s]{1,}<\/button><br \/>\s{1,}<a href='http:\/\/hbniaudio\.hbni\.net:8000\/\w{1,}'>Direct Link<\/a><br \/>\s{1,}Listeners Current: (\d{1,})"
+    regex = r"<button class='change-stream' data-mnt='(\/\w{1,})' data-stream='([\w\W\s]{1,100})'>[\W\w\s]{1,100}<\/button><br \/>\s{1,}<a href='http:\/\/hbniaudio\.hbni\.net:8000\/\w{1,}'>Direct Link<\/a><br \/>\s{1,}Listeners Current: (\d{1,})"
     with open(f"{FOLDER_LOCATION}/archivedPage.html", "r") as archivedPage:
         html = archivedPage.read()
 
