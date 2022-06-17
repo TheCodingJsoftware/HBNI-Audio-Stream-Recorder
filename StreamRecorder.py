@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-06-16 14:10:14"
+__updated__ = "2022-06-16 23:05:25"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -298,7 +298,8 @@ def download(fileName: str, hostAddress: str) -> None:
     global recordingPartNumber
     dt = datetime.now()
     appLog.info(f"{dt} - Started recording")
-    RecordingStatus.setRecordingStatus(message=hostAddress)
+    RecordingStatus.setRecordingStatus(message=hostAddress, file_mode="a")
+    RecordingStatus.updateStatus()
 
     r: float = random.random()
     b: float = random.random()
@@ -432,7 +433,8 @@ def download(fileName: str, hostAddress: str) -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Original copy deleted{Colors.ENDC}"
     )
-    RecordingStatus.setRecordingStatus(message="Currently nothing to record")
+    RecordingStatus.removeHost(host_to_delete=hostAddress)
+    RecordingStatus.updateStatus()
 
 
 def main() -> None:

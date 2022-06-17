@@ -84,9 +84,11 @@
             <h3>Recording Status: </h3>
         </div>
         {% if recordingStatus != "Currently nothing to record"%}
-        <div class="item">
-            Currently recording <a href="http://hbniaudio.hbni.net:8000{{recordingStatus}}">{{recordingStatus}}</a>
-        </div>
+            {% for hostAddress in recordingStatus %}
+                <div class="item">
+                    Currently recording <a href="http://hbniaudio.hbni.net:8000{{hostAddress}}">{{hostAddress}}</a>
+                </div>
+            {% endfor %}
         <div class="item">
             <div class="recorder-container">
                 <div class="outer"></div>
@@ -119,7 +121,6 @@
         href="mailto:jared@pinelandfarms.ca">jared@pinelandfarms.ca</a></p>
     </div>
     <ul class="apps">
-
         <a class="download apple" href="https://apps.apple.com/ca/app/hbni-audio-streaming/id1611672333">
             <i class="fa fa fa-apple fa-3x"></i>
             <span class="df">Download from</span>

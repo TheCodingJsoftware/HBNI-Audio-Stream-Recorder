@@ -129,12 +129,15 @@ def downloadDatabase() -> None:
         print("Content was not found.")
 
 
-def getRecordingStatus() -> str:
+def getRecordingStatus() -> list:
     """Gets recording status from GitHub"""
     url = "https://raw.githubusercontent.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/master/recordingStatus.txt"
     req = requests.get(url)
     if req.status_code == requests.codes.ok:
-        return req.content.decode()
+        content = req.content.decode().split("\n")
+        if content[0] == "Currently nothing to record":
+            content = content[0]
+        return content
     print(
         f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.WARNING}Content was not found.{Colors.ENDC}"
     )
@@ -175,5 +178,5 @@ def getDownloadLink(fileName: str) -> str:
         return None
 
 
-threading.Thread(target=downloadThread).start()
-# app.run(host="10.0.0.217", port=5000, debug=False, threaded=True)
+# threading.Thread(target=downloadThread).start()
+app.run(host="10.0.0.217", port=5000, debug=False, threaded=True)
