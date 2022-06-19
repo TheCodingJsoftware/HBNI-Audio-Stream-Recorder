@@ -78,7 +78,7 @@ def updateStatus() -> None:
     origin = repo.remote("origin")
     origin.push()
     print(
-        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}{message}{Colors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Updated server status{Colors.ENDC}"
     )
 
 
