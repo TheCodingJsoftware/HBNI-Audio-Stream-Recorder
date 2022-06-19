@@ -1,7 +1,1 @@
-<<<<<<< HEAD
-/newdale
-/test
-/test
-=======
 Currently nothing to record
->>>>>>> 8b67a3293c080af12af56f8349cdf41c414400b1
