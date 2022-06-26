@@ -3,7 +3,6 @@ from datetime import datetime
 
 import requests
 from git import Repo
-from isort import file
 
 from GlobalVariables import FOLDER_LOCATION, Colors
 
