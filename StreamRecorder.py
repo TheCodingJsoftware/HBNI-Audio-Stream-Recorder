@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, StreamRecorder"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
 __version__ = "1.0.0"
-__updated__ = "2022-06-19 12:42:56"
+__updated__ = "2022-06-25 22:44:28"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -235,6 +235,17 @@ def run(sc: sched.scheduler) -> None:
         print(
             f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Host: {title} Description: {body}{Colors.ENDC}"
         )
+        with open(f"{FOLDER_LOCATION}/hostsToIgnore.txt", "r") as hostsToIgnoreFile:
+            hosts = hostsToIgnoreFile.readlines()
+            for host in hosts:
+                host = host.replace("\n", "")
+                if host == address:
+                    print(
+                        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.WARNING}Host does not want to be recordered, aborting.{Colors.ENDC}"
+                    )
+                    appLog.info(f"{dt} - Host does not want to be recordered - Aborted.")
+                    s.enter(15, 1, run, (sc,))
+                    return
         appLog.info(f"{dt} - Host: {title} Description: {body} - Recording starting")
         fileName = f"{title} - {body}"
         threading.Thread(

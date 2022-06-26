@@ -3,6 +3,7 @@ from datetime import datetime
 
 import requests
 from git import Repo
+from isort import file
 
 from GlobalVariables import FOLDER_LOCATION, Colors
 
@@ -199,6 +200,19 @@ def getDownloadLink(fileName: str) -> str:
         return data[fileName]["downloadLink"]
     except KeyError:
         return None
+
+
+def removeAllByHost(host: str) -> None:
+    """
+    It removes all download links that have the same host as the one specified
+
+    Args:
+      host (str): The host of the file.
+    """
+    data = loadJson()
+    for filename in list(data.keys()):
+        if data[filename]["host"] == host:
+            removeDownloadLink(filename=filename)
 
 
 def getCountOfStreams(host: str) -> int:
