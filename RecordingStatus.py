@@ -1,3 +1,4 @@
+import contextlib
 import fileinput
 from datetime import datetime
 
@@ -15,26 +16,55 @@ def setRecordingStatus(message: str, file_mode: str) -> None:
       message (str): The message to be written to the file.
       file_mode (str): 'a' for append, 'w' for write
     """
-
-    with open(f"{FOLDER_LOCATION}/recordingStatus.txt", file_mode) as recordingStatusFile:
-        recordingStatusFile.write("\n" + message + "\n")
-
     with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "r") as f:
         lines = f.readlines()
-        if lines[0] == "Currently nothing to record\n":
-            removeHost(host_to_delete="Currently nothing to record")
+        with contextlib.suppress(IndexError):
+            if "Currently nothing to record" in lines[0]:
+                removeHost(host_to_delete="Currently nothing to record")
+    hosts = [message]
+    hosts += __getAllHosts()
+    __clearFile()
+    with open(f"{FOLDER_LOCATION}/recordingStatus.txt", file_mode) as recordingStatusFile:
+        for host in hosts:
+            recordingStatusFile.write("\n" + host + "\n")
 
     __removeEemptyLines()
+
+
+def __clearFile() -> None:
+    """
+    It clears the file recordingStatus.txt
+    """
+    with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "w") as f:
+        f.write("")
+
+
+def __getAllHosts() -> list[str]:
+    """
+    It reads a file, removes duplicate lines, and returns the lines as a list
+
+    Returns:
+      A list of strings.
+    """
+    with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "r") as f:
+        lines = f.readlines()
+        lines = [line.replace("\n", "") for line in lines]
+        lines = list(set(lines))
+    new_lines = []
+    for i, line in enumerate(lines):
+        if i == 0:
+            new_lines.append(line)
+            continue
+        new_lines.append(line + "\n")
+    return new_lines
 
 
 def __removeEemptyLines() -> None:
     """
     It removes empty lines from a text file
     """
-    with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "r") as f:
-        lines = f.readlines()
-    with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "w") as f:
-        f.write("")
+    lines = __getAllHosts()
+    __clearFile()
     with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "a") as f:
         for i, line in enumerate(lines, start=1):
             if line == "\n":
@@ -55,13 +85,12 @@ def removeHost(host_to_delete: str) -> None:
     Args:
       host_to_delete (str): str = The hostname of the host to remove from the recordingStatus.txt file.
     """
-    with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "r") as recordingStatusFile:
-        hosts = recordingStatusFile.readlines()
-    print(len(hosts))
-    if len(hosts) == 1:
+    hosts = __getAllHosts()
+    if len(hosts) == 1 and host_to_delete != "Currently nothing to record":
+        __clearFile()
         setRecordingStatus(message="Currently nothing to record", file_mode="w")
         return
-    setRecordingStatus(message="", file_mode="w")
+    __clearFile()
     for host in hosts:
         if host_to_delete not in host:
             setRecordingStatus(message=host, file_mode="a")
