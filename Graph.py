@@ -166,10 +166,3 @@ class ListenersGraph:
         print(
             f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}{message}{Colors.ENDC}"
         )
-
-
-with open("logs/Milshof.json", "r") as f:
-    data = json.load(f)
-
-g = ListenersGraph(data)
-g.archive(host="/milshof")
