@@ -27,9 +27,9 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
     )
-    RemoveSilence.removeSilence(
-        filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
-    )
+    #RemoveSilence.removeSilence(
+    #    filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
+    #)
 
     audioFileLength: int = AudioFile.getAudioFileLength(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
@@ -93,7 +93,7 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
 
 
 upload(
-    filePath="Elmriver - Wake And Funeral For Isaack Hofer, Elm River - (Part 2)",
-    hostAddress="/elmriver",
-    fileName="Elmriver - Wake And Funeral For Isaack Hofer, Elm River",
+    filePath="20220706184057",
+    hostAddress="/millshof",
+    fileName="Millshof Singing For Crystal Spring And Riverside",
 )
