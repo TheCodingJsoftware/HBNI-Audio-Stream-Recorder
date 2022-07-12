@@ -39,7 +39,7 @@ def __clearFile() -> None:
         f.write("")
 
 
-def __getAllHosts() -> list[str]:
+def __getAllHosts() -> "list[str]":
     """
     It reads a file, removes duplicate lines, and returns the lines as a list
 

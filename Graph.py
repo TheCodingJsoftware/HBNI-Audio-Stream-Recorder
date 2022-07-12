@@ -1,3 +1,4 @@
+import itertools
 import json
 import random
 from datetime import datetime
@@ -37,7 +38,26 @@ class ListenersGraph:
         It takes the data from the listeners_count dictionary and plots it on a graph
         """
         colonies = list(self.listeners_count.keys())
+
         for colony in colonies:
+
+            @mticker.FuncFormatter
+            def major_formatter(x, pos):
+                """
+                It returns the dates in the dates list.
+
+                Args:
+                x: The x coordinate of the tick
+                pos: the position of the tick
+
+                Returns:
+                The dates list is being returned.
+                """
+                try:
+                    return dates[colony][int(x)]
+                except IndexError:
+                    return dates[colony][-1]
+
             values = []
             dates = []
             # indexes = []
@@ -49,7 +69,6 @@ class ListenersGraph:
                 dates.append(date)
                 # indexes.append(i)
                 values.append(int(self.listeners_count[colony]["listeners"][i][date]))
-
             # Smooth interpretation of data
             # indexes = np.array(indexes)
             # smooth = make_interp_spline(indexes, values)
@@ -66,9 +85,21 @@ class ListenersGraph:
                 color=self.listeners_count[colony]["color"],
                 label=colony,
             )
+            self.ax.set_xlim([0, len(dates)])
             self.ax.set_xticklabels(dates, rotation=45, ha="right")
-        locator = mticker.MultipleLocator(30)
-        self.ax.xaxis.set_major_locator(locator)
+            self.ax.xaxis.set_major_locator(mticker.MaxNLocator(30))
+            self.ax.xaxis.set_minor_locator(mticker.MaxNLocator(1))
+
+            # FuncFormatter can be used as a decorator
+            @mticker.FuncFormatter
+            def major_formatter(x, pos):
+                try:
+                    return dates[int(x)]
+                except IndexError:
+                    return len(dates)
+
+            self.ax.xaxis.set_major_formatter(major_formatter)
+            self.ax.set_xticklabels(dates, rotation=45, ha="right")
         plt.legend()
         self.fig.savefig(f"{FOLDER_LOCATION}/graph.png")
         self.__upload_graph()
@@ -96,9 +127,29 @@ class ListenersGraph:
         self.ax.plot(
             dates, values, color=self.listeners_count[host]["color"], label=title
         )
+        self.ax.set_xlim([0, len(dates)])
         self.ax.set_xticklabels(dates, rotation=45, ha="right")
-        locator = mticker.MultipleLocator(30)
-        self.ax.xaxis.set_major_locator(locator)
+        self.ax.xaxis.set_major_locator(mticker.MaxNLocator(30))
+        self.ax.xaxis.set_minor_locator(mticker.MaxNLocator(1))
+
+        @mticker.FuncFormatter
+        def major_formatter(x, pos):
+            """
+            It returns the dates in the dates list.
+
+            Args:
+              x: The x coordinate of the tick
+              pos: the position of the tick
+
+            Returns:
+              The dates list is being returned.
+            """
+            try:
+                return dates[int(x)]
+            except IndexError:
+                return dates[-1]
+
+        self.ax.xaxis.set_major_formatter(major_formatter)
         plt.legend()
         self.fig.savefig(
             f"{FOLDER_LOCATION}/logs/{datetime.now().strftime('%Y-%m-%d-%H-%M')} - {title}.png"
