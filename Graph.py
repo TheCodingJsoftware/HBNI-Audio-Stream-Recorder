@@ -40,24 +40,6 @@ class ListenersGraph:
         colonies = list(self.listeners_count.keys())
 
         for colony in colonies:
-
-            @mticker.FuncFormatter
-            def major_formatter(x, pos):
-                """
-                It returns the dates in the dates list.
-
-                Args:
-                x: The x coordinate of the tick
-                pos: the position of the tick
-
-                Returns:
-                The dates list is being returned.
-                """
-                try:
-                    return dates[colony][int(x)]
-                except IndexError:
-                    return dates[colony][-1]
-
             values = []
             dates = []
             # indexes = []
@@ -90,13 +72,22 @@ class ListenersGraph:
             self.ax.xaxis.set_major_locator(mticker.MaxNLocator(30))
             self.ax.xaxis.set_minor_locator(mticker.MaxNLocator(1))
 
-            # FuncFormatter can be used as a decorator
             @mticker.FuncFormatter
             def major_formatter(x, pos):
+                """
+                It returns the dates in the dates list.
+
+                Args:
+                x: The x coordinate of the tick
+                pos: the position of the tick
+
+                Returns:
+                The dates list is being returned.
+                """
                 try:
                     return dates[int(x)]
                 except IndexError:
-                    return len(dates)
+                    return dates[-1]
 
             self.ax.xaxis.set_major_formatter(major_formatter)
             self.ax.set_xticklabels(dates, rotation=45, ha="right")
