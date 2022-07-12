@@ -2,7 +2,9 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
 
+{% if showFaq == false %}
 
 <head>
     <link rel="icon" href="/static/favicon.png">
@@ -84,11 +86,11 @@
             <h3>Recording Status: </h3>
         </div>
         {% if recordingStatus != "Currently nothing to record"%}
-            {% for hostAddress in recordingStatus %}
-                <div class="item">
-                    Currently recording <a href="http://hbniaudio.hbni.net:8000{{hostAddress}}">{{hostAddress}}</a>
-                </div>
-            {% endfor %}
+        {% for hostAddress in recordingStatus %}
+        <div class="item">
+            Currently recording <a href="http://hbniaudio.hbni.net:8000{{hostAddress}}">{{hostAddress}}</a>
+        </div>
+        {% endfor %}
         <div class="item">
             <div class="recorder-container">
                 <div class="outer"></div>
@@ -106,7 +108,11 @@
     <details>
         <summary>Current Listeners</summary>
         <span>
-            <img class="graph "src="https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/blob/master/graph.png?raw=true" alt="graph.png" height=400 width=600>
+            <div id="logo">
+                <img class="graph "
+                    src="https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/blob/master/graph.png?raw=true"
+                    alt="graph.png" height=400 width=600>
+            </div>
         </span>
     </details>
     {% endif %}
@@ -119,6 +125,8 @@
         <h3>HBNI Streaming Archive</h3>
     </div <div class="address">For Questions, Comments or Concerns about this service please email: <a
         href="mailto:jared@pinelandfarms.ca">jared@pinelandfarms.ca</a></p>
+    <a href="https://hbniaudioarchive.herokuapp.com/frequently-asked-questions">Frequently Asked Questions </a></p>
+    </p>
     </div>
     <ul class="apps">
         <a class="download apple" href="https://apps.apple.com/ca/app/hbni-audio-streaming/id1611672333">
@@ -149,6 +157,70 @@
         <p>Copyright 2022 by TheCodingJ's</p>
     </div>
 </footer>
+
+</html>
+
+{% else %}
+<zero-md>
+    <template>
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/sindresorhus/github-markdown-css@4/github-markdown.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/PrismJS/prism@1/themes/prism.min.css" />
+    </template>
+    <script type="text/markdown">
+        # Frequently Asked Questions
+
+## How do I play archives without downloading them?
+
+### Apple
+
+1. Install [Mega](https://apps.apple.com/us/app/mega/id706857885) on your phone. *(You may or may not have to create an account)*
+2. Go to the [HBNI archive](https://hbniaudioarchive.herokuapp.com) and press any archive you want to listen to.
+3. You will be redirected ot the [Mega](https://apps.apple.com/us/app/mega/id706857885) app.
+4. You can directly play the broadcast that way without downloading it to your device.
+
+### Android
+
+1. Install [Mega](https://play.google.com/store/apps/details?id=mega.privacy.android.app&hl=en_US&gl=US) on your phone. *(You may or may not have to create an account)*
+2. Go to the [HBNI archive](https://hbniaudioarchive.herokuapp.com) and press any archive you want to listen to.
+3. You will be redirected ot the [Mega](https://play.google.com/store/apps/details?id=mega.privacy.android.app&hl=en_US&gl=US) app.
+4. You can directly play the broadcast that way without downloading it to your device.
+
+### Windows (Computer)
+
+- Just press on any archive on the [HBNI archive](https://hbniaudioarchive.herokuapp.com), you will be redirected to [mega.nz](https://mega.nz), from there you can just press play.
+
+## Why does the website not load?
+
+- Try refreshing the page.
+
+## Where are the archives stored?
+
+- The archives (as of 2022-07-12) are stored on a file hosting website called [mega.nz](https://mega.nz).
+- The folder where all archives are stored online is [here](https://mega.nz/folder/CxF1AQwS#rucPTrUDuhHE5I76NtpkLA).
+- All data on each broadcast (date, length, host, description, etc...) can be found [here](https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/blob/master/downloadLinks.json).
+    - This data is what the archive refers from, whatever changes in this file, changes on the [HBNI archive](https://hbniaudioarchive.herokuapp.com).
+    - However, some of this data such as the [graphs](https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/blob/master/graph.png) or listeners count is not publicly available, although if you wish to access it please email me at: jared@pinelandfarms.ca
+
+## I want to remove a broadcast on the archive.
+
+- Please email me the exact details at: jared@pinelandfarms.ca
+
+## I don't want any of my broadcasts on the archive.
+
+- Please email me at: jared@pinelandfarms.ca
+- **NOTE** The [HBNI recorder](https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder) records all broadcasts by default, if you wish to be exempt from these conditions, the recorder has [list](https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/blob/master/hostsToIgnore.txt) of hosts will never be recorded. Just make sure when you start a broadcast, use the same host name each time.
+
+# Contact
+
+If you have any other questions, comments or concerns please email me: jared@pinelandfarms.ca
+
+    </script>
+</zero-md>
+</body>
+
+{% endif %}
+
 <script>
     var input = document.getElementById("search");
     // Execute a function when the user releases a key on the keyboard
@@ -184,5 +256,3 @@
         });
     });
 </script>
-
-</html>

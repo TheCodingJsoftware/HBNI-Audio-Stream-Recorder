@@ -8,7 +8,14 @@ from os import listdir
 from os.path import isfile, join
 
 import requests
-from flask import Flask, current_app, render_template, send_file, url_for
+from flask import (
+    Flask,
+    current_app,
+    render_template,
+    send_file,
+    send_from_directory,
+    url_for,
+)
 
 from GlobalVariables import FOLDER_LOCATION
 
@@ -41,6 +48,8 @@ def index() -> None:
         monthsList=getMonthsList(),
         daysList=getDaysList(),
         recordingStatus=getRecordingStatus(),
+        showFaq=False,
+        title="HBNI Audio Streaming Archive",
     )
 
 
@@ -53,6 +62,7 @@ def search(file_name):
     """
     fileNames: list[str] = []
     downloadLinks: list[str] = []
+    showFaq = file_name == "frequently-asked-questions"
 
     data = loadJson()
     for fileName in data:
@@ -71,6 +81,8 @@ def search(file_name):
         monthsList=getMonthsList(),
         daysList=getDaysList(),
         recordingStatus=getRecordingStatus(),
+        showFaq=showFaq,
+        title="HBNI Audio Streaming Archive",
     )
 
 
