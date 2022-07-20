@@ -43,7 +43,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="inputSearch"/>
+       <widget class="QLineEdit" name="inputSearch">
+        <property name="placeholderText">
+         <string>Search for broadcasts...</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QScrollArea" name="scrollArea">
@@ -55,7 +62,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>661</width>
+           <width>961</width>
            <height>481</height>
           </rect>
          </property>
@@ -72,14 +79,14 @@
         <item>
          <widget class="QPushButton" name="btnPushToGithub">
           <property name="text">
-           <string>Commit to github</string>
+           <string>Commit to Github</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="btnAdd">
           <property name="text">
-           <string>Add new</string>
+           <string>Add New Broadcast</string>
           </property>
          </widget>
         </item>

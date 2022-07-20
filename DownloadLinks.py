@@ -214,6 +214,19 @@ def removeAllByHost(host: str) -> None:
             removeDownloadLink(filename=filename)
 
 
+def getAllHosts() -> "list[str]":
+    """
+    It returns a list of all the hosts in the JSON file
+
+    Returns:
+      A list of strings.
+    """
+    data = loadJson()
+    hosts = [data[filename]["host"].replace("/", "") for filename in list(data.keys())]
+    hosts = set(hosts)
+    return hosts
+
+
 def getCountOfStreams(host: str) -> int:
     """Gets the count of streams that a certain host has hosted
 

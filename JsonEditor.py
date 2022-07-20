@@ -7,6 +7,7 @@ from PyQt5.QtCore import QRegExp, Qt, QTimer
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import (
     QApplication,
+    QCompleter,
     QDialog,
     QDoubleSpinBox,
     QFrame,
@@ -23,6 +24,96 @@ from PyQt5.QtWidgets import (
 )
 
 import DownloadLinks
+
+
+class HumbleDoubleSpinBox(QDoubleSpinBox):
+    """It's a spin box that doesn't let you enter a value that's too close to zero."""
+
+    def __init__(self, *args):
+        """
+        The function sets the focus policy of the spinbox to strong focus
+        """
+        super(HumbleDoubleSpinBox, self).__init__(*args)
+        self.setFocusPolicy(Qt.StrongFocus)
+
+    def focusInEvent(self, event):
+        """
+        When the user clicks on the spinbox, the focus policy is changed to allow the mouse wheel to be
+        used to change the value
+        Args:
+          event: QFocusEvent
+        """
+        self.setFocusPolicy(Qt.WheelFocus)
+        super(HumbleDoubleSpinBox, self).focusInEvent(event)
+
+    def focusOutEvent(self, event):
+        """
+        When the user clicks on the spinbox, the focus policy is changed to StrongFocus, and then the
+        focusOutEvent is called
+        Args:
+          event: QFocusEvent
+        """
+        self.setFocusPolicy(Qt.StrongFocus)
+        super(HumbleDoubleSpinBox, self).focusOutEvent(event)
+
+    def wheelEvent(self, event):
+        """
+        If the spinbox has focus, then it will behave as normal. If it doesn't have focus, then the
+        wheel event will be ignored
+        Args:
+          event: The event object
+        Returns:
+          The super class of the HumbleSpinBox class.
+        """
+        if self.hasFocus():
+            return super(HumbleDoubleSpinBox, self).wheelEvent(event)
+        else:
+            event.ignore()
+
+
+class HumbleSpinBox(QSpinBox):
+    """It's a spin box that doesn't let you enter a value that's too close to zero."""
+
+    def __init__(self, *args):
+        """
+        The function sets the focus policy of the spinbox to strong focus
+        """
+        super(HumbleSpinBox, self).__init__(*args)
+        self.setFocusPolicy(Qt.StrongFocus)
+
+    def focusInEvent(self, event):
+        """
+        When the user clicks on the spinbox, the focus policy is changed to allow the mouse wheel to be
+        used to change the value
+        Args:
+          event: QFocusEvent
+        """
+        self.setFocusPolicy(Qt.WheelFocus)
+        super(HumbleSpinBox, self).focusInEvent(event)
+
+    def focusOutEvent(self, event):
+        """
+        When the user clicks on the spinbox, the focus policy is changed to StrongFocus, and then the
+        focusOutEvent is called
+        Args:
+          event: QFocusEvent
+        """
+        self.setFocusPolicy(Qt.StrongFocus)
+        super(HumbleSpinBox, self).focusOutEvent(event)
+
+    def wheelEvent(self, event):
+        """
+        If the spinbox has focus, then it will behave as normal. If it doesn't have focus, then the
+        wheel event will be ignored
+        Args:
+          event: The event object
+        Returns:
+          The super class of the HumbleSpinBox class.
+        """
+        if self.hasFocus():
+            return super(HumbleSpinBox, self).wheelEvent(event)
+        else:
+            event.ignore()
 
 
 class QDialogClass(QDialog):
@@ -118,6 +209,11 @@ class MainWindow(QMainWindow):
         self.index = 0
         # self.loadContents()
         self.inputSearch.returnPressed.connect(self.startTimer)
+
+        autofill_search_options = DownloadLinks.getAllHosts()
+        completer = QCompleter(autofill_search_options)
+        completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.inputSearch.setCompleter(completer)
         self.btnPushToGithub.clicked.connect(
             partial(DownloadLinks.uploadDatabase, "Updated downloadLinks.json file.")
         )
@@ -172,12 +268,12 @@ class MainWindow(QMainWindow):
                     label = QLabel(self, text=data)
                     gridLayout.addWidget(label, self.index, 0)
                     if data == "id":
-                        edit = QSpinBox(self)
+                        edit = HumbleSpinBox(self)
                         edit.setMaximum(999999)
                         edit.setFocusPolicy(Qt.ClickFocus)
                         edit.setValue(int(json[name][data]))
                     elif data == "length":
-                        edit = QDoubleSpinBox(self)
+                        edit = HumbleDoubleSpinBox(self)
                         edit.setDecimals(15)
                         edit.setSuffix(" minutes")
                         edit.setFocusPolicy(Qt.ClickFocus)
@@ -258,7 +354,7 @@ class MainWindow(QMainWindow):
             length=self.jsonContent[name]["length"][0].value(),
             id=self.jsonContent[name]["id"][0].value(),
         )
-        self.startTimer()
+        # self.startTimer()
 
     def deleteJson(self, name: str) -> None:
         """
