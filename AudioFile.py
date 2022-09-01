@@ -1,7 +1,9 @@
 import mutagen
 from mutagen.easyid3 import EasyID3
 from pydub import AudioSegment
+from pydub.utils import which
 
+AudioSegment.converter = which("ffmpeg")
 
 def getAudioFileLength(pathToFile: str) -> float:
     """

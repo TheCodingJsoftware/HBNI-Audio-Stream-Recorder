@@ -374,9 +374,9 @@ def download(fileName: str, hostAddress: str) -> None:
     print(
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
     )
-    RemoveSilence.removeSilence(
-        filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3"
-    )
+    #RemoveSilence.removeSilence(
+    #    filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3"
+    #)
 
     audioFileLength: int = AudioFile.getAudioFileLength(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{recordingstr}.mp3"
