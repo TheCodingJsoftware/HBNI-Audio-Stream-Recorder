@@ -1,2 +1,3 @@
+/sunnyside
 /windybay
 /whiteshell
