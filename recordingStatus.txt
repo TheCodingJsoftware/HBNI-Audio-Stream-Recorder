@@ -1,4 +1,2 @@
-/PoplarPoint
-/Pineland
-/test
+/test/Pineland
 /acadia
