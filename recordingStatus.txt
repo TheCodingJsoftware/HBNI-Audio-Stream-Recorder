@@ -1,3 +1,1 @@
-/ridgeland
-/PoplarPoint
-/ridgeland/test/Pineland/acadia
+/ridgeland/ridgeland/test/Pineland/acadia
