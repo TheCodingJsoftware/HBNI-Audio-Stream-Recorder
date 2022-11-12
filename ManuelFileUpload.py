@@ -34,7 +34,7 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
     audioFileLength: int = AudioFile.getAudioFileLength(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
     )
-
+    #audioFileLength: int = 258.316666666
     timeDelta = timedelta(minutes=audioFileLength)
     finalDeltatime: str = AudioFile.convertDeltatime(duration=timeDelta)
     finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
@@ -93,7 +93,7 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
 
 
 upload(
-    filePath="20220830165150",
-    hostAddress="/brightstone",
-    fileName="Brightstone and Whiteshell",
+    filePath="Crystal - Crystal Spring Funeral For Tim Kleinsasser - (Final Part)",
+    hostAddress="/crystal",
+    fileName="Crystal - Crystal Spring Funeral For Tim Kleinsasser - (Final Part)",
 )
