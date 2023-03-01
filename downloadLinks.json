@@ -1375,13 +1375,21 @@
         "host": "/littlecreek",
         "id": 171
     },
-    "Rosedale - Rosedale Singing - February 27 Monday 2023 08_02 PM - 28m 1s.mp3": {
+    "Rosedale - Rosedale Singing - February 27 Tuesday 2023 10_04 PM - 19m 58s - (Part 1).mp3": {
+        "date": "February 27 Tuesday 2023 10_04 PM",
+        "description": "Rosedale Singing",
+        "downloadLink": "https://mega.co.nz/#!m1cUnbYZ!jB0Ym2nhEKcd99e9MPya9jLOl5iMecFemO0V9VKAuVQ",
+        "length": 19.978883333333332,
+        "host": "/rosedale",
+        "id": 172
+    },
+    "Rosedale - Rosedale Singing - February 27 Monday 2023 08_02 PM - 28m 1s - (Final Part).mp3": {
         "date": "February 27 Monday 2023 08_02 PM",
         "description": "Rosedale Singing",
         "downloadLink": "https://mega.co.nz/#!vh9TUQ6J!W0hw6iANxQumtPD0B7uPo_A5_Nns-enLg7E8PSjI7SU",
         "length": 28.0246,
         "host": "/rosedale",
-        "id": 172
+        "id": 173
     },
     "Rosedale - Wake for Zacharias Waldner - February 28 Tuesday 2023 10_11 AM - 1h 43m 13s.mp3": {
         "date": "February 28 Tuesday 2023 10_11 AM",
@@ -1389,7 +1397,7 @@
         "downloadLink": "https://mega.co.nz/#!nhVCCY4a!ciH-HnMehM_amNcngSqJdKBOcLMfAj7eiaIZPeByxn0",
         "length": 103.22981666666666,
         "host": "/rosedale",
-        "id": 173
+        "id": 174
     },
     "Rosedale - Funeral for Zacharias Waldner - February 28 Tuesday 2023 02_06 PM - 1h 1m 17s.mp3": {
         "date": "February 28 Tuesday 2023 02_06 PM",
@@ -1397,14 +1405,6 @@
         "downloadLink": "https://mega.co.nz/#!Hg8jjAKR!dONb2DTNqhUeTwCENxyniP3DCfEzwCBo-N3keEPXf_M",
         "length": 61.2837,
         "host": "/rosedale",
-        "id": 174
-    },
-    "Rosedale - Rosefale Singing - (Part 1) - February 28 Tuesday 2023 10_04 PM - 19m 58s.mp3": {
-        "date": "February 28 Tuesday 2023 10_04 PM",
-        "description": "(Part 1)",
-        "downloadLink": "https://mega.co.nz/#!m1cUnbYZ!jB0Ym2nhEKcd99e9MPya9jLOl5iMecFemO0V9VKAuVQ",
-        "length": 19.978883333333332,
-        "host": "/Rosedale",
         "id": 175
     }
 }
