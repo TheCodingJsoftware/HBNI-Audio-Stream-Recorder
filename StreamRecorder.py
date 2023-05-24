@@ -322,7 +322,7 @@ def download(fileName: str, hostAddress: str) -> None:
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Started recording{Colors.ENDC}"
     )
     timestr = datetime.now().strftime("%B %d %A %Y %I_%M %p")
-    recordingstr = time.strftime("%Y%m%d%H%M%S")
+    recordingstr = fileName + " - " + timestr
     process = subprocess.Popen(
         [
             "ffmpeg",
