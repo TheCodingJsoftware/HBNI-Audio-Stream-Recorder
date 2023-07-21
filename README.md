@@ -16,14 +16,14 @@ Add to **PATH** environment variables.
 **PYTHON 3.8+**
 
 ```
-pip install flask natsort mega.py gitpython pydub colorama pyqt5 pyqtdarktheme mutagen matplotlib themepy
+pip install --upgrade flask natsort mega.py gitpython pydub colorama pyqt5 qt_material mutagen matplotlib themepy google-api-python-client google-auth-httplib2 google-auth-oauthlib
 ```
 
-## JsonEditor.py
+## Editing Archived Streams Data
 
 Demo:
 
-![image](https://user-images.githubusercontent.com/25397800/157153928-06c7fecd-d541-42f6-ac73-f24a88136f69.png)
+![image](https://github.com/TheCodingJsoftware/HBNI-Audio-Stream-Recorder/assets/25397800/e25a2d75-f644-4725-a057-405173aaf522)
 
 Run with:
 
@@ -135,7 +135,10 @@ Add this line before ```@xscreensaver -no-splash```
 +-- Zip.py
 ```
 
-Create a `credentials.json` file with the following:
+
+## Mega Setup
+
+Create a `mega_credentials.json` file with the following:
 ```
 {
     "username": "",
@@ -143,3 +146,9 @@ Create a `credentials.json` file with the following:
 }
 ```
 Make sure you fill these out with your mega login credetials.
+
+## GoogleDrive Setup
+
+Follow instructions here to setup: https://developers.google.com/drive/api/quickstart/python
+
+You need only to run `python GoogleDriveSetup.py` to upload files to GoogleDrive account.

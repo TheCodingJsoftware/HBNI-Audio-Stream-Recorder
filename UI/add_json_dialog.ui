@@ -82,7 +82,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="inputDate"/>
+        <widget class="QDateTimeEdit" name="inputDate"/>
        </item>
        <item>
         <widget class="QLineEdit" name="inputDescription">
@@ -100,14 +100,17 @@
           <string/>
          </property>
          <property name="placeholderText">
-          <string>https://mega.co.nz/</string>
+          <string>https://</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLineEdit" name="inputHost">
          <property name="text">
-          <string>/</string>
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>/name</string>
          </property>
         </widget>
        </item>

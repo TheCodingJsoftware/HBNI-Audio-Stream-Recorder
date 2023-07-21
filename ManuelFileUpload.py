@@ -93,7 +93,7 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
 
 
 upload(
-    filePath="20230317233901",
-    hostAddress="/decker",
-    fileName="Decker - Decker - (Final Part)",
+    filePath="Windybay - Unspecified Description - July 05 Wednesday 2023 10_12 AM",
+    hostAddress="/windybay",
+    fileName="Windybay - Unspecified Description - July 05 Wednesday 2023 10_12 AM",
 )

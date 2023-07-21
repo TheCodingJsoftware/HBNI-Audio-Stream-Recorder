@@ -20,7 +20,7 @@ def upload(filePath: str, host: str, description: str, date: str, length: float)
         date (str): date the file was created
     """
     fileName: str = filePath.split("/")[-1]
-    with open(f"{FOLDER_LOCATION}/credentials.json", "r") as credentialsFile:
+    with open(f"{FOLDER_LOCATION}/mega_credentials.json", "r") as credentialsFile:
         credentials = json.load(credentialsFile)
         mega = Mega({"verbose": True})
         mega._login_user(credentials["username"], credentials["password"])

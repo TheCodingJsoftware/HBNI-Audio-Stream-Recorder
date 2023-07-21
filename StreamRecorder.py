@@ -27,6 +27,7 @@ from urllib.request import urlopen
 
 import AudioFile
 import DownloadLinks
+import GoogleDriveUploader
 import MegaUploader
 import RecordingStatus
 import RemoveSilence
@@ -296,7 +297,7 @@ def update_graph() -> None:
 
 def download(fileName: str, hostAddress: str) -> None:
     """
-    It downloads a stream, removes silence, sets metadata, uploads to Mega, compresses the file, and
+    It downloads a stream, removes silence, sets metadata, uploads to GoogleDrive, compresses the file, and
     deletes the original copy
 
     Args:
@@ -413,10 +414,11 @@ def download(fileName: str, hostAddress: str) -> None:
     )
 
     if audioFileLength > 12:
-        appLog.info(f"{dt} - Starting upload to Mega")
+        appLog.info(f"{dt} - Starting upload")
         description: str = fileName.split(" - ")[-1]
-        MegaUploader.upload(
-            filePath=f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
+        GoogleDriveUploader.upload(
+            file_name=finalFileName,
+            file_path=f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
             host=hostAddress,
             description=description,
             date=timestr,
@@ -452,6 +454,17 @@ def main() -> None:
     """
     This function starts the scheduler, and then starts the stream listener
     """
+        
+    current_time = datetime.now().time()
+    target_time = datetime.strptime("04:00", "%H:%M").time()  # 4:00 AM
+
+    time_range_start = (datetime.combine(datetime.today(), target_time) - timedelta(minutes=120)).time()
+    time_range_end = (datetime.combine(datetime.today(), target_time) + timedelta(minutes=120)).time()
+
+    if time_range_start <= current_time <= time_range_end:
+        with open(f"{FOLDER_LOCATION}/recordingStatus.txt", "w") as f:
+            f.write("Currently nothing to record")
+        RecordingStatus.updateStatus()
     s.enter(0, 0, run, (s,))
     print(
         f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.HEADER}Starting stream listener{Colors.ENDC}"
