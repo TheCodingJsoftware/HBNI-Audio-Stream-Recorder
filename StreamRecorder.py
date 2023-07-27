@@ -17,6 +17,7 @@ import random
 import re
 import sched
 import subprocess
+import sys
 import threading
 import time
 import urllib.request
@@ -61,6 +62,27 @@ appLog = logging.getLogger("root")
 appLog.setLevel(logging.INFO)
 appLog.addHandler(logHandler)
 
+
+def excepthook(exc_type, exc_value, exc_traceback):
+    """
+    The above function is a custom exception hook that logs unhandled exceptions and then calls the
+    default exception hook.
+
+    Args:
+      exc_type: The type of the exception that was raised. It is a class object representing the type of
+    the exception (e.g., `TypeError`, `ValueError`, etc.).
+      exc_value: The `exc_value` parameter in the `excepthook` function represents the actual exception
+    object that was raised. It contains information about the exception, such as its type, message, and
+    any additional data associated with it.
+      exc_traceback: The traceback object that contains information about the exception's call stack. It
+    includes the line numbers and function names of the code that led to the exception being raised.
+    """
+    appLog.error("Unhandled exception", exc_info=(exc_type, exc_value, exc_traceback))
+    sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+
+# Set the exception hook
+sys.excepthook = excepthook
 
 class Changes:
     def __init__(self, url: str, archive: str = f"{FOLDER_LOCATION}/archivedPage.html"):

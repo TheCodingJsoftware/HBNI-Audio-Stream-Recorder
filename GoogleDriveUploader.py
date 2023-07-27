@@ -36,6 +36,15 @@ def upload(file_name: str, file_path: str, host: str, description: str, date: st
             .create(body=file_metadata, media_body=media, fields="id, webViewLink")
             .execute()
         )
+        
+        # Add permission to make the file publicly accessible
+        permission = {
+            "type": "anyone",
+            "role": "commenter",
+            "allowFileDiscovery": True,
+        }
+        service.permissions().create(fileId=uploaded_file["id"], body=permission).execute()
+
         print(
             f"{Colors.ENDC}{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKGREEN}Upload finished{Colors.ENDC}"
         )

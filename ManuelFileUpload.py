@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import AudioFile
 import DownloadLinks
 import MegaUploader
+import GoogleDriveUploader
 import RecordingStatus
 import RemoveSilence
 import Zip
@@ -65,8 +66,9 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
 
     if audioFileLength > 12:
         description: str = fileName.split(" - ")[-1]
-        MegaUploader.upload(
-            filePath=f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
+        GoogleDriveUploader.upload(
+            file_name=finalFileName,
+            file_path=f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
             host=hostAddress,
             description=description,
             date=timestr,
@@ -93,7 +95,7 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
 
 
 upload(
-    filePath="Windybay - Unspecified Description - July 05 Wednesday 2023 10_12 AM",
-    hostAddress="/windybay",
-    fileName="Windybay - Unspecified Description - July 05 Wednesday 2023 10_12 AM",
+    filePath="Newdalechurch - Newdalechurch",
+    hostAddress="/haven",
+    fileName="Newdalechurch - Newdalechurch",
 )
