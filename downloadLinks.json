@@ -1966,5 +1966,13 @@
         "length": 73.80636666666666,
         "host": "/ridgeland",
         "id": 245
+    },
+    "Whiteshell - Whiteshell Church - August 21 Monday 2023 05_31 PM - 35m 34s.mp3": {
+        "date": "August 21 Monday 2023 05_31 PM",
+        "description": "Whiteshell Church",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Whiteshell%20-%20Whiteshell%20Church%20-%20August%2021%20Monday%202023%2005_31%20PM%20-%2035m%2034s.mp3",
+        "length": 35.573116666666664,
+        "host": "/whiteshell",
+        "id": 246
     }
 }
