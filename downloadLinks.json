@@ -1974,5 +1974,13 @@
         "length": 35.573116666666664,
         "host": "/whiteshell",
         "id": 246
+    },
+    "Whiteshell - Whiteshell Singing Evening - August 21 Monday 2023 08_06 PM - 1h 42m 36s.mp3": {
+        "date": "August 21 Monday 2023 08_06 PM",
+        "description": "Whiteshell Singing Evening",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Whiteshell%20-%20Whiteshell%20Singing%20Evening%20-%20August%2021%20Monday%202023%2008_06%20PM%20-%201h%2042m%2036s.mp3",
+        "length": 102.61551666666666,
+        "host": "/whiteshell",
+        "id": 247
     }
 }
