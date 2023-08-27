@@ -2006,5 +2006,13 @@
         "length": 133.34421666666665,
         "host": "/homewood",
         "id": 250
+    },
+    "Newhaven - Newhaven Einsetzung - August 27 Sunday 2023 04_01 PM - 1h 11m 29s.mp3": {
+        "date": "August 27 Sunday 2023 04_01 PM",
+        "description": "Newhaven Einsetzung",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Newhaven%20-%20Newhaven%20Einsetzung%20-%20August%2027%20Sunday%202023%2004_01%20PM%20-%201h%2011m%2029s.mp3",
+        "length": 71.48626666666667,
+        "host": "/newhaven",
+        "id": 251
     }
 }
