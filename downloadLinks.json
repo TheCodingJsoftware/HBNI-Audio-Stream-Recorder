@@ -1998,5 +1998,13 @@
         "length": 85.08081666666666,
         "host": "/whiteshell",
         "id": 249
+    },
+    "Homewood - Homewood Prediger Einsetzung - August 27 Sunday 2023 09_35 AM - 2h 13m 20s.mp3": {
+        "date": "August 27 Sunday 2023 09_35 AM",
+        "description": "Homewood Prediger Einsetzung",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Homewood%20-%20Homewood%20Prediger%20Einsetzung%20-%20August%2027%20Sunday%202023%2009_35%20AM%20-%202h%2013m%2020s.mp3",
+        "length": 133.34421666666665,
+        "host": "/homewood",
+        "id": 250
     }
 }
