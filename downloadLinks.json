@@ -2022,5 +2022,13 @@
         "length": 41.16331666666667,
         "host": "/acadia",
         "id": 252
+    },
+    "Clearwater - Clearwater &Amp; Newhaven - September 10 Sunday 2023 08_23 PM - 1h 38m 18s - (Final Part).mp3": {
+        "date": "September 10 Sunday 2023 08_23 PM",
+        "description": "Clearwater &Amp; Newhaven",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Clearwater%20-%20Clearwater%20%26Amp%3B%20Newhaven%20-%20September%2010%20Sunday%202023%2008_23%20PM%20-%201h%2038m%2018s%20-%20%28Final%20Part%29.mp3",
+        "length": 98.30181666666667,
+        "host": "/clearwater",
+        "id": 253
     }
 }
