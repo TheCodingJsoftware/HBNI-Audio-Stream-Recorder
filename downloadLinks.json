@@ -2126,5 +2126,13 @@
         "length": 65.2591,
         "host": "/decker",
         "id": 265
+    },
+    "Hbniaudio - Paul Baer Funeral - September 5 Tuesday 2023 12_00 AM - 1h 17m 40s.mp3": {
+        "date": "October 01 Sunday 2023 12_33 PM",
+        "description": "Paul Baer Funeral",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Hbniaudio%20-%20Paul%20Baer%20Funeral%20-%20September%205%20Tuesday%202023%2012_00%20AM%20-%201h%2017m%2040s.mp3",
+        "length": 77.66813333333333,
+        "host": "/hbniaudio",
+        "id": 266
     }
 }
