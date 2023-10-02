@@ -2142,5 +2142,13 @@
         "length": 123.941,
         "host": "/waldheim",
         "id": 267
+    },
+    "Waldheim - Waldheim Funeral - October 02 Monday 2023 02_13 PM - 1h 12m 20s.mp3": {
+        "date": "October 02 Monday 2023 02_13 PM",
+        "description": "Waldheim Funeral",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Waldheim%20-%20Waldheim%20Funeral%20-%20October%2002%20Monday%202023%2002_13%20PM%20-%201h%2012m%2020s.mp3",
+        "length": 72.34655,
+        "host": "/waldheim",
+        "id": 268
     }
 }
