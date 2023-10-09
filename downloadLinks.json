@@ -2150,5 +2150,13 @@
         "length": 72.34655,
         "host": "/waldheim",
         "id": 268
+    },
+    "Brightstone - Brightstonewhiteshellspringfieldridgeland - October 09 Monday 2023 03_54 PM - 17m 11s.mp3": {
+        "date": "October 09 Monday 2023 03_54 PM",
+        "description": "Brightstonewhiteshellspringfieldridgeland",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Brightstone%20-%20Brightstonewhiteshellspringfieldridgeland%20-%20October%2009%20Monday%202023%2003_54%20PM%20-%2017m%2011s.mp3",
+        "length": 17.1877,
+        "host": "/brightstone",
+        "id": 269
     }
 }
