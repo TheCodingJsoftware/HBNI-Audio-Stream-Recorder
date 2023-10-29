@@ -2174,5 +2174,13 @@
         "length": 85.90323333333333,
         "host": "/greenwald",
         "id": 271
+    },
+    "Brightstone - Brightstone - October 29 Sunday 2023 09_53 AM - 3h 1m 46s.mp3": {
+        "date": "October 29 Sunday 2023 09_53 AM",
+        "description": "Brightstone",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Brightstone%20-%20Brightstone%20-%20October%2029%20Sunday%202023%2009_53%20AM%20-%203h%201m%2046s.mp3",
+        "length": 181.77088333333333,
+        "host": "/brightstone",
+        "id": 272
     }
 }
