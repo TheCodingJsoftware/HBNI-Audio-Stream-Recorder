@@ -2190,5 +2190,13 @@
         "length": 56.42145,
         "host": "/springfield",
         "id": 273
+    },
+    "Springfield - Springfield, Greenwald, Ridgeland, and Whiteshell - November 13 Monday 2023 08_03 PM - 1h 59m 2s.mp3": {
+        "date": "November 14 Tuesday 2023 07_57 AM",
+        "description": "Springfield, Greenwald, Ridgeland, and Whiteshell",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Springfield%20-%20Springfield%2C%20Greenwald%2C%20Ridgeland%2C%20and%20Whiteshell%20-%20November%2013%20Monday%202023%2008_03%20PM%20-%201h%2059m%202s.mp3",
+        "length": 119.03478333333334,
+        "host": "/springfield",
+        "id": 274
     }
 }
