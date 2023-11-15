@@ -2246,5 +2246,13 @@
         "length": 64.12016666666666,
         "host": "/starlite",
         "id": 280
+    },
+    "Cascade - Susanna Basel - November 15 Wednesday 2023 04_51 PM - 29m 2s.mp3": {
+        "date": "November 15 Wednesday 2023 04_51 PM",
+        "description": "Susanna Basel",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Cascade%20-%20Susanna%20Basel%20-%20November%2015%20Wednesday%202023%2004_51%20PM%20-%2029m%202s.mp3",
+        "length": 29.0473,
+        "host": "/cascade",
+        "id": 281
     }
 }
