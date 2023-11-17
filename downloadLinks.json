@@ -2262,5 +2262,13 @@
         "length": 111.81758333333333,
         "host": "/elmriver",
         "id": 282
+    },
+    "Newdale - Newdale Broadcast - November 16 Thursday 2023 08_05 PM - 1h 55m 37s.mp3": {
+        "date": "November 16 Thursday 2023 08_05 PM",
+        "description": "Newdale Broadcast",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Newdale%20-%20Newdale%20Broadcast%20-%20November%2016%20Thursday%202023%2008_05%20PM%20-%201h%2055m%2037s.mp3",
+        "length": 115.62623333333333,
+        "host": "/newdale",
+        "id": 283
     }
 }
