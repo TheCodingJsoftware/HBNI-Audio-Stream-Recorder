@@ -2294,5 +2294,13 @@
         "length": 59.0376,
         "host": "/cascade",
         "id": 286
+    },
+    "Cascade - Susanna Basel Funeral - November 18 Saturday 2023 10_20 AM - 5h 5m 44s.mp3": {
+        "date": "November 18 Saturday 2023 10_20 AM",
+        "description": "Susanna Basel Funeral",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Cascade%20-%20Susanna%20Basel%20Funeral%20-%20November%2018%20Saturday%202023%2010_20%20AM%20-%205h%205m%2044s.mp3",
+        "length": 305.73931666666664,
+        "host": "/cascade",
+        "id": 287
     }
 }
