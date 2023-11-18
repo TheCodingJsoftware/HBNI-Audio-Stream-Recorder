@@ -2278,5 +2278,13 @@
         "length": 124.32588333333334,
         "host": "/cascade",
         "id": 284
+    },
+    "Crystal - Pastor Vassi Speaking At Crystal Spring - November 17 Friday 2023 10_56 PM - 1h 31m 14s.mp3": {
+        "date": "November 17 Friday 2023 10_56 PM",
+        "description": "Pastor Vassi Speaking At Crystal Spring",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Crystal%20-%20Pastor%20Vassi%20Speaking%20At%20Crystal%20Spring%20-%20November%2017%20Friday%202023%2010_56%20PM%20-%201h%2031m%2014s.mp3",
+        "length": 91.23918333333333,
+        "host": "/crystal",
+        "id": 285
     }
 }
