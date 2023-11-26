@@ -2302,5 +2302,13 @@
         "length": 305.73931666666664,
         "host": "/cascade",
         "id": 287
+    },
+    "Starlite - Starlite Testing Evening Church Service  - November 25 Saturday 2023 05_32 PM - 42m 29s.mp3": {
+        "date": "November 25 Saturday 2023 05_32 PM",
+        "description": "Starlite Testing Evening Church Service ",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Starlite%20-%20Starlite%20Testing%20Evening%20Church%20Service%20%20-%20November%2025%20Saturday%202023%2005_32%20PM%20-%2042m%2029s.mp3",
+        "length": 42.49165,
+        "host": "/starlite",
+        "id": 288
     }
 }
