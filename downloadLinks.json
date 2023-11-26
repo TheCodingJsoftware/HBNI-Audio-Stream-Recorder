@@ -2310,5 +2310,13 @@
         "length": 42.49165,
         "host": "/starlite",
         "id": 288
+    },
+    "Starlite - Starlite Prediger Wahl   - November 26 Sunday 2023 09_45 AM - 2h 45m 53s.mp3": {
+        "date": "November 26 Sunday 2023 09_45 AM",
+        "description": "Starlite Prediger Wahl  ",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Starlite%20-%20Starlite%20Prediger%20Wahl%20%20%20-%20November%2026%20Sunday%202023%2009_45%20AM%20-%202h%2045m%2053s.mp3",
+        "length": 165.888,
+        "host": "/starlite",
+        "id": 289
     }
 }
