@@ -2326,5 +2326,13 @@
         "length": 56.8664,
         "host": "/silverwinds",
         "id": 290
+    },
+    "Newrosedale - Singing Fur Alle Die Leidtragen - December 09 Saturday 2023 08_37 PM - 14m 58s - (Final Part).mp3": {
+        "date": "December 09 Saturday 2023 08_37 PM",
+        "description": "Singing Fur Alle Die Leidtragen",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Newrosedale%20-%20Singing%20Fur%20Alle%20Die%20Leidtragen%20-%20December%2009%20Saturday%202023%2008_37%20PM%20-%2014m%2058s%20-%20%28Final%20Part%29.mp3",
+        "length": 14.982966666666666,
+        "host": "/newrosedale",
+        "id": 291
     }
 }
