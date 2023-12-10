@@ -2334,5 +2334,13 @@
         "length": 14.982966666666666,
         "host": "/newrosedale",
         "id": 291
+    },
+    "Sunnyside - Sunnyside Prediger Wahl - December 10 Sunday 2023 09_07 AM - 4h 13m 50s.mp3": {
+        "date": "December 10 Sunday 2023 09_07 AM",
+        "description": "Sunnyside Prediger Wahl",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Sunnyside%20-%20Sunnyside%20Prediger%20Wahl%20-%20December%2010%20Sunday%202023%2009_07%20AM%20-%204h%2013m%2050s.mp3",
+        "length": 253.84925,
+        "host": "/Sunnyside",
+        "id": 292
     }
 }
