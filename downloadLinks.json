@@ -2366,5 +2366,13 @@
         "length": 55.6674,
         "host": "/silverwinds",
         "id": 295
+    },
+    "Silverwinds - Unspecified Description - December 20 Wednesday 2023 06_25 PM - 19m 12s.mp3": {
+        "date": "December 20 Wednesday 2023 06_25 PM",
+        "description": "Unspecified Description",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Silverwinds%20-%20Unspecified%20Description%20-%20December%2020%20Wednesday%202023%2006_25%20PM%20-%2019m%2012s.mp3",
+        "length": 19.2126,
+        "host": "/silverwinds",
+        "id": 296
     }
 }
