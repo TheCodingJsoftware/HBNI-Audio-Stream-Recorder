@@ -2382,5 +2382,13 @@
         "length": 34.8948,
         "host": "/silverwinds",
         "id": 297
+    },
+    "Springfield - Springfieldbrightstonegreenwaldwhiteshellridgeland - December 23 Saturday 2023 07_56 PM - 1h 56m 28s.mp3": {
+        "date": "December 23 Saturday 2023 07_56 PM",
+        "description": "Springfieldbrightstonegreenwaldwhiteshellridgeland",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Springfield%20-%20Springfieldbrightstonegreenwaldwhiteshellridgeland%20-%20December%2023%20Saturday%202023%2007_56%20PM%20-%201h%2056m%2028s.mp3",
+        "length": 116.4787,
+        "host": "/springfield",
+        "id": 298
     }
 }
