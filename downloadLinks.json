@@ -2390,5 +2390,13 @@
         "length": 116.4787,
         "host": "/springfield",
         "id": 298
+    },
+    "Silverwinds - Unspecified Description - December 24 Sunday 2023 04_34 PM - 47m 44s.mp3": {
+        "date": "December 24 Sunday 2023 04_34 PM",
+        "description": "Unspecified Description",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Silverwinds%20-%20Unspecified%20Description%20-%20December%2024%20Sunday%202023%2004_34%20PM%20-%2047m%2044s.mp3",
+        "length": 47.7342,
+        "host": "/silverwinds",
+        "id": 299
     }
 }
