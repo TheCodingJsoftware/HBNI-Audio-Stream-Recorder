@@ -2406,5 +2406,13 @@
         "length": 103.29078333333334,
         "host": "/maplegrove",
         "id": 300
+    },
+    "Silverwinds - Unspecified Description - December 26 Tuesday 2023 12_08 PM - 42m 15s.mp3": {
+        "date": "December 26 Tuesday 2023 12_08 PM",
+        "description": "Unspecified Description",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Silverwinds%20-%20Unspecified%20Description%20-%20December%2026%20Tuesday%202023%2012_08%20PM%20-%2042m%2015s.mp3",
+        "length": 42.2622,
+        "host": "/silverwinds",
+        "id": 301
     }
 }
