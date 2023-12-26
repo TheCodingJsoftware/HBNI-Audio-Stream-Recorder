@@ -2398,5 +2398,13 @@
         "length": 47.7342,
         "host": "/silverwinds",
         "id": 299
+    },
+    "Maplegrove - Christmas - December 25 Monday 2023 08_09 PM - 1h 43m 17s.mp3": {
+        "date": "December 25 Monday 2023 08_09 PM",
+        "description": "Christmas",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Maplegrove%20-%20Christmas%20-%20December%2025%20Monday%202023%2008_09%20PM%20-%201h%2043m%2017s.mp3",
+        "length": 103.29078333333334,
+        "host": "/maplegrove",
+        "id": 300
     }
 }
