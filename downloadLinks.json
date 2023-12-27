@@ -2430,5 +2430,13 @@
         "length": 61.690333333333335,
         "host": "/acadia",
         "id": 303
+    },
+    "Ridgeland - Ridgeland Wake For Jordan Waldner Dec 27 2023 - December 27 Wednesday 2023 12_00 AM - 1h 15m 26s.mp3": {
+        "date": "December 27 Wednesday 2023 12_27 PM",
+        "description": "Ridgeland Wake For Jordan Waldner Dec 27 2023",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Ridgeland%20-%20Ridgeland%20Wake%20For%20Jordan%20Waldner%20Dec%2027%202023%20-%20December%2027%20Wednesday%202023%2012_00%20AM%20-%201h%2015m%2026s.mp3",
+        "length": 75.44685,
+        "host": "/ridgeland",
+        "id": 304
     }
 }
