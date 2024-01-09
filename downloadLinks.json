@@ -2550,5 +2550,13 @@
         "length": 125.35988333333333,
         "host": "/riverdale",
         "id": 318
+    },
+    "Riverdale - Pr. George Hofer Funeral - January 09 Tuesday 2024 01_54 PM - 1h 56m 7s.mp3": {
+        "date": "January 09 Tuesday 2024 01_54 PM",
+        "description": "Pr. George Hofer Funeral",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Riverdale%20-%20Pr.%20George%20Hofer%20Funeral%20-%20January%2009%20Tuesday%202024%2001_54%20PM%20-%201h%2056m%207s.mp3",
+        "length": 116.12255,
+        "host": "/riverdale",
+        "id": 319
     }
 }
