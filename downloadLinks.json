@@ -2542,5 +2542,13 @@
         "length": 124.4443,
         "host": "/acadia",
         "id": 317
+    },
+    "Riverdale - Pr. George Hofer Wake - January 08 Monday 2024 08_20 PM - 2h 5m 21s - (Final Part).mp3": {
+        "date": "January 08 Monday 2024 08_20 PM",
+        "description": "Pr. George Hofer Wake",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Riverdale%20-%20Pr.%20George%20Hofer%20Wake%20-%20January%2008%20Monday%202024%2008_20%20PM%20-%202h%205m%2021s%20-%20%28Final%20Part%29.mp3",
+        "length": 125.35988333333333,
+        "host": "/riverdale",
+        "id": 318
     }
 }
