@@ -2726,5 +2726,13 @@
         "length": 131.0646,
         "host": "/thunderbird",
         "id": 340
+    },
+    "Thunderbird - Dave Stahl Wake And Funeral - March 28 Thursday 2024 01_52 PM - 1h 23m 31s.mp3": {
+        "date": "March 28 Thursday 2024 01_52 PM",
+        "description": "Dave Stahl Wake And Funeral",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Thunderbird%20-%20Dave%20Stahl%20Wake%20And%20Funeral%20-%20March%2028%20Thursday%202024%2001_52%20PM%20-%201h%2023m%2031s.mp3",
+        "length": 83.51738333333333,
+        "host": "/thunderbird",
+        "id": 341
     }
 }
