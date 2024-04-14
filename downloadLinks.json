@@ -2766,5 +2766,13 @@
         "length": 36.445166666666665,
         "host": "/stream",
         "id": 345
+    },
+    "Stream - Cascade Prediger Wahl - April 14 Sunday 2024 02_12 PM - 32m 14s.mp3": {
+        "date": "April 14 Sunday 2024 02_12 PM",
+        "description": "Cascade Prediger Wahl",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Stream%20-%20Cascade%20Prediger%20Wahl%20-%20April%2014%20Sunday%202024%2002_12%20PM%20-%2032m%2014s.mp3",
+        "length": 32.2425,
+        "host": "/stream",
+        "id": 346
     }
 }
