@@ -2838,5 +2838,13 @@
         "length": 74.07325,
         "host": "/brightstone",
         "id": 354
+    },
+    "Lakeside - Lakeside Predigerwahl - April 28 Sunday 2024 10_02 AM - 2h 56m 23s.mp3": {
+        "date": "April 28 Sunday 2024 10_02 AM",
+        "description": "Lakeside Predigerwahl",
+        "downloadLink": "http://audioarchives.hbni.net:5050/play_recording/Lakeside%20-%20Lakeside%20Predigerwahl%20-%20April%2028%20Sunday%202024%2010_02%20AM%20-%202h%2056m%2023s.mp3",
+        "length": 176.384,
+        "host": "/lakeside",
+        "id": 355
     }
 }
