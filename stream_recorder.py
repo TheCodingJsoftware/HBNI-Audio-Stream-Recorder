@@ -2,8 +2,8 @@ __author__ = "Jared Gross"
 __copyright__ = "Copyright 2022"
 __credits__ = ["Jared Gross"]
 __license__ = "MIT"
-__version__ = "2.0.0"
-__updated__ = "2024-04-28 22:44:28"
+__version__ = "3.0.0"
+__updated__ = "2024-05-22 14:04:28"
 __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
@@ -195,9 +195,10 @@ class StreamRecorder:
                         elif self.active_streams[host].is_recording:
                             print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.OKBLUE}{self.active_streams[host]} is currently recording.{Colors.ENDC}")
                     if len(all_hosts) > 0:
-                        recording_status_html = []
-                        for host, stream in self.active_streams.items():
-                            recording_status_html.append(f"{stream.host} - {stream.description} - {stream.starting_time.strftime('%B %d %A %Y %I:%M %p')} - {stream.get_time_since_started_recording()}\n")
+                        recording_status_html = [
+                            f"{stream.host} - {stream.description} - {stream.starting_time.strftime('%B %d %A %Y %I:%M %p')} - {stream.get_time_since_started_recording()}\n"
+                            for host, stream in self.active_streams.items()
+                        ]
                         recording_status.update_recording_status(recording_status_html)
                 else:
                     print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.WARNING}Could not fetch html{Colors.ENDC}")
