@@ -2,59 +2,50 @@ import os
 import time
 from datetime import datetime, timedelta
 
-import AudioFile
-import DownloadLinks
-import MegaUploader
-import GoogleDriveUploader
-import RecordingStatus
+import audio_file
+import download_links
+import recording_status
+import synology_uploader
 import RemoveSilence
 import Zip
-from GlobalVariables import FOLDER_LOCATION, Colors
+from global_variables import FOLDER_LOCATION, Colors
 
 
-def upload(filePath: str, hostAddress: str, fileName: str) -> None:
-    """
-    It takes a file, removes silence, sets the metadata, uploads it to Mega, compresses it, and deletes
-    the original file
-
-    Args:
-      filePath (str): str = The name of the file that is being uploaded.
-      hostAddress (str): str = "/pineland"
-      fileName (str): str = "HBNI - " + fileName
-    """
-
+def upload(filePath: str, hostAddress: str, finalFileName: str) -> None:
+    if '.mp3' in filePath:
+        filePath = filePath.replace('.mp3', '')
     timestr = datetime.now().strftime("%B %d %A %Y %I_%M %p")
     dt = datetime.now()
     print(
-        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Removing silence{Colors.ENDC}"
+        f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Geting file length{Colors.ENDC}"
     )
     #RemoveSilence.removeSilence(
     #    filePath=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
     #)
 
-    audioFileLength: int = AudioFile.getAudioFileLength(
+    audioFileLength: int = audio_file.get_audio_file_length(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3"
     )
     #audioFileLength: int = 258.316666666
-    timeDelta = timedelta(minutes=audioFileLength)
-    finalDeltatime: str = AudioFile.convertDeltatime(duration=timeDelta)
-    finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
+    # timeDelta = timedelta(minutes=audioFileLength)
+    # finalDeltatime: str = AudioFile.convertDeltatime(duration=timeDelta)
+    # finalFileName: str = f"{fileName} - {timestr} - {finalDeltatime}.mp3"
 
-    AudioFile.setArtist(
+    audio_file.set_artist(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3",
-        artist=fileName.split(" - ")[0],
+        artist=finalFileName.split(" - ")[0],
     )
-    AudioFile.setGenre(
+    audio_file.set_genre(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3",
         genre="HBNI Streams",
     )
-    AudioFile.setTitle(
+    audio_file.set_title(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3",
-        title=fileName.split(" - ")[-1],
+        title=finalFileName.split(" - ")[1],
     )
-    AudioFile.setNumber(
+    audio_file.set_track_number(
         pathToFile=f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{filePath}.mp3",
-        number=DownloadLinks.getCountOfStreams(host=hostAddress),
+        number=download_links.get_count_of_streams(host=hostAddress),
     )
 
     recordingPartNumber = 0
@@ -65,8 +56,8 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
     )
 
     if audioFileLength > 12:
-        description: str = fileName.split(" - ")[-1]
-        GoogleDriveUploader.upload(
+        description: str = finalFileName.split(" - ")[1]
+        synology_uploader.upload(
             file_name=finalFileName,
             file_path=f"{FOLDER_LOCATION}/Recordings/{finalFileName}",
             host=hostAddress,
@@ -93,9 +84,9 @@ def upload(filePath: str, hostAddress: str, fileName: str) -> None:
         f"{Colors.ENDC}{Colors.BOLD}{dt}{Colors.ENDC} - {Colors.OKGREEN}Original copy deleted{Colors.ENDC}"
     )
 
-
-upload(
-    filePath="Newdalechurch - Newdalechurch",
-    hostAddress="/haven",
-    fileName="Newdalechurch - Newdalechurch",
-)
+if __name__ == '__main__':
+    upload(
+        filePath="20220225200049.mp3",
+        hostAddress="/elmriver",
+        finalFileName="Elmriver - Elm River",
+    )
