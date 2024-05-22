@@ -196,11 +196,8 @@ class StreamRecorder:
                             print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.OKBLUE}{self.active_streams[host]} is currently recording.{Colors.ENDC}")
                     if len(all_hosts) > 0:
                         recording_status_html = []
-                        string_active_streams = f"{Colors.BOLD}{current_time}{Colors.ENDC} - Currently recording:\n{Colors.OKBLUE}"
                         for host, stream in self.active_streams.items():
-                            string_active_streams += f"\t{stream} - {stream.get_time_since_started_recording()}\n"
                             recording_status_html.append(f"{stream.host} - {stream.description} - {stream.starting_time.strftime('%B %d %A %Y %I:%M %p')} - {stream.get_time_since_started_recording()}\n")
-                        print(f"{string_active_streams}{Colors.ENDC}")
                         recording_status.update_recording_status(recording_status_html)
                 else:
                     print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.WARNING}Could not fetch html{Colors.ENDC}")
