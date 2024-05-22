@@ -1,11 +1,12 @@
 import re
+import os
 from datetime import datetime, timedelta
 from functools import partial
+from urllib.parse import quote
 
-from PyQt5 import uic
-from PyQt5.QtCore import QDate, QDateTime, QRegExp, Qt
-from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtWidgets import (
+from PyQt6 import uic
+from PyQt6.QtCore import QDate, QDateTime, Qt
+from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
     QComboBox,
@@ -29,8 +30,8 @@ from PyQt5.QtWidgets import (
 )
 from qt_material import apply_stylesheet
 
-import DownloadLinks
-
+import download_links
+import manual_file_upload
 
 class CustomTableWidget(QTableWidget):
     def __init__(self, parent=None):
@@ -38,66 +39,49 @@ class CustomTableWidget(QTableWidget):
         self.editable_column_indexes = []
 
     def edit(self, index, trigger, event):
-        """
-        This function checks if a column is editable and allows editing if it is, otherwise it returns
-        False.
-
-        Args:
-          index: The index of the item in the model that is being edited.
-          trigger: The trigger parameter is an event that causes the editor to be opened for editing the
-        cell. It can be one of the following values:
-          event: The event parameter in the edit() method is an instance of QEvent class. It represents
-        an event that occurred on the widget. The event parameter is used to determine the type of event
-        that occurred, such as a mouse click or a key press, and to handle the event accordingly.
-
-        Returns:
-          If the column index of the given index is in the list of editable_column_indexes, then the
-        super().edit() method is called and its return value is returned. Otherwise, False is returned.
-        """
         if index.column() in self.editable_column_indexes:
             return super(CustomTableWidget, self).edit(index, trigger, event)
         else:
             return False
 
     def set_editable_column_index(self, columns):
-        """
-        This function sets the indexes of columns that are editable in a table.
-
-        Args:
-          columns (list[int]): A list of integers representing the indexes of the columns that should be
-        editable in a table or spreadsheet.
-        """
         self.editable_column_indexes = columns
 
 
 class AddStreamDialog(QDialog):
     def __init__(self, parent=None):
-        """
-        I'm trying to make a dialog box that will allow the user to add a new entry to a JSON file
-
-        Args:
-          parent: The parent widget.
-        """
         QDialog.__init__(self, parent)
         uic.loadUi("UI/add_json_dialog.ui", self)
-        data = DownloadLinks.loadJson()
+        data = download_links.loadJson()
         self.inputID.setValue(len(data))
         self.inputDate.setDate(QDate().currentDate())
         self.inputDate.dateTimeChanged.connect(self.inputTextChanged)
         self.inputHost.setText("/")
-        reg_ex = QRegExp("(\/(\/\/)?[a-z]+)")
-        input_validator = QRegExpValidator(reg_ex, self.inputHost)
-        self.inputHost.setValidator(input_validator)
+        # reg_ex = QRegExp("(\/(\/\/)?[a-z]+)")
+        # input_validator = QRegExpValidator(reg_ex, self.inputHost)
+        # self.inputHost.setValidator(input_validator)
         self.inputHost.textChanged.connect(self.inputTextChanged)
         self.inputDescription.textChanged.connect(self.inputTextChanged)
         self.inputLength.valueChanged.connect(self.inputTextChanged)
+        self.inputPath.addItems(self.get_all_file_names())
         self.inputTextChanged()
+        self.pushButton_upload.clicked.connect(self.manual_upload)
+
+    def get_all_file_names(self, folder_path="CURRENTLY_RECORDING"):
+        files = []
+        for file_name in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, file_name)
+            if os.path.isfile(file_path):
+                files.append((file_path, os.path.getmtime(file_path)))
+
+        # Sort files by modification time (newest to oldest)
+        files.sort(key=lambda x: x[1], reverse=True)
+
+        # Extract only the file paths from the sorted list
+        sorted_files = [file[0].replace(folder_path, '').replace('\\', '') for file in files]
+        return sorted_files
 
     def inputTextChanged(self):
-        """
-        It takes the text from the inputHost, inputDescription, inputDate, and inputLength fields and
-        combines them into a filename.
-        """
         timeDelta = timedelta(minutes=self.inputLength.value())
         finalDeltatime: str = self.convertDeltatime(duration=timeDelta)
         try:
@@ -118,14 +102,6 @@ class AddStreamDialog(QDialog):
         )
 
     def convertDeltatime(self, duration) -> str:
-        """Converts minutes to a pretty format
-
-        Args:
-            duration (deltatime): file length
-
-        Returns:
-            output (str): final format
-        """
         days, seconds = duration.days, duration.seconds
         hours = days * 24 + seconds // 3600
         minutes = (seconds % 3600) // 60
@@ -136,10 +112,7 @@ class AddStreamDialog(QDialog):
         )
 
     def accept(self):
-        """
-        It takes the text from the text boxes and adds it to a database.
-        """
-        DownloadLinks.addDownloadLink(
+        download_links.add_download_link(
             fileName=self.inputFileName.text(),
             downloadLink=self.inputDownloadLink.text(),
             date=self.inputDate.dateTime().toString("MMMM d dddd yyyy hh_mm AP"),
@@ -150,12 +123,16 @@ class AddStreamDialog(QDialog):
         )
         self.close()
 
+    def manual_upload(self):
+        manual_file_upload.upload(
+            filePath=self.inputPath.currentText(),
+            hostAddress=self.inputHost.text(),
+            fileName=self.inputFileName.text()
+        )
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        """
-        It loads the json file, and then it loads the contents of the json file into the GUI.
-        """
         super().__init__()
         uic.loadUi("UI/json_editor.ui", self)
         self.selected_item: str = ""
@@ -165,20 +142,20 @@ class MainWindow(QMainWindow):
         # self.loadContents()
         self.inputSearch.textChanged.connect(self.loadData)
 
-        autofill_search_options = DownloadLinks.getAllHosts()
+        autofill_search_options = download_links.get_all_hosts()
         completer = QCompleter(autofill_search_options)
-        completer.setCaseSensitivity(Qt.CaseInsensitive)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.inputSearch.setCompleter(completer)
         self.btnPushToGithub.clicked.connect(
-            partial(DownloadLinks.uploadDatabase, "Updated downloadLinks.json file.")
+            partial(download_links.upload_database, "Updated download_links.json file.")
         )
         self.btnAdd.clicked.connect(self.addBroadcast)
         self.tableWidget = CustomTableWidget(self)
         self.tableWidget.set_editable_column_index([1, 2, 3, 4, 5, 6, 7])
         self.tableWidget.itemChanged.connect(self.cellChanged)
         self.tableWidget.itemSelectionChanged.connect(self.selectionChanged)
-        self.tableWidget.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tableWidget.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.tableWidget.setColumnCount(9)
         self.tableWidget.setHorizontalHeaderLabels(
             [
@@ -204,21 +181,14 @@ class MainWindow(QMainWindow):
         self.tableWidget.setColumnWidth(8, 70)  # DEL
         self.layoutContent.addWidget(self.tableWidget)
         self.loadData()
+        self.pushButton_refresh.clicked.connect(self.loadData)
 
     def convertDeltatime(self, minutes) -> str:
-        """Converts minutes to a pretty format
-
-        Args:
-            duration (deltatime): file length
-
-        Returns:
-            output (str): final format
-        """
         duration = timedelta(minutes=minutes)
         days, seconds = duration.days, duration.seconds
         hours = days * 24 + seconds // 3600
         minutes = (seconds % 3600) // 60
-        seconds = seconds % 60
+        seconds %= 60
 
         return (
             f"{minutes}m {seconds}s" if hours == 0 else f"{hours}h {minutes}m {seconds}s"
@@ -237,7 +207,7 @@ class MainWindow(QMainWindow):
     def cellChanged(self, item: QTableWidgetItem):
         selected_row = item.row()
 
-        data = DownloadLinks.loadJson()
+        data = download_links.loadJson()
         changed_column = item.column()
         if changed_column == 1: # Host
             new_host = item.text().replace(" ", '').replace('_', '')
@@ -299,7 +269,7 @@ class MainWindow(QMainWindow):
                 length=data[self.selected_item]["length"],
                 id=new_id,
             )
-            DownloadLinks.sortJsonFile()
+            download_links.sort_json_file()
         elif changed_column == 7: # Download Link
             new_download_link = item.text()
 
@@ -313,7 +283,7 @@ class MainWindow(QMainWindow):
                 id=data[self.selected_item]["id"],
             )
 
-        DownloadLinks.changeTitle(self.selected_item, self.generateNewTitle(selected_row=selected_row))
+        download_links.change_title(self.selected_item, self.generateNewTitle(selected_row=selected_row))
 
         self.tableWidget.blockSignals(True)
         self.tableWidget.item(selected_row, 0).setText(self.generateNewTitle(selected_row=selected_row))
@@ -329,7 +299,7 @@ class MainWindow(QMainWindow):
     def loadData(self):
         self.tableWidget.blockSignals(True)
         self.tableWidget.setRowCount(0)
-        data = dict(reversed(list(DownloadLinks.loadJson().items())))
+        data = dict(reversed(list(download_links.loadJson().items())))
         row_count: int = 0
         for stream_name, stream_data in data.items():
             if self.inputSearch.text() not in stream_data["host"]:
@@ -339,7 +309,7 @@ class MainWindow(QMainWindow):
             self.tableWidget.setRowHeight(row_count, 40)
             self.tableWidget.setItem(row_count, col_count, QTableWidgetItem(stream_name))
             self.tableWidget.item(row_count, col_count).setTextAlignment(
-                Qt.AlignLeft | Qt.AlignVCenter
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
 
             col_count += 1
@@ -347,7 +317,7 @@ class MainWindow(QMainWindow):
                 row_count, col_count, QTableWidgetItem(stream_data["host"])
             )
             self.tableWidget.item(row_count, col_count).setTextAlignment(
-                Qt.AlignLeft | Qt.AlignVCenter
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
 
             col_count += 1
@@ -355,7 +325,7 @@ class MainWindow(QMainWindow):
                 row_count, col_count, QTableWidgetItem(stream_data["description"])
             )
             self.tableWidget.item(row_count, col_count).setTextAlignment(
-                Qt.AlignLeft | Qt.AlignVCenter
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
 
             col_count += 1
@@ -379,7 +349,7 @@ class MainWindow(QMainWindow):
                 QTableWidgetItem(str(stream_data["length"]) + " minutes"),
             )
             self.tableWidget.item(row_count, col_count).setTextAlignment(
-                Qt.AlignLeft | Qt.AlignVCenter
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
 
             col_count += 1
@@ -400,7 +370,7 @@ class MainWindow(QMainWindow):
                 row_count, col_count, QTableWidgetItem(str(stream_data["id"]))
             )
             self.tableWidget.item(row_count, col_count).setTextAlignment(
-                Qt.AlignVCenter | Qt.AlignHCenter
+                Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter
             )
 
             col_count += 1
@@ -408,7 +378,7 @@ class MainWindow(QMainWindow):
                 row_count, col_count, QTableWidgetItem(stream_data["downloadLink"])
             )
             self.tableWidget.item(row_count, col_count).setTextAlignment(
-                Qt.AlignLeft | Qt.AlignVCenter
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
 
             col_count += 1
@@ -420,18 +390,15 @@ class MainWindow(QMainWindow):
         self.tableWidget.blockSignals(False)
 
     def addBroadcast(self):
-        """
-        If the dialog is accepted or rejected, start the timer.
-        """
         dialog = AddStreamDialog()
-        if dialog.exec_() in [QDialog.Accepted, QDialog.Rejected]:
+        if dialog.exec() in [QDialog.DialogCode.Accepted, QDialog.DialogCode.Rejected]:
             dialog.deleteLater()
 
     def onPartChange(self, combo_part: QComboBox):
         selected_row = self.tableWidget.selectedItems()[0].row()
 
-        DownloadLinks.loadJson()
-        DownloadLinks.changeTitle(self.selected_item, self.generateNewTitle(selected_row=selected_row))
+        download_links.loadJson()
+        download_links.change_title(self.selected_item, self.generateNewTitle(selected_row=selected_row))
 
         self.tableWidget.blockSignals(True)
         self.tableWidget.item(selected_row, 0).setText(self.generateNewTitle(selected_row=selected_row))
@@ -443,7 +410,7 @@ class MainWindow(QMainWindow):
         selected_row = self.tableWidget.selectedItems()[0].row()
 
         date_string = datetime.dateTime().toString("MMMM d dddd yyyy hh_mm AP")
-        data = DownloadLinks.loadJson()
+        data = download_links.loadJson()
         self.editBroadcast(
             fileName=self.selected_item,
             downloadLink=data[self.selected_item]["downloadLink"],
@@ -453,7 +420,7 @@ class MainWindow(QMainWindow):
             length=data[self.selected_item]["length"],
             id=data[self.selected_item]["id"],
         )
-        DownloadLinks.changeTitle(self.selected_item, self.generateNewTitle(selected_row=selected_row))
+        download_links.change_title(self.selected_item, self.generateNewTitle(selected_row=selected_row))
 
         self.tableWidget.blockSignals(True)
         self.tableWidget.item(selected_row, 0).setText(self.generateNewTitle(selected_row=selected_row))
@@ -471,7 +438,7 @@ class MainWindow(QMainWindow):
         length: float,
         id: int,
     ):
-        DownloadLinks.editDownloadLink(
+        download_links.edit_download_link(
             fileName=fileName,
             downloadLink=downloadLink,
             host=host,
@@ -482,7 +449,7 @@ class MainWindow(QMainWindow):
         )
 
     def deleteBroadcast(self, name: str, row_index: int):
-        DownloadLinks.removeDownloadLink(name)
+        download_links.remove_download_link(name)
         self.tableWidget.removeRow(row_index)
         self.refreshAllDeleteButtons()
 
@@ -498,4 +465,4 @@ if __name__ == "__main__":
     apply_stylesheet(app, theme="theme.xml")
     window = MainWindow()
     window.show()
-    app.exec_()
+    app.exec()
