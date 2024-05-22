@@ -11,5 +11,5 @@ def update_recording_status(lines: list[str]):
         link = f"http://hbniaudio.hbni.net:8000{host}"
         length = line.split(' - ')[3]
         data |= {host: {"link": link, "length": length, "descripton": descripton, "starting_time": starting_time}}
-    with open(r"static\recording_status.json", "a", encoding="utf-8") as f:
+    with open(r"static\recording_status.json", "w", encoding="utf-8") as f:
         json.dump(data, f)
