@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>227</height>
+    <width>555</width>
+    <height>258</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,10 +70,17 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>File Path:</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0">
        <item>
         <widget class="QLineEdit" name="inputFileName">
          <property name="enabled">
@@ -132,16 +139,24 @@
        </item>
        <item>
         <widget class="QSpinBox" name="inputID">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="focusPolicy">
-          <enum>Qt::ClickFocus</enum>
-         </property>
          <property name="maximum">
-          <number>9999999</number>
+          <number>99999999</number>
          </property>
         </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+         <item>
+          <widget class="QComboBox" name="inputPath"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_upload">
+           <property name="text">
+            <string>Upload</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
