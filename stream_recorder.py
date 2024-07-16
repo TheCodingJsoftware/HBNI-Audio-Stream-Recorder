@@ -19,9 +19,9 @@ from datetime import datetime, timedelta
 from logging.handlers import RotatingFileHandler
 from urllib.request import urlopen
 
+import audio_file
 import recording_status
 import synology_uploader
-import audio_file
 import zip_file
 from global_variables import FOLDER_LOCATION, Colors
 
@@ -177,9 +177,9 @@ class StreamRecorder:
             recording_status.update_recording_status([])
 
     def run(self):
-        try:
-            print(f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKBLUE}Listening for streams{Colors.ENDC}")
-            while True:
+        while True:
+            try:
+                print(f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKBLUE}Listening for streams{Colors.ENDC}")
                 current_time = datetime.now()
                 if html := self.get_website_changes():
                     all_hosts = self.get_all_stream_hosts(html)
@@ -203,9 +203,9 @@ class StreamRecorder:
                 else:
                     print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.WARNING}Could not fetch html{Colors.ENDC}")
                 time.sleep(15)
-        except Exception as e:
-            print(f"Error: {e}")
-            app_log.info(f"{datetime.now()} - StreamRecorder.run error: {e}")
+            except Exception as e:
+                print(f"Error: {e}")
+                app_log.info(f"{datetime.now()} - StreamRecorder.run error: {e}")
 
 
 def main() -> None:
