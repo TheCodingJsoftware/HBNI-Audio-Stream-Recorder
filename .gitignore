@@ -58,6 +58,7 @@ docs/_build/
 target/
 
 # Stuff I added myself:
+.venv
 *.exe
 Recordings
 logs/
