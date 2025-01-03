@@ -8,6 +8,7 @@ __maintainer__ = "Jared Gross"
 __email__ = "jared@pinelandfarms.ca"
 __status__ = "Production"
 
+import json
 import logging
 import os
 import re
@@ -17,6 +18,7 @@ import threading
 import time
 from datetime import datetime, timedelta
 from logging.handlers import RotatingFileHandler
+from typing import Dict, Union
 from urllib.request import urlopen
 
 import audio_file
@@ -58,7 +60,7 @@ class Stream:
         self.title = title
         self.host = host
         self.url = f"http://hbniaudio.hbni.net:8000{self.host}"
-        self.description = description
+        self.description = description.replace("&amp;", "&").replace("&", "and").replace("/", " or ")
         self.recording_finished = recording_finished
         self.is_recording: bool = False
         self.recording_stopped: bool = False
@@ -104,16 +106,16 @@ class Stream:
         self.audio_file_length: float = audio_file.get_audio_file_length(self.recording_file_path)
 
         time_delta = timedelta(minutes=self.audio_file_length)
-        final_delta_time: str = audio_file.convert_delta_time(time_delta)
-        final_file_name: str = f"{self.recording_file_name} - {final_delta_time}.mp3"
-        final_file_path: str = f"{FOLDER_LOCATION}\\Recordings\\{final_file_name}"
+        final_delta_time = audio_file.convert_delta_time(time_delta)
+        final_file_name = f"{self.recording_file_name} - {final_delta_time}.mp3"
+        final_file_path = f"{FOLDER_LOCATION}\\Recordings\\{final_file_name}"
 
         os.rename(
             self.recording_file_path,
             final_file_path,
         )
 
-        if self.audio_file_length > 5:
+        if self.audio_file_length > 10:
             self.upload_stream(final_file_name, final_file_path)
             app_log.info(f"{datetime.now()} - Stream uploaded for {self.host}")
         else:
@@ -149,24 +151,20 @@ class StreamRecorder:
     def __init__(self) -> None:
         self.active_streams: dict[str, Stream] = {}
 
-    def get_all_stream_hosts(self, html: str) -> list[str]:
-        return re.findall(r"data-mnt='([^']+)'", html)
-
-    def get_all_stream_description(self, html: str) -> list[str]:
-        return re.findall(r"data-stream='([^']+)'", html)
-
-    def get_website_changes(self) -> str | None:
+    def fetch_icecast_status(self, icecast_source="http://hbniaudio.hbni.net:8000/status-json.xsl") -> Union[dict, None]:
         try:
-            with urlopen("http://hbniaudio.hbni.net/") as byt:
-                html_lines = [x.decode("latin-1") for x in byt.readlines()]
-                html_content = "".join(html_lines)
-                with open("archivedPage.html", "w", encoding="utf-8") as file:
-                    file.write(html_content)
-                return html_content
+            with urlopen(icecast_source) as response:
+                data = json.load(response)
+                return data
         except Exception as e:
-            print(f"{Colors.WARNING}{e}{Colors.ENDC}")
-            app_log.info(f"{datetime.now()} - StreamRecorder.get_website_changes error: {e}")
+            print(f"Error fetching Icecast status: {e}")
             return None
+
+    def process_sources(self, sources: Union[dict, list[dict]]) -> list[dict]:
+        # Normalize single source to a list of sources
+        if isinstance(sources, dict):
+            sources = [sources]
+        return sources
 
     def remove_stream(self, host: str):
         del self.active_streams[host]
@@ -180,32 +178,40 @@ class StreamRecorder:
         while True:
             try:
                 print(f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKBLUE}Listening for streams{Colors.ENDC}")
-                current_time = datetime.now()
-                if html := self.get_website_changes():
-                    all_hosts = self.get_all_stream_hosts(html)
-                    all_descriptions = self.get_all_stream_description(html)
-                    for host, description in zip(all_hosts, all_descriptions):
-                        title = host.replace("/", "").title()
-                        if host not in self.active_streams:
-                            stream = Stream(title, host, description, recording_finished=self.remove_stream)
-                            self.active_streams.setdefault(host, stream) # We are using host because its how we keep track of active streams
-                            stream.start_recording()
-                            app_log.info(f"{current_time} - Started recording for {host}")
-                            print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.OKBLUE}{stream} started recording.{Colors.ENDC}")
-                        elif self.active_streams[host].is_recording:
-                            print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.OKBLUE}{self.active_streams[host]} is currently recording.{Colors.ENDC}")
-                    if len(all_hosts) > 0:
-                        recording_status_html = [
-                            f"{stream.host} - {stream.description} - {stream.starting_time.strftime('%B %d %A %Y %I:%M %p')} - {stream.get_time_since_started_recording()}\n"
-                            for host, stream in self.active_streams.items()
-                        ]
-                        recording_status.update_recording_status(recording_status_html)
-                else:
-                    print(f"{Colors.BOLD}{current_time}{Colors.ENDC} - {Colors.WARNING}Could not fetch html{Colors.ENDC}")
+
+                # Fetch Icecast status JSON
+                status_data = self.fetch_icecast_status()
+                if not status_data:
+                    time.sleep(15)
+                    continue
+
+                sources = status_data.get("icestats", {}).get("source", [])
+                sources = self.process_sources(sources)
+
+                for source in sources:
+                    host = source["listenurl"].split("/")[-1]
+                    description = source.get("server_description", "No description")
+                    title = host.replace("/", "").title()
+
+                    if host not in self.active_streams and "test" not in host:
+                        stream = Stream(title, host, description, self.remove_stream)
+                        self.active_streams[host] = stream
+                        stream.start_recording()
+                        print(f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKBLUE}{title} started recording.{Colors.ENDC}")
+
+                    elif host in self.active_streams and self.active_streams[host].is_recording:
+                        print(f"{Colors.BOLD}{datetime.now()}{Colors.ENDC} - {Colors.OKBLUE}{self.active_streams[host].title} is currently recording.{Colors.ENDC}")
+
+                # Cleanup inactive streams
+                active_hosts = {source["listenurl"].split("/")[-1] for source in sources}
+                for host in list(self.active_streams.keys()):
+                    if host not in active_hosts:
+                        self.remove_stream(host)
+
                 time.sleep(15)
             except Exception as e:
-                print(f"Error: {e}")
-                app_log.info(f"{datetime.now()} - StreamRecorder.run error: {e}")
+                print(f"Error in run loop: {e}")
+                time.sleep(15)
 
 
 def main() -> None:
