@@ -38,16 +38,18 @@ async def upload(
     date: str,
     length: float,
 ):
+    sanitized_file_name = file_path.replace("&amp;", "&").replace("&Amp;", "&").replace("&", "and").replace("/", " or ")
+    try:
+        shutil.copy2(
+            file_path, os.path.join(os.getenv("STATIC_RECORDINGS_PATH", "/app/static/Recordings"), sanitized_file_name)
+        )
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File not found: {file_path}")
+    except PermissionError:
+        raise PermissionError(f"Permission denied for copying file: {file_path}")
+    except Exception as e:
+        raise RuntimeError(f"Unexpected error while copying file: {str(e)}")
     pool = await asyncpg.create_pool(**db_settings)
-    file_path = (
-        file_path.replace("&amp;", "&")
-        .replace("&Amp;", "&")
-        .replace("&", "and")
-        .replace("/", " or ")
-    )
-    shutil.copy2(
-        file_path, os.getenv("STATIC_RECORDINGS_PATH", "/app/static/Recordings")
-    )
     download_url = f"https://broadcasting.hbni.net/play_recording/{quote(file_name)}"
     await insert_data_to_db(
         pool, file_name, download_url, date, description, length, host

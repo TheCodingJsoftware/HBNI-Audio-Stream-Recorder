@@ -15,7 +15,8 @@ from typing import Callable, Literal
 import requests
 from dotenv import load_dotenv
 
-import firebase_notification
+import firebase_android_notification
+import firebase_web_notification
 import send_email
 import synology_uploader
 import zip_file
@@ -85,7 +86,7 @@ class Stream:
         self.finished_time: datetime | None = None
         self.recording_file_name = f"{self.title} - {self.description} - {self.starting_time.strftime('%B %d %A %Y %I_%M %p')} - BROADCAST_LENGTH.mp3"
         self.recording_file_path = (
-            f"{FOLDER_LOCATION}\\CURRENTLY_RECORDING\\{self.recording_file_name}"
+            f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{self.recording_file_name}"
         )
         self.send_notification()
 
@@ -155,13 +156,13 @@ class Stream:
             "BROADCAST_LENGTH", final_delta_time
         )
         self.recording_file_name = final_recording_file_name_with_length
-        final_recording_file_path = f"{FOLDER_LOCATION}\\CURRENTLY_RECORDING\\{final_recording_file_name_with_length}"
+        final_recording_file_path = f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{final_recording_file_name_with_length}"
         os.rename(
             self.recording_file_path,
             final_recording_file_path,
         )
 
-        if self.audio_file_length > int(os.getenv("MINIMUM_RECORDING_LENGTH", 10)):
+        if self.audio_file_length > int(os.getenv("MINIMUM_RECORDING_LENGTH", 10)) and not (self.host.lower() == "test" or self.description.lower() == "test"):
             self.upload_stream(
                 final_recording_file_name_with_length, final_recording_file_path
             )
@@ -204,10 +205,14 @@ class Stream:
             time.sleep(60 * int(os.getenv("NOTIFICATION_DELAY", 2)))
             # Check if the stream is still active before sending the notification
             if self.is_recording and not self.recording_stopped:
-                firebase_notification.send_notification(
+                firebase_android_notification.send_notification(
                     f"{self.title} just started a stream!",
                     f"{self.description}",
                     f"https://hbniaudio.hbni.net/{self.host}",
+                )
+                firebase_web_notification.send_notification_to_topic(
+                    f"{self.title} just started a stream!",
+                    f"{self.description}",
                 )
                 app_log.info(f"Notification sent for {self.host}")
 

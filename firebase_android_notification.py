@@ -14,7 +14,7 @@ SCOPES = ["https://www.googleapis.com/auth/firebase.messaging"]
 
 def _get_access_token():
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        "google_credentials.json",
+        "firebase_android_credentials.json",
         SCOPES,
     )
     access_token_info = credentials.get_access_token()
