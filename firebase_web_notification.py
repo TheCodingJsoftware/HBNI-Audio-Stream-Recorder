@@ -11,6 +11,7 @@ def send_notification_to_topic(title, body, topic="broadcasts"):
             notification=messaging.Notification(
                 title=title,
                 body=body,
+                image="/static/logo.png",
             ),
             topic=topic,
         )
