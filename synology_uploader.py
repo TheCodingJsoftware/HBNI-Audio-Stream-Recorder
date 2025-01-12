@@ -38,7 +38,7 @@ async def upload(
     date: str,
     length: float,
 ):
-    sanitized_file_name = file_path.replace("&amp;", "&").replace("&Amp;", "&").replace("&", "and").replace("/", " or ")
+    sanitized_file_name = file_name.replace("&amp;", "&").replace("&Amp;", "&").replace("&", "and").replace("/", " or ")
     try:
         shutil.copy2(
             file_path, os.path.join(os.getenv("STATIC_RECORDINGS_PATH", "/app/static/Recordings"), sanitized_file_name)
