@@ -289,7 +289,7 @@ class StreamRecorder:
                     is_recording = source.get("genre", "various") == "RECORDING"
 
                     if (
-                        host not in self.active_streams and "test" not in host.lower()
+                        host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower()
                         # and not is_recording #
                     ):
                         stream = Stream(title, host, description, self.remove_stream)
