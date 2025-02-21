@@ -208,7 +208,7 @@ class Stream:
                 firebase_android_notification.send_notification(
                     f"{self.title} just started a stream!",
                     f"{self.description}",
-                    f"https://hbniaudio.hbni.net/{self.host}",
+                    self.url,
                 )
                 firebase_web_notification.send_notification_to_topic(
                     f"{self.title} just started a stream!",
@@ -218,7 +218,7 @@ class Stream:
 
         send_email.send(
             f"{self.title} just started a stream!",
-            f"{self.description}<br>https://hbniaudio.hbni.net/{self.host}",
+            f"{self.description}<br>{self.url}",
         )
 
         if "test" in self.title.lower():
