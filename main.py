@@ -65,12 +65,12 @@ sys.excepthook = excepthook
 
 class Stream:
     def __init__(
-        self, title: str, host: str, description: str, recording_finished
+        self, title: str, url: str, host: str, description: str, recording_finished
     ) -> None:
         load_dotenv()
         self.title = title
         self.host = host
-        self.url = f"https://hbniaudio.hbni.net/{self.host}"
+        self.url = f"{url}/{self.host}"
         self.description = (
             description.replace("&amp;", "&")
             .replace("&Amp;", "&")
@@ -233,7 +233,7 @@ class StreamRecorder:
         self.active_streams: dict[str, Stream] = {}
 
     def fetch_icecast_status_json(
-        self, icecast_source="https://hbniaudio.hbni.net/status-json.xsl"
+        self, icecast_source="https://hbniaudio.hbni.net"
     ) -> (
         dict[
             Literal["icestats"],
@@ -242,17 +242,18 @@ class StreamRecorder:
         | None
     ):
         try:
-            response = requests.get(icecast_source)
+            response = requests.get(f"{icecast_source}/status-json.xsl")
             if response.status_code == 200:
                 json_content = response.text.replace('"title": - ,', '"title": null,')
                 json_data = json.loads(json_content)
+                json_data["icestats"]["source"] = icecast_source
                 return json_data
             else:
                 app_log.info(f"Error fetching Icecast status: {response.status_code}")
-                return None
+                return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
         except Exception as e:
             app_log.error(f"Error fetching Icecast status: {e}")
-            return None
+            return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
 
     def process_sources(
         self, sources: dict[str, str] | list[dict[str, str]]
@@ -286,13 +287,14 @@ class StreamRecorder:
                     host = source["listenurl"].split("/")[-1]
                     description = source.get("server_description", "No description")
                     title = host.replace("/", "").title()
+                    icecast_source = status_data.get("icestats", {}).get("source", "https://hbniaudio.hbni.net")
                     is_recording = source.get("genre", "various") == "RECORDING"
 
                     if (
                         host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower()
                         # and not is_recording #
                     ):
-                        stream = Stream(title, host, description, self.remove_stream)
+                        stream = Stream(title, icecast_source, host, description, self.remove_stream)
                         self.active_streams[host] = stream
                         stream.start_recording()
                         app_log.info(
