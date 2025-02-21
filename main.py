@@ -246,7 +246,8 @@ class StreamRecorder:
             if response.status_code == 200:
                 json_content = response.text.replace('"title": - ,', '"title": null,')
                 json_data = json.loads(json_content)
-                json_data["icestats"]["source"] = icecast_source
+                json_data["icestats"]["icecast_source"] = icecast_source
+                app_log.info(f"Icecast status: {json_data}")
                 return json_data
             else:
                 app_log.info(f"Error fetching Icecast status: {response.status_code}")
@@ -287,7 +288,7 @@ class StreamRecorder:
                     host = source["listenurl"].split("/")[-1]
                     description = source.get("server_description", "No description")
                     title = host.replace("/", "").title()
-                    icecast_source = status_data.get("icestats", {}).get("source", "https://hbniaudio.hbni.net")
+                    icecast_source = status_data.get("icestats", {}).get("icecast_source", "https://hbniaudio.hbni.net")
                     is_recording = source.get("genre", "various") == "RECORDING"
 
                     if (
