@@ -251,10 +251,10 @@ class StreamRecorder:
                 return json_data
             else:
                 app_log.info(f"Error fetching Icecast status: {response.status_code}")
-                return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
+                return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:443")
         except Exception as e:
             app_log.error(f"Error fetching Icecast status: {e}")
-            return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
+            return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:443")
 
     def process_sources(
         self, sources: dict[str, str] | list[dict[str, str]]
@@ -274,6 +274,11 @@ class StreamRecorder:
 
     def run(self):
         self.send_notification()
+
+        # stream = Stream("Springhill", "http://hbniaudio.hbni.net:443", "springhill", "Springhill/Odanah/Cascade singing in memory of Dave Stahl(Bon Homme)", self.remove_stream)
+        # self.active_streams["springhill"] = stream
+        # stream.start_recording()
+
         while True:
             try:
                 status_data = self.fetch_icecast_status_json()
@@ -293,7 +298,7 @@ class StreamRecorder:
 
                     if (
                         host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower()
-                        # and not is_recording #
+                        and not is_recording # It is being recorded by HBNI Audio
                     ):
                         stream = Stream(title, icecast_source, host, description, self.remove_stream)
                         self.active_streams[host] = stream
@@ -373,6 +378,7 @@ def start_recorder():
 
 
 def main() -> None:
+
     threading.Thread(target=start_recorder).start()
     threading.Thread(target=start_log_server).start()
 
