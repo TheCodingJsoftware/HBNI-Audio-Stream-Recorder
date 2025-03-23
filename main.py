@@ -15,6 +15,7 @@ from typing import Callable, Literal
 import requests
 from dotenv import load_dotenv
 
+import filebrowser_uploader
 import firebase_android_notification
 import firebase_web_notification
 import send_email
@@ -180,7 +181,7 @@ class Stream:
     def upload_stream(self, file_name: str, file_path: str):
         app_log.info(f"Uploading {self.host}: {self.recording_file_name}")
         asyncio.run(
-            synology_uploader.upload(
+            filebrowser_uploader.upload(
                 file_name,
                 file_path,
                 self.host,
@@ -298,7 +299,7 @@ class StreamRecorder:
 
                     if (
                         host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower()
-                        and not is_recording # It is being recorded by HBNI Audio
+                        # and not is_recording # It is being recorded by HBNI Audio
                     ):
                         stream = Stream(title, icecast_source, host, description, self.remove_stream)
                         self.active_streams[host] = stream
