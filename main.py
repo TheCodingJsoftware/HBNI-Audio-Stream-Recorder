@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from logging.handlers import RotatingFileHandler
 from typing import Callable, Literal
 
+import asyncpg
 import requests
 from dotenv import load_dotenv
 
@@ -22,8 +23,16 @@ import send_email
 import synology_uploader
 import zip_file
 
-FOLDER_LOCATION: str = os.path.abspath(os.getcwd()).replace("\\", "/")
+load_dotenv()
 
+FOLDER_LOCATION: str = os.path.abspath(os.getcwd()).replace("\\", "/")
+db_settings = {
+    "host": os.getenv("POSTGRES_HOST"),
+    "port": int(os.getenv("POSTGRES_PORT", 5434)),
+    "database": os.getenv("POSTGRES_DB"),
+    "user": os.getenv("POSTGRES_USER"),
+    "password": os.getenv("POSTGRES_PASSWORD"),
+}
 if not os.path.exists(f"{FOLDER_LOCATION}/CURRENTLY_RECORDING"):
     os.makedirs(f"{FOLDER_LOCATION}/CURRENTLY_RECORDING")
 
@@ -323,18 +332,45 @@ class StreamRecorder:
                 app_log.error(f"Error in run loop: {e}")
                 time.sleep(15)
 
-    def update_recording_status(self):
-        recording_status_data: dict[str, dict[str, str]] = {}
-        for host, stream in self.active_streams.items():
-            recording_status_data[host] = {
-                "link": f"https://hbniaudio.hbni.net/{host.replace('/', '')}",
-                "length": stream.get_time_since_started_recording(),
-                "description": stream.description,
-                "starting_time": stream.starting_time.strftime("%B %d %A %Y %I:%M %p"),
-            }
-        with open(os.getenv("RECORDING_STATUS_FILE_PATH"), "w") as f:
-            json.dump(recording_status_data, f)
+    async def ensure_recording_status_table(self, pool):
+        async with pool.acquire() as conn:
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS recording_status (
+                    host TEXT PRIMARY KEY,
+                    link TEXT NOT NULL,
+                    length TEXT NOT NULL,
+                    description TEXT,
+                    starting_time TEXT NOT NULL,
+                    last_updated TIMESTAMPTZ DEFAULT NOW()
+                );
+            """)
 
+    async def update_recording_status(self):
+        pool = await asyncpg.create_pool(**db_settings)
+
+        # await self.ensure_recording_status_table(pool)
+
+        async with pool.acquire() as conn:
+            async with conn.transaction():
+                for host, stream in self.active_streams.items():
+                    link = f"https://hbniaudio.hbni.net/{host.replace('/', '')}"
+                    length = stream.get_time_since_started_recording()
+                    description = stream.description
+                    starting_time = stream.starting_time.strftime("%B %d %A %Y %I:%M %p")
+
+                    query = """
+                    INSERT INTO recording_status (host, link, length, description, starting_time)
+                    VALUES ($1, $2, $3, $4, $5)
+                    ON CONFLICT (host) DO UPDATE
+                    SET link = EXCLUDED.link,
+                        length = EXCLUDED.length,
+                        description = EXCLUDED.description,
+                        starting_time = EXCLUDED.starting_time;
+                        last_updated = NOW();
+                    """
+                    await conn.execute(query, host, link, length, description, starting_time)
+
+        await pool.close()
     def send_notification(self):
         send_email.send(
             "HBNI Audio Stream Recorder Started Successfully",

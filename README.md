@@ -14,8 +14,6 @@ Records broadcasts from the HBNI Audio Streaming Service and send notifications.
 2. Create a `.env` file in the root directory of the project with the following variables:
 
 ```bash
-STATIC_RECORDINGS_PATH="/app/static/Recordings"
-RECORDING_STATUS_FILE_PATH="/app/static/recording_status.json"
 MINIMUM_RECORDING_LENGTH="10"
 LOG_SERVER_HOST="0.0.0.0"
 LOG_SERVER_PORT="5054"
