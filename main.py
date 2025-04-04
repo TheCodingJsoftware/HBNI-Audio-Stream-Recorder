@@ -261,10 +261,10 @@ class StreamRecorder:
                 return json_data
             else:
                 app_log.info(f"Error fetching Icecast status: {response.status_code}")
-                return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:443")
+                return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
         except Exception as e:
             app_log.error(f"Error fetching Icecast status: {e}")
-            return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:443")
+            return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
 
     def process_sources(
         self, sources: dict[str, str] | list[dict[str, str]]
