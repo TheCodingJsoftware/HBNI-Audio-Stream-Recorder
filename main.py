@@ -39,15 +39,24 @@ if not os.path.exists(f"{FOLDER_LOCATION}/CURRENTLY_RECORDING"):
 if not os.path.exists(f"{FOLDER_LOCATION}/logs"):
     os.makedirs(f"{FOLDER_LOCATION}/logs")
 
-logFile = f"{FOLDER_LOCATION}/logs/{datetime.now().strftime("%Y-%B-%d-%A")}.log"
-logHandler = RotatingFileHandler(
-    logFile,
-    mode="a",
-    maxBytes=1024**2 * 1024,  # 1 gb
-    backupCount=2,
-    encoding=None,
-    delay=0,
-)
+
+class DailyRotatingFileHandler(logging.FileHandler):
+    def __init__(self, logs_dir):
+        self.logs_dir = logs_dir
+        self.current_date = datetime.now().strftime("%Y-%B-%d-%A")
+        self.base_filename = os.path.join(self.logs_dir, f"{self.current_date}.log")
+        super().__init__(self.base_filename, mode="a", encoding="utf-8")
+
+    def emit(self, record):
+        new_date = datetime.now().strftime("%Y-%B-%d-%A")
+        if new_date != self.current_date:
+            self.current_date = new_date
+            self.baseFilename = os.path.join(self.logs_dir, f"{self.current_date}.log")
+            self.stream.close()
+            self.stream = self._open()
+        super().emit(record)
+
+logHandler = DailyRotatingFileHandler(f"{FOLDER_LOCATION}/logs")
 
 logHandler.setFormatter(
     logging.Formatter(
