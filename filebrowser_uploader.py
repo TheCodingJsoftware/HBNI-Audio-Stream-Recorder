@@ -52,6 +52,7 @@ async def get_public_share_url(file_relative_path: str, token: str) -> str:
             f"{FILEBROWSER_URL}/api/share/{file_relative_path}",
             headers=headers,
             json={"path": f"/{file_relative_path}"},
+            ssl=False, # This explicitly tells aiohttp not to use SSL
         ) as response:
             if response.status != 200:
                 body = await response.text()
@@ -67,6 +68,7 @@ async def get_filebrowser_token():
         async with session.post(
             f"{FILEBROWSER_URL}/api/login",
             json={"username": FILEBROWSER_USERNAME, "password": FILEBROWSER_PASSWORD},
+            ssl=False, # This explicitly tells aiohttp not to use SSL
         ) as response:
             token = await response.text()
             return token.strip()
@@ -77,6 +79,7 @@ async def delete_existing_file(file_relative_path: str, token: str):
         async with session.delete(
             f"{FILEBROWSER_URL}/api/resources/{file_relative_path}",
             headers={"X-Auth": token},
+            ssl=False
         ) as response:
             if response.status not in [200, 204, 404]:
                 body = await response.text()
@@ -101,6 +104,7 @@ async def upload_to_filebrowser(file_path, file_name) -> str:
                 f"{FILEBROWSER_URL}/api/resources/{FILEBROWSER_UPLOAD_PATH}/{file_name}",
                 headers=headers,
                 data=form,
+                ssl=False, # This explicitly tells aiohttp not to use SSL
             ) as response:
                 if response.status != 200:
                     body = await response.text()
@@ -145,12 +149,12 @@ async def upload(
 if __name__ == "__main__":
     asyncio.run(
         upload(
-            "Glenwayprivate - Unspecified description - February 20 Thursday 2025 08_50 PM - 1h 36m 34s.mp3",
-            "CURRENTLY_RECORDING/Glenwayprivate - Unspecified description - February 20 Thursday 2025 08_50 PM - 1h 36m 34s.mp3",
-            "glenway",
-            "Unspecified description",
-            "February 20 Thursday 2025 08_50 PM",
-            96.53333333333334,
+            "Pineland - just seeing if stuff works. - April 05 Saturday 2025 03_34 PM - 1m 1s.mp3",
+            "CURRENTLY_RECORDING/Pineland - just seeing if stuff works. - April 05 Saturday 2025 03_34 PM - 1m 1s.mp3",
+            "pineland",
+            "just seeing if stuff works.",
+            "April 05 Saturday 2025 03_34 PM",
+            1.1,
         ),
         debug=True,
     )

@@ -84,7 +84,7 @@ sys.excepthook = excepthook
 
 class Stream:
     def __init__(
-        self, title: str, url: str, host: str, description: str, recording_finished
+        self, title: str, url: str, host: str, description: str, recording_finished, upload_callback
     ) -> None:
         load_dotenv()
         self.title = title
@@ -107,6 +107,7 @@ class Stream:
         self.recording_file_path = (
             f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{self.recording_file_name}"
         )
+        self.upload_callback = upload_callback
         self.send_notification()
 
     def start_recording(self):
@@ -192,24 +193,28 @@ class Stream:
             )
             self.uploaded = True
 
-        self.backup_stream(final_recording_file_path)
+        # self.backup_stream(final_recording_file_path)
         os.remove(final_recording_file_path)
         app_log.info(f"Original copy deleted: {self.recording_file_name}")
 
     def upload_stream(self, file_name: str, file_path: str):
         app_log.info(f"Uploading {self.host}: {self.recording_file_name}")
-        asyncio.run(
-            filebrowser_uploader.upload(
-                file_name,
-                file_path,
-                self.host,
-                self.description,
-                self.starting_time.strftime("%B %d %A %Y %I_%M %p"),
-                self.audio_file_length,
-            )
-        )
-        self.uploaded = True
-        app_log.info(f"Uploaded {self.host}: {self.recording_file_name}")
+        try:
+            if self.upload_callback:
+                self.upload_callback(
+                    file_name,
+                    file_path,
+                    self.host,
+                    self.description,
+                    self.starting_time.strftime("%B %d %A %Y %I_%M %p"),
+                    self.audio_file_length,
+                )
+                self.uploaded = True
+                app_log.info(f"Uploaded {self.host}: {self.recording_file_name}")
+            else:
+                raise RuntimeError("No upload callback provided.")
+        except Exception as e:
+            app_log.error(f"Failed to upload stream: {e}")
 
     def backup_stream(self, file_path: str):
         app_log.info(f"Starting compression for {self.recording_file_name}")
@@ -250,30 +255,28 @@ class StreamRecorder:
     def __init__(self) -> None:
         load_dotenv()
         self.active_streams: dict[str, Stream] = {}
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        threading.Thread(target=self.loop.run_forever, daemon=True).start()
 
-    def fetch_icecast_status_json(
-        self, icecast_source="https://hbniaudio.hbni.net"
+    def fetch_broadcast_data(
+        self, source="https://broadcasting.hbni.net/get_broadcast_data"
     ) -> (
-        dict[
-            Literal["icestats"],
-            None | str | dict[Literal["source"], dict[str, str] | list[dict[str, str]]],
-        ]
+        list[dict]
         | None
     ):
         try:
-            response = requests.get(f"{icecast_source}/status-json.xsl")
+            response = requests.get(source)
             if response.status_code == 200:
-                json_content = response.text.replace('"title": - ,', '"title": null,')
-                json_data = json.loads(json_content)
-                json_data["icestats"]["icecast_source"] = icecast_source
-                app_log.info(f"Icecast status: {json_data}")
+                json_data = json.loads(response.text)
+                app_log.info(f"Broadcast data: {json_data}")
                 return json_data
             else:
-                app_log.info(f"Error fetching Icecast status: {response.status_code}")
-                return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
+                app_log.info(f"Error fetching Broadcast data: {response.status_code}")
+                return self.fetch_broadcast_data()
         except Exception as e:
-            app_log.error(f"Error fetching Icecast status: {e}")
-            return self.fetch_icecast_status_json("http://hbniaudio.hbni.net:8000")
+            app_log.error(f"Error fetching Broadcast data: {e}")
+            return self.fetch_broadcast_data()
 
     def process_sources(
         self, sources: dict[str, str] | list[dict[str, str]]
@@ -289,7 +292,7 @@ class StreamRecorder:
         )
         del self.active_streams[host]
         if not list(self.active_streams.keys()):
-            self.update_recording_status()
+            self.loop.create_task(self.update_recording_status())
 
     def run(self):
         self.send_notification()
@@ -300,26 +303,31 @@ class StreamRecorder:
 
         while True:
             try:
-                status_data = self.fetch_icecast_status_json()
+                status_data = self.fetch_broadcast_data()
                 if not status_data:
                     time.sleep(15)
                     continue
 
-                sources = status_data.get("icestats", {}).get("source", [])
-                sources = self.process_sources(sources)
-
-                for source in sources:
-                    host = source["listenurl"].split("/")[-1]
+                for source in status_data:
+                    host: str = source.get("host")
                     description = source.get("server_description", "No description")
-                    title = host.replace("/", "").title()
-                    icecast_source = status_data.get("icestats", {}).get("icecast_source", "https://hbniaudio.hbni.net")
+                    title = host.title()
+                    icecast_source = "https://hbniaudio.hbni.net"
+                    is_private = source.get("is_private", False)
                     is_recording = source.get("genre", "various") == "RECORDING"
 
                     if (
-                        host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower()
+                        host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower() and not is_private
                         # and not is_recording # It is being recorded by HBNI Audio
                     ):
-                        stream = Stream(title, icecast_source, host, description, self.remove_stream)
+                        stream = Stream(
+                            title,
+                            icecast_source,
+                            host,
+                            description,
+                            self.remove_stream,
+                            upload_callback=upload_sync
+                        )
                         self.active_streams[host] = stream
                         stream.start_recording()
                         app_log.info(
@@ -328,13 +336,13 @@ class StreamRecorder:
 
                 # Cleanup inactive streams
                 active_hosts = {
-                    source["listenurl"].split("/")[-1] for source in sources
+                    source["host"].split("/")[-1] for source in status_data
                 }
                 for host in list(self.active_streams.keys()):
                     if host not in active_hosts:
                         self.remove_stream(host)
 
-                    self.update_recording_status()
+                    self.loop.create_task(self.update_recording_status())
 
                 time.sleep(15)
             except Exception as e:
@@ -380,6 +388,7 @@ class StreamRecorder:
                     await conn.execute(query, host, link, length, description, starting_time)
 
         await pool.close()
+
     def send_notification(self):
         send_email.send(
             "HBNI Audio Stream Recorder Started Successfully",
@@ -417,6 +426,26 @@ def start_log_server():
         httpd.serve_forever()
 
 
+def upload_sync(
+    file_name: str,
+    file_path: str,
+    host: str,
+    description: str,
+    date: str,
+    length: float,
+):
+    return asyncio.run(
+        filebrowser_uploader.upload(
+            file_name,
+            file_path,
+            host,
+            description,
+            date,
+            length,
+        )
+    )
+
+
 def start_recorder():
     stream_recorder = StreamRecorder()
     app_log.info("Starting stream recorder")
@@ -424,9 +453,9 @@ def start_recorder():
 
 
 def main() -> None:
-
-    threading.Thread(target=start_recorder).start()
+    # threading.Thread(target=start_recorder).start()
     threading.Thread(target=start_log_server).start()
+    start_recorder()
 
 
 if __name__ == "__main__":
