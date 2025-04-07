@@ -9,18 +9,17 @@ import sys
 import threading
 import time
 from datetime import datetime, timedelta
-from logging.handlers import RotatingFileHandler
-from typing import Callable, Literal
+from typing import Callable
 
 import asyncpg
 import requests
 from dotenv import load_dotenv
+from natsort import natsorted
 
 import filebrowser_uploader
 import firebase_android_notification
 import firebase_web_notification
 import send_email
-import synology_uploader
 import zip_file
 
 load_dotenv()
@@ -295,7 +294,7 @@ class StreamRecorder:
             self.loop.create_task(self.update_recording_status())
 
     def run(self):
-        self.send_notification()
+        # self.send_notification()
 
         # stream = Stream("Springhill", "http://hbniaudio.hbni.net:443", "springhill", "Springhill/Odanah/Cascade singing in memory of Dave Stahl(Bon Homme)", self.remove_stream)
         # self.active_streams["springhill"] = stream
@@ -398,21 +397,38 @@ class StreamRecorder:
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory="logs", **kwargs)
+        # Serve from root so we can access logs/ directory
+        super().__init__(*args, directory=".", **kwargs)
         load_dotenv()
 
     def do_GET(self):
-        if self.path.endswith(".log"):  # Check if the requested file is a log file
-            log_file_path = os.path.join("logs", self.path.lstrip("/"))
-            if os.path.exists(log_file_path):  # Ensure the file exists
-                self.send_response(200)
-                self.send_header("Content-type", "text/plain")
-                self.end_headers()
-                with open(log_file_path, "r", encoding="utf-8") as log_file:
-                    self.wfile.write(log_file.read().encode("utf-8"))
-                return
-        # Default behavior for other files
-        super().do_GET()
+        # Show a custom index with log links
+        if self.path == "/":
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
+            html = "<html><body><h1>Log Files</h1><ul>"
+            for filename in natsorted(os.listdir("logs")):
+
+                if filename.endswith(".log"):
+                    html += f'<li><a href="/logs/{filename}">{filename}</a></li>'
+            html += "</ul></body></html>"
+
+            self.wfile.write(html.encode("utf-8"))
+            return
+
+        # Serve logs with text/plain so they show in browser
+        if self.path.startswith("/logs/") and self.path.endswith(".log"):
+            self.send_response(200)
+            self.send_header("Content-type", "text/plain")
+            self.end_headers()
+            filepath = os.path.join("logs", os.path.basename(self.path))
+            with open(filepath, "r", encoding="utf-8") as f:
+                self.wfile.write(f.read().encode("utf-8"))
+            return
+
+        return super().do_GET()
 
 
 def start_log_server():
