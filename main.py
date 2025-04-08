@@ -15,6 +15,8 @@ import asyncpg
 import requests
 from dotenv import load_dotenv
 from natsort import natsorted
+from tornado.ioloop import IOLoop
+from tornado.web import Application, RequestHandler
 
 import filebrowser_uploader
 import firebase_android_notification
@@ -410,7 +412,6 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
 
             html = "<html><body><h1>Log Files</h1><ul>"
             for filename in natsorted(os.listdir("logs")):
-
                 if filename.endswith(".log"):
                     html += f'<li><a href="/logs/{filename}">{filename}</a></li>'
             html += "</ul></body></html>"
@@ -431,15 +432,48 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
 
+class IndexHandler(RequestHandler):
+    def get(self):
+        try:
+            files = [f for f in natsorted(os.listdir("logs")) if f.endswith(".log")]
+            html = "<html><body><h1>Log Files</h1><ul>"
+            for file in files:
+                html += f'<li><a href="/logs/{file}">{file}</a></li>'
+            html += "</ul></body></html>"
+            self.write(html)
+        except Exception as e:
+            self.set_status(500)
+            self.write(f"<pre>Error: {str(e)}</pre>")
+
+
+class LogFileHandler(RequestHandler):
+    def get(self, filename):
+        safe_filename = os.path.basename(filename)
+        file_path = os.path.join("logs", safe_filename)
+        if os.path.exists(file_path):
+            self.set_header("Content-Type", "text/plain; charset=utf-8")
+            with open(file_path, "r", encoding="utf-8") as f:
+                self.write(f.read())
+        else:
+            self.set_status(404)
+            self.write("File not found.")
+
+
+def make_app():
+    return Application([
+        (r"/", IndexHandler),
+        (r"/logs/", IndexHandler),
+        (r"/logs/(.*)", LogFileHandler),
+    ])
+
+
 def start_log_server():
-    with socketserver.TCPServer(
-        (f"{os.getenv("LOG_SERVER_HOST")}", int(os.getenv("LOG_SERVER_PORT"))),
-        CustomHandler,
-    ) as httpd:
-        app_log.info(
-            f"Listening for connections on port {os.getenv('LOG_SERVER_PORT')}"
-        )
-        httpd.serve_forever()
+    port = int(os.getenv("LOG_SERVER_PORT", 8080))
+    host = os.getenv("LOG_SERVER_HOST", "127.0.0.1")
+    app = make_app()
+    app.listen(port, address=host)
+    print(f"Listening for connections on {host}:{port}")
+    IOLoop.current().start()
 
 
 def upload_sync(
