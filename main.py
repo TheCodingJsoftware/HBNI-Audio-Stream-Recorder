@@ -270,7 +270,7 @@ class StreamRecorder:
             response = requests.get(source)
             if response.status_code == 200:
                 json_data = json.loads(response.text)
-                app_log.info(f"Broadcast data: {json_data}")
+                # app_log.info(f"Broadcast data: {json_data}")
                 return json_data
             else:
                 app_log.info(f"Error fetching Broadcast data: {response.status_code}")
@@ -296,7 +296,7 @@ class StreamRecorder:
             self.loop.create_task(self.update_recording_status())
 
     def run(self):
-        # self.send_notification()
+        self.send_notification()
 
         # stream = Stream("Springhill", "http://hbniaudio.hbni.net:443", "springhill", "Springhill/Odanah/Cascade singing in memory of Dave Stahl(Bon Homme)", self.remove_stream)
         # self.active_streams["springhill"] = stream
@@ -348,6 +348,10 @@ class StreamRecorder:
                 time.sleep(15)
             except Exception as e:
                 app_log.error(f"Error in run loop: {e}")
+                send_email.send(
+                    "HBNI Audio Stream Recorder Error",
+                    f"https://broadcasting.hbni.net/logs/{datetime.now().strftime('%Y-%B-%d-%A')}.log",
+                )
                 time.sleep(15)
 
     async def ensure_recording_status_table(self, pool):
@@ -397,72 +401,53 @@ class StreamRecorder:
         )
 
 
-class CustomHandler(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        # Serve from root so we can access logs/ directory
-        super().__init__(*args, directory=".", **kwargs)
-        load_dotenv()
-
-    def do_GET(self):
-        # Show a custom index with log links
-        if self.path == "/":
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-
-            html = "<html><body><h1>Log Files</h1><ul>"
-            for filename in natsorted(os.listdir("logs")):
-                if filename.endswith(".log"):
-                    html += f'<li><a href="/logs/{filename}">{filename}</a></li>'
-            html += "</ul></body></html>"
-
-            self.wfile.write(html.encode("utf-8"))
-            return
-
-        # Serve logs with text/plain so they show in browser
-        if self.path.startswith("/logs/") and self.path.endswith(".log"):
-            self.send_response(200)
-            self.send_header("Content-type", "text/plain")
-            self.end_headers()
-            filepath = os.path.join("logs", os.path.basename(self.path))
-            with open(filepath, "r", encoding="utf-8") as f:
-                self.wfile.write(f.read().encode("utf-8"))
-            return
-
-        return super().do_GET()
-
 
 class IndexHandler(RequestHandler):
-    def get(self):
-        try:
-            files = [f for f in natsorted(os.listdir("logs")) if f.endswith(".log")]
-            html = "<html><body><h1>Log Files</h1><ul>"
-            for file in files:
-                html += f'<li><a href="/logs/{file}">{file}</a></li>'
-            html += "</ul></body></html>"
-            self.write(html)
-        except Exception as e:
-            self.set_status(500)
-            self.write(f"<pre>Error: {str(e)}</pre>")
-
-
+    def get(self, filename):
+        if filename == "logs":
+            try:
+                files = [f for f in natsorted(os.listdir("logs")) if f.endswith(".log")]
+                html = "<html><body><h1>Log Files</h1><ul>"
+                for file in files:
+                    html += f'<li><a href="/logs/{file}">{file}</a></li>'
+                html += "</ul></body></html>"
+                self.write(html)
+            except Exception as e:
+                self.set_status(404)
+                self.write("File not found.")
+                app_log.error(f"Error {e}")
+        elif filename.endswith(".log"):
+            safe_filename = os.path.basename(filename)
+            file_path = os.path.join("logs", safe_filename)
+            if os.path.exists(file_path) and file_path.endswith(".log"):
+                self.set_header("Content-Type", "text/plain; charset=utf-8")
+                with open(file_path, "r", encoding="utf-8") as f:
+                    self.write(f.read())
+            else:
+                self.set_status(404)
+                self.write("File not found.")
+                app_log.error(f"File not found: {file_path}")
+        else:
+            self.set_status(404)
+            self.write("File not found.")
+            app_log.error(f"File not found: {filename}")
 class LogFileHandler(RequestHandler):
     def get(self, filename):
         safe_filename = os.path.basename(filename)
         file_path = os.path.join("logs", safe_filename)
-        if os.path.exists(file_path):
+        if os.path.exists(file_path) and file_path.endswith(".log"):
             self.set_header("Content-Type", "text/plain; charset=utf-8")
             with open(file_path, "r", encoding="utf-8") as f:
                 self.write(f.read())
         else:
             self.set_status(404)
             self.write("File not found.")
+            app_log.error(f"File not found: {file_path}")
 
 
 def make_app():
     return Application([
-        (r"/", IndexHandler),
-        (r"/logs/", IndexHandler),
+        (r"/(.*)", IndexHandler),
         (r"/logs/(.*)", LogFileHandler),
     ])
 
