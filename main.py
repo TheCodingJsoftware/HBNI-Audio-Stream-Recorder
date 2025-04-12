@@ -397,7 +397,7 @@ class StreamRecorder:
     def send_notification(self):
         send_email.send(
             "HBNI Audio Stream Recorder Started Successfully",
-            f"http://{os.getenv('LOG_SERVER_HOST')}:{os.getenv('PORT')}",
+            f"http://{os.getenv('LOG_SERVER_HOST')}:{os.getenv('LOG_SERVER_PORT')}",
         )
 
 class LogFileHandler(RequestHandler):
