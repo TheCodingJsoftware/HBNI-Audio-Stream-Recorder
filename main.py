@@ -400,10 +400,8 @@ class StreamRecorder:
             f"http://{os.getenv('LOG_SERVER_HOST')}:{os.getenv('PORT')}",
         )
 
-
-
-class IndexHandler(RequestHandler):
-    def get(self, filename):
+class LogFileHandler(RequestHandler):
+    def get(self, filename: str):
         if filename == "logs":
             try:
                 files = [f for f in natsorted(os.listdir("logs")) if f.endswith(".log")]
@@ -431,23 +429,11 @@ class IndexHandler(RequestHandler):
             self.set_status(404)
             self.write("File not found.")
             app_log.error(f"File not found: {filename}")
-class LogFileHandler(RequestHandler):
-    def get(self, filename):
-        safe_filename = os.path.basename(filename)
-        file_path = os.path.join("logs", safe_filename)
-        if os.path.exists(file_path) and file_path.endswith(".log"):
-            self.set_header("Content-Type", "text/plain; charset=utf-8")
-            with open(file_path, "r", encoding="utf-8") as f:
-                self.write(f.read())
-        else:
-            self.set_status(404)
-            self.write("File not found.")
-            app_log.error(f"File not found: {file_path}")
 
 
 def make_app():
     return Application([
-        (r"/(.*)", IndexHandler),
+        (r"/(.*)", LogFileHandler),
         (r"/logs/(.*)", LogFileHandler),
     ])
 
