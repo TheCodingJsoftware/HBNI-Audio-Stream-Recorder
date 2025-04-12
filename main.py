@@ -402,7 +402,7 @@ class StreamRecorder:
 
 class LogFileHandler(RequestHandler):
     def get(self, filename: str):
-        if filename == "logs":
+        if filename == "logs" or filename == "logs/" or filename == "":
             try:
                 files = [f for f in natsorted(os.listdir("logs")) if f.endswith(".log")]
                 html = "<html><body><h1>Log Files</h1><ul>"
