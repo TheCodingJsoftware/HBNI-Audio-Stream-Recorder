@@ -375,7 +375,7 @@ class StreamRecorder:
         async with pool.acquire() as conn:
             async with conn.transaction():
                 for host, stream in self.active_streams.items():
-                    link = f"https://hbniaudio.hbni.net/{host.replace('/', '')}"
+                    link = f"https://broadcasting.hbni.net/play_live/{host.replace('/', '')}"
                     length = stream.get_time_since_started_recording()
                     description = stream.description
                     starting_time = stream.starting_time.strftime("%B %d %A %Y %I:%M %p")
