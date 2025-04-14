@@ -293,7 +293,7 @@ class StreamRecorder:
         )
         del self.active_streams[host]
         if not list(self.active_streams.keys()):
-            self.loop.create_task(self.update_recording_status())
+            asyncio.run(self.update_recording_status())
 
     def run(self):
         self.send_notification()
@@ -343,7 +343,7 @@ class StreamRecorder:
                     if host not in active_hosts:
                         self.remove_stream(host)
 
-                    self.loop.create_task(self.update_recording_status())
+                    asyncio.run(self.update_recording_status())
 
                 time.sleep(15)
             except Exception as e:
@@ -387,7 +387,7 @@ class StreamRecorder:
                     SET link = EXCLUDED.link,
                         length = EXCLUDED.length,
                         description = EXCLUDED.description,
-                        starting_time = EXCLUDED.starting_time;
+                        starting_time = EXCLUDED.starting_time,
                         last_updated = NOW();
                     """
                     await conn.execute(query, host, link, length, description, starting_time)
@@ -418,13 +418,41 @@ class LogFileHandler(RequestHandler):
             safe_filename = os.path.basename(filename)
             file_path = os.path.join("logs", safe_filename)
             if os.path.exists(file_path) and file_path.endswith(".log"):
-                self.set_header("Content-Type", "text/plain; charset=utf-8")
+                self.set_header("Content-Type", "text/html; charset=utf-8")
+                self.write("<html><head><style>")
+                self.write("""
+                    body { font-family: monospace; background: #121212; color: #eee; padding: 1rem; }
+                    .error { color: red; }
+                    .info { color: cyan; }
+                    .debug { color: gray; }
+                    .warn { color: orange; }
+                    .timestamp { color: #888; }
+                """)
+                self.write("</style></head><body><pre>")
+
                 with open(file_path, "r", encoding="utf-8") as f:
-                    self.write(f.read())
+                    for line in f:
+                        formatted = line
+                        # Highlight levels
+                        formatted = formatted.replace("[ERROR]", '<span class="error">[ERROR]</span>')
+                        formatted = formatted.replace("[INFO]", '<span class="info">[INFO]</span>')
+                        formatted = formatted.replace("[DEBUG]", '<span class="debug">[DEBUG]</span>')
+                        formatted = formatted.replace("[WARNING]", '<span class="warn">[WARN]</span>')
+
+                        # Optional: Timestamp coloring (assumes timestamp at line start)
+                        if line.startswith("[") and "]" in line:
+                            timestamp_end = line.find("]")
+                            ts = line[0:timestamp_end+1]
+                            rest = line[timestamp_end+1:]
+                            formatted = f'<span class="timestamp">{ts}</span>{rest}'
+
+                        self.write(formatted)
+                self.write("</pre></body></html>")
             else:
                 self.set_status(404)
                 self.write("File not found.")
                 app_log.error(f"File not found: {file_path}")
+
         else:
             self.set_status(404)
             self.write("File not found.")
