@@ -18,9 +18,11 @@ from natsort import natsorted
 from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
 
+import audio_file
 import filebrowser_uploader
 import firebase_android_notification
 import firebase_web_notification
+import remove_silence
 import send_email
 import zip_file
 
@@ -168,8 +170,10 @@ class Stream:
         )
 
     def process_file(self):
+        self.backup_stream(self.recording_file_name)
         app_log.info(f"Processing {self.recording_file_name}")
-        self.audio_file_length = self.get_recording_time_minutes()
+        remove_silence.remove_silence_everywhere(self.recording_file_path)
+        self.audio_file_length = audio_file.get_audio_length(self.recording_file_path)
 
         time_delta = timedelta(minutes=self.audio_file_length)
         final_delta_time = self.convert_delta_time(time_delta)
@@ -241,9 +245,16 @@ class Stream:
                 )
                 app_log.info(f"Notification sent for {self.host}")
 
+        email_body = f"""
+            URL: {self.url}<br>
+            Title: {self.title}<br>
+            Description: {self.description}<br>
+            Host: {self.host}<br>
+            Date: {self.starting_time.strftime('%B %d, %A %I:%M %p')}<br>
+        """
         send_email.send(
             f"{self.title} just started a stream!",
-            f"{self.description}<br>{self.url}",
+            email_body,
         )
 
         if "test" in self.title.lower():
@@ -318,7 +329,7 @@ class StreamRecorder:
                     is_recording = source.get("genre", "various") == "RECORDING"
 
                     if (
-                        host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower() and not is_private
+                        host not in self.active_streams
                         # and not is_recording # It is being recorded by HBNI Audio
                     ):
                         stream = Stream(
