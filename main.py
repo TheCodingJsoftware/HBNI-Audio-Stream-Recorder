@@ -329,7 +329,7 @@ class StreamRecorder:
                     is_recording = source.get("genre", "various") == "RECORDING"
 
                     if (
-                        host not in self.active_streams
+                        host not in self.active_streams and "test" not in host.lower() and "test" not in description.lower() and not is_private
                         # and not is_recording # It is being recorded by HBNI Audio
                     ):
                         stream = Stream(
