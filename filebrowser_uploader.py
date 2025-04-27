@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+UPLOAD_BROADCAST: bool = os.getenv("UPLOAD_BROADCAST", "true").lower() == "true"
+BACKUP_BROADCAST: bool = os.getenv("BACKUP_BROADCAST", "true").lower() == "true"
+
 # Database settings
 db_settings = {
     "host": os.getenv("POSTGRES_HOST"),
@@ -138,12 +141,13 @@ async def upload(
     except Exception as e:
         raise RuntimeError(f"Unexpected error while uploading file: {str(e)}")
 
-    pool = await asyncpg.create_pool(**db_settings)
     download_url = f"https://broadcasting.hbni.net/play_recording/{quote(file_name)}"
-    await insert_data_to_db(
-        pool, file_name, download_url, date, description, length, host, share_hash
-    )
-    await pool.close()
+    if UPLOAD_BROADCAST:
+        pool = await asyncpg.create_pool(**db_settings)
+        await insert_data_to_db(
+            pool, file_name, download_url, date, description, length, host, share_hash
+        )
+        await pool.close()
 
 
 if __name__ == "__main__":

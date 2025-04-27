@@ -29,6 +29,9 @@ import zip_file
 load_dotenv()
 
 FOLDER_LOCATION: str = os.path.abspath(os.getcwd()).replace("\\", "/")
+UPLOAD_BROADCAST: bool = os.getenv("UPLOAD_BROADCAST", "true").lower() == "true"
+BACKUP_BROADCAST: bool = os.getenv("BACKUP_BROADCAST", "true").lower() == "true"
+
 db_settings = {
     "host": os.getenv("POSTGRES_HOST"),
     "port": int(os.getenv("POSTGRES_PORT", 5434)),
@@ -170,7 +173,18 @@ class Stream:
         )
 
     def process_file(self):
-        self.backup_stream(self.recording_file_name)
+        if self.upload_callback and BACKUP_BROADCAST:
+            self.backup_stream(self.recording_file_name)
+            app_log.info(f"Backing up {self.recording_file_name}")
+            self.upload_callback(
+                self.recording_file_name.replace(".mp3", ".zip"),
+                f"{FOLDER_LOCATION}/CURRENTLY_RECORDING/{self.recording_file_name.replace(".mp3", ".zip")}",
+                self.host,
+                self.description,
+                self.starting_time.strftime("%B %d %A %Y %I_%M %p"),
+                self.audio_file_length,
+            )
+
         app_log.info(f"Processing {self.recording_file_name}")
         remove_silence.remove_silence_everywhere(self.recording_file_path)
         self.audio_file_length = audio_file.get_audio_length(self.recording_file_path)

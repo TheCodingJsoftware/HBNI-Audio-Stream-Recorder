@@ -39,22 +39,38 @@ def _build_common_message(
     title: str,
     body: str,
     topic: str = "news",
-    link: str = "https://hbniaudio.hbni.net/",
+    link: str = "https://broadcasting.hbni.net/events",
 ):
     return {
         "message": {
             "topic": topic,
-            "notification": {"title": title, "body": body},
-            "data": {"link": link},
+            "notification": {
+                "title": title,
+                "body": body,
+            },
+            "webpush": {
+                "notification": {
+                    "title": title,
+                    "body": body,
+                    "icon": "/favicon.ico",  # optional: your logo icon
+                },
+                "fcm_options": {
+                    "link": link,
+                },
+            },
+            "data": {
+                "link": link,
+            },
         }
     }
+
 
 
 def _build_override_message(
     title: str,
     body: str,
     topic: str = "news",
-    link: str = "https://hbniaudio.hbni.net/",
+    link: str = "https://broadcasting.hbni.net/events",
 ):
     fcm_message = _build_common_message(title=title, body=body, topic=topic, link=link)
 
@@ -80,7 +96,7 @@ def send_notification(title: str, body: str, link: str):
 
 
 def send_notification_to_dev(
-    title: str, body: str, link: str = "https://hbniaudio.hbni.net/"
+    title: str, body: str, link: str = "https://broadcasting.hbni.net/events"
 ):
     override_message = _build_override_message(
         title=title, body=body, topic="developer", link=link
