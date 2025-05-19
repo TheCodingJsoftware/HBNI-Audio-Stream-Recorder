@@ -373,10 +373,10 @@ class StreamRecorder:
                 time.sleep(15)
             except Exception as e:
                 app_log.error(f"Error in run loop: {e}")
-                send_email.send(
-                    "HBNI Audio Stream Recorder Error",
-                    f"https://broadcasting.hbni.net/logs/{datetime.now().strftime('%Y-%B-%d-%A')}.log",
-                )
+                # send_email.send(
+                #     "HBNI Audio Stream Recorder Error",
+                #     f"https://broadcasting.hbni.net/logs/{datetime.now().strftime('%Y-%B-%d-%A')}.log",
+                # )
                 time.sleep(15)
 
     async def ensure_recording_status_table(self, pool):
