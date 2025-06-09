@@ -339,7 +339,11 @@ class StreamRecorder:
                     description = source.get("server_description", "No description")
                     title = host.title()
                     icecast_source = "https://hbniaudio.hbni.net"
-                    is_private = source.get("is_private", False) or source.get("genre", "various") == "private"
+                    is_private = (
+                        source.get("is_private", False)
+                        or "private" in source.get("genre", "various")
+                        or any(keyword in host.lower() for keyword in ("private", "priv", "prv"))
+                    )
                     is_recording = source.get("genre", "various") == "RECORDING"
 
                     if (
